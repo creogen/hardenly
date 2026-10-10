@@ -250,7 +250,9 @@ possible future paid add-on, extend the plugin without changing it:
 - Action `hardenly_scan_completed` (`array $report`): fires after a report is stored, before the email.
 - Filter `hardenly_score_weights` (`array`): adjust severity weights and group caps.
 
-Hooks are documented in `readme.txt` (FAQ) and covered by tests. Anything registered through them is validated
+Hooks are covered by tests and documented in `docs/developer/`, published to GitHub Pages
+(https://creogen.github.io/hardenly/) and linked from the `readme.txt` FAQ. `docs/developer/hooks.md` is
+generated from the hook docblocks by `make docs`; `make check` fails when it is out of date. Anything registered through them is validated
 (must implement the interface) so a broken add-on cannot break a scan.
 
 ## 6. Quality gates

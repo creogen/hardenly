@@ -421,7 +421,17 @@ class Scanner {
 		/**
 		 * Fires after a scan's report is stored.
 		 *
-		 * @param array $report The report: score, counts, results (with `id` and `ignored`) and check metadata.
+		 * Runs once per scan, in the request that finishes its last batch: WP-Cron, or a REST
+		 * request from the open Hardenly screen. Hardenly sends its email report from this action
+		 * at the default priority (10).
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $report The report: `id`, `trigger` (`manual` or `schedule`), `started_at`,
+		 *                      `finished_at`, `duration`, `score` (0-100), `counts` (problems by
+		 *                      severity), `passed`, `skipped`, `ignored`, `checks` (`title` and
+		 *                      `group` by check id) and `results` (each Result::to_array() plus
+		 *                      `id` and `ignored`).
 		 */
 		$this->hooks->do_action( 'hardenly_scan_completed', $report );
 	}

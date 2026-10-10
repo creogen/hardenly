@@ -52,6 +52,9 @@ jobs:
       - name: Translation template is up to date
         run: make i18n-check
 
+      - name: Hook docs are up to date
+        run: make docs-check
+
       - name: Versions match
         run: make version-check
 

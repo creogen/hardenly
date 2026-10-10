@@ -6,6 +6,7 @@
 	<file>uninstall.php</file>
 	<file>src</file>
 	<file>tests</file>
+	<file>bin</file>
 
 	<exclude-pattern>tests/fixtures/*/assets/build/*</exclude-pattern>
 
@@ -47,8 +48,8 @@
 		<exclude-pattern>*</exclude-pattern>
 	</rule>
 
-	<!-- Tests don't run inside WordPress: PHPUnit naming, stand-ins for WordPress functions
-	     and plain file functions are fine there. -->
+	<!-- Tests and bin/ scripts don't run inside WordPress: PHPUnit naming, stand-ins for
+	     WordPress functions, plain file functions and console output are fine there. -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<exclude-pattern>tests/*</exclude-pattern>
 	</rule>
@@ -60,8 +61,10 @@
 	</rule>
 	<rule ref="WordPress.Security.EscapeOutput">
 		<exclude-pattern>tests/*</exclude-pattern>
+		<exclude-pattern>bin/*</exclude-pattern>
 	</rule>
 	<rule ref="WordPress.WP.AlternativeFunctions">
 		<exclude-pattern>tests/*</exclude-pattern>
+		<exclude-pattern>bin/*</exclude-pattern>
 	</rule>
 </ruleset>

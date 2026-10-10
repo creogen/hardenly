@@ -1,0 +1,4 @@
+# GitHub Pages site for the developer docs, built by .github/workflows/docs.yml.
+title: Hardenly developer docs
+description: Hooks and extension points of the Hardenly WordPress plugin.
+theme: jekyll-theme-primer

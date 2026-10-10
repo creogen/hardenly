@@ -142,8 +142,14 @@ class Plugin {
 		/**
 		 * Filters the weights of the security score.
 		 *
-		 * @param array $weights `severity` => penalty per problem by severity, `group_cap` => the most
-		 *                       one check group can take off the score. See Score::DEFAULT_WEIGHTS.
+		 * The score starts at 100 and loses the severity's penalty for each problem that is not
+		 * ignored; one check group can take off at most `group_cap`. Missing or non-numeric
+		 * values keep their defaults and negative values count as 0.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $weights `severity` => penalty per problem by severity (`critical` 25,
+		 *                       `high` 15, `medium` 8, `low` 3, `info` 0), `group_cap` => 40.
 		 */
 		$weights = $this->hooks->apply_filters( 'hardenly_score_weights', Score::DEFAULT_WEIGHTS );
 		return new Score( is_array( $weights ) ? $weights : Score::DEFAULT_WEIGHTS );

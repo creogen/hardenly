@@ -13,6 +13,7 @@ and the WordPress version in "Requires at least" (plugin header and `readme.txt`
 | `make phpstan` | Static analysis |
 | `make test-js` / `make lint-js` | JavaScript tests (Vitest) and ESLint/Stylelint |
 | `make i18n` | Regenerates `languages/hardenly.pot`; run after changing translatable strings |
+| `make docs` | Regenerates `docs/developer/hooks.md` from hook docblocks; run after adding or changing a hook |
 | `make dist && make smoke` | Builds the release zip and runs it; run after changing WordPress calls or the build |
 | `make plugin-check` | WordPress.org's Plugin Check on the build (Docker) |
 
@@ -86,6 +87,8 @@ Product rules for Hardenly. The sections above take precedence for style, layout
 - Loopback requests (own site headers/XML-RPC checks) are allowed and must be documented in `readme.txt`.
 - Extension points (`hardenly_checks`, `hardenly_vulnerability_providers`, `hardenly_scan_completed`,
   `hardenly_score_weights`) are public API: see `docs/SPEC.md` 5.1. Validate what they return.
+  Document each hook with a docblock (description, `@since`, `@param`) directly above its call, then run
+  `make docs`; `docs/developer/extending.md` is the hand-written guide.
 
 ## Product rules
 
