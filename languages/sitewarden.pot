@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-10T12:13:56+00:00\n"
+"POT-Creation-Date: 2026-10-10T12:25:17+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: sitewarden\n"
@@ -298,6 +298,14 @@ msgstr ""
 #: src/Admin/SettingsPage.php:497
 #, php-format
 msgid "Next scan: %s. WP-Cron starts it with the first visit after that time."
+msgstr ""
+
+#: src/Plugin.php:95
+msgid "Sitewarden scans one site at a time and cannot be activated for the whole network. Activate it on each site you want to scan instead."
+msgstr ""
+
+#: src/Plugin.php:96
+msgid "Plugin not activated"
 msgstr ""
 
 #. translators: 1: site name, 2: security score, 3: change since the previous scan, e.g. " (-6)".

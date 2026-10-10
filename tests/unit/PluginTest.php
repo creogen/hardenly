@@ -3,6 +3,7 @@
 namespace Sitewarden\Tests;
 
 use Merkushin\Wpal\Service\Assets;
+use Merkushin\Wpal\Service\Errors;
 use Merkushin\Wpal\Service\Hooks;
 use Merkushin\Wpal\Service\Plugins;
 use Merkushin\Wpal\ServiceFactory;
@@ -117,6 +118,22 @@ class PluginTest extends TestCase {
 			],
 			$classes
 		);
+	}
+
+	public function testActivate_NetworkWide_IsRefused(): void {
+		$errors = $this->createMock( Errors::class );
+		$errors->expects( self::once() )->method( 'wp_die' );
+		ServiceFactory::set_custom_errors( $errors );
+
+		Plugin::activate( true );
+	}
+
+	public function testActivate_SingleSite_IsAllowed(): void {
+		$errors = $this->createMock( Errors::class );
+		$errors->expects( self::never() )->method( 'wp_die' );
+		ServiceFactory::set_custom_errors( $errors );
+
+		Plugin::activate( false );
 	}
 
 	public function testEnqueueAdminAssets_OtherScreen_EnqueuesNothing(): void {
