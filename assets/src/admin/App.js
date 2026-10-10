@@ -131,7 +131,13 @@ export default function App() {
 		return <p>{ __( 'Loading…', 'sitewarden' ) }</p>;
 	}
 
-	const { report, history, groups, skip_files: skipFiles = [] } = data;
+	const {
+		report,
+		history,
+		groups,
+		skip_files: skipFiles = [],
+		vulnerability_lookup: lookupReady = false,
+	} = data;
 
 	return (
 		<div className="sitewarden">
@@ -168,6 +174,25 @@ export default function App() {
 				</div>
 			) }
 			<Notice status={ status } />
+			{ report && ! lookupReady && (
+				<div className="notice notice-info inline">
+					<p>
+						<strong>
+							{ __(
+								'Vulnerability lookup is not configured.',
+								'sitewarden'
+							) }
+						</strong>{ ' ' }
+						{ __(
+							'Version checks work offline. To match installed plugins and themes against known vulnerabilities, connect WPScan or Patchstack.',
+							'sitewarden'
+						) }{ ' ' }
+						<a href="admin.php?page=sitewarden-settings">
+							{ __( 'Set up in Settings', 'sitewarden' ) }
+						</a>
+					</p>
+				</div>
+			) }
 
 			{ active && (
 				<Progress status={ status } onStop={ stop } busy={ busy } />

@@ -28,14 +28,15 @@ class ReportPayload {
 	}
 
 	/**
-	 * @return array{report: array<string, mixed>|null, history: array<int, array<string, mixed>>, groups: array<string, string>, skip_files: string[]}
+	 * @return array{report: array<string, mixed>|null, history: array<int, array<string, mixed>>, groups: array<string, string>, skip_files: string[], vulnerability_lookup: bool}
 	 */
 	public function build(): array {
 		return [
-			'report'     => $this->reports->latest(),
-			'history'    => $this->reports->history(),
-			'groups'     => Group::labels(),
-			'skip_files' => (array) $this->settings->get()['skip_files'],
+			'report'               => $this->reports->latest(),
+			'history'              => $this->reports->history(),
+			'groups'               => Group::labels(),
+			'skip_files'           => (array) $this->settings->get()['skip_files'],
+			'vulnerability_lookup' => $this->settings->vulnerability_lookup_ready(),
 		];
 	}
 }
