@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-10T11:41:38+00:00\n"
+"POT-Creation-Date: 2026-10-10T12:13:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: sitewarden\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: src/Admin/Menu.php:48
 #: src/Admin/Menu.php:49
 #: src/Admin/Menu.php:59
-#: assets/src/admin/App.js:139
+#: assets/src/admin/App.js:145
 msgid "Sitewarden"
 msgstr ""
 
@@ -53,7 +53,7 @@ msgid "Dashboard"
 msgstr ""
 
 #: src/Admin/Menu.php:68
-#: src/Admin/SettingsPage.php:96
+#: src/Admin/SettingsPage.php:142
 msgid "Sitewarden Settings"
 msgstr ""
 
@@ -61,146 +61,241 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:104
+#: src/Admin/SettingsPage.php:151
 msgid "What to scan"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:107
-#: src/Admin/SettingsPage.php:110
+#: src/Admin/SettingsPage.php:154
+#: src/Admin/SettingsPage.php:157
 msgid "Checks"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:125
+#: src/Admin/SettingsPage.php:172
 #: src/Scanner/Checks/Files/RecentlyModifiedCheck.php:39
 msgid "Recently changed files"
 msgstr ""
 
 #. translators: %s: number input for days.
-#: src/Admin/SettingsPage.php:130
+#: src/Admin/SettingsPage.php:177
 #, php-format
 msgid "Report PHP files changed in the last %s days"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:137
+#: src/Admin/SettingsPage.php:184
 msgid "Files to skip"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:140
+#: src/Admin/SettingsPage.php:187
 msgid "One file or folder per line, relative to the WordPress folder. File checks never report them. \"Ignore this file\" on the dashboard adds lines here."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:145
+#: src/Admin/SettingsPage.php:192
 msgid "Schedule and email"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:148
+#: src/Admin/SettingsPage.php:195
 msgid "Automatic scan"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:159
-#: src/Admin/SettingsPage.php:162
+#: src/Admin/SettingsPage.php:206
+#: src/Admin/SettingsPage.php:209
 msgid "Email report"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:166
+#: src/Admin/SettingsPage.php:213
 msgid "Email a summary after automatic scans"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:172
+#: src/Admin/SettingsPage.php:219
 msgid "Only when the score drops or a new high or critical problem appears"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:179
+#: src/Admin/SettingsPage.php:226
 msgid "Send to"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:182
+#: src/Admin/SettingsPage.php:229
 msgid "Leave empty to use the site admin email. The email lists scores and problems, never file paths."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:187
+#: src/Admin/SettingsPage.php:236
 msgid "Ignored findings"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:189
+#: src/Admin/SettingsPage.php:238
 msgid "No findings are ignored. Use \"Ignore this finding\" on the dashboard to hide a finding you have reviewed."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:194
+#: src/Admin/SettingsPage.php:243
 msgid "Finding"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:195
+#: src/Admin/SettingsPage.php:244
 msgid "Ignored"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:196
+#: src/Admin/SettingsPage.php:245
 #: assets/src/admin/components/Findings.js:121
 msgid "Show again"
 msgstr ""
 
 #. translators: 1: date, 2: username.
-#: src/Admin/SettingsPage.php:208
+#: src/Admin/SettingsPage.php:257
 #, php-format
 msgid "%1$s by %2$s"
 msgstr ""
 
 #. translators: %s: finding.
-#: src/Admin/SettingsPage.php:221
+#: src/Admin/SettingsPage.php:270
 #, php-format
 msgid "Show \"%s\" again"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:233
+#: src/Admin/SettingsPage.php:282
 msgid "Save Changes"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:248
+#: src/Admin/SettingsPage.php:290
+msgid "Test the vulnerability lookup connection"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:291
+msgid "Uses the saved key and makes one request to the provider."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:308
+#: src/Scanner/Group.php:45
+msgid "Online services"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:309
+msgid "Off by default. Turning one on sends data from your site to a third party, as described under each option. Nothing else ever leaves your site."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:312
+msgid "File integrity"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:316
+msgid "Compare WordPress core and plugin files with WordPress.org"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:319
+msgid "Sends your WordPress version and language, and the slugs and versions of installed plugins, to api.wordpress.org and downloads.wordpress.org to get the official file checksums."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:320
+msgid "WordPress.org privacy policy"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:325
+msgid "Vulnerability lookup"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:328
+msgid "Vulnerability lookup provider"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:332
+msgid "None"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:343
+msgid "Get a key"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:344
+msgid "Terms"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:352
+msgid "API key"
+msgstr ""
+
+#. translators: %s: last four characters of the saved key.
+#: src/Admin/SettingsPage.php:359
+#, php-format
+msgid "A key ending in %s is saved. Leave the field empty to keep it."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:365
+msgid "Remove the saved key"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:369
+msgid "Your own key from the provider you chose."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:374
+msgid "Consent"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:380
+msgid "Choose a provider and save to see what it receives."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:387
+msgid "Lookups do not run until you agree."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:417
+msgid "Choose a provider and save a key first."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:419
+msgid "Agree to send data to the provider and save before testing."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:461
 msgid "Debug output, file editing, HTTPS for the dashboard, security keys."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:249
+#: src/Admin/SettingsPage.php:462
 msgid "An \"admin\" username, number of administrators, inactive administrators, username listing."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:250
+#: src/Admin/SettingsPage.php:463
 msgid "Outdated WordPress, plugins, themes and PHP; unused plugins and themes."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:251
+#: src/Admin/SettingsPage.php:464
 msgid "HTTPS, certificate expiry, security headers, folder listing, XML-RPC. Requests go only to your own site."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:252
+#: src/Admin/SettingsPage.php:465
 msgid "Table prefix and size of autoloaded options."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:253
+#: src/Admin/SettingsPage.php:466
 msgid "PHP in uploads, file permissions, backups, debug log, .git and .env, recent changes."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:254
+#: src/Admin/SettingsPage.php:467
 msgid "Hidden or injected code in PHP files. The slowest check; findings need review."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:269
+#: src/Admin/SettingsPage.php:468
+msgid "File integrity and vulnerability lookups. Run only when turned on under Online services below."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:483
 msgid "Off"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:270
+#: src/Admin/SettingsPage.php:484
 msgid "Weekly"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:271
+#: src/Admin/SettingsPage.php:485
 msgid "Daily"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:278
+#: src/Admin/SettingsPage.php:492
 msgid "Scans run only when you start them."
 msgstr ""
 
 #. translators: %s: date and time.
-#: src/Admin/SettingsPage.php:283
+#: src/Admin/SettingsPage.php:497
 #, php-format
 msgid "Next scan: %s. WP-Cron starts it with the first visit after that time."
 msgstr ""
@@ -584,6 +679,166 @@ msgstr ""
 
 #: src/Scanner/Checks/Files/UploadsPhpCheck.php:81
 msgid "The uploads folder should only hold media. PHP files there are a common sign of a break-in or a vulnerable plugin."
+msgstr ""
+
+#: src/Scanner/Checks/Online/CoreChecksumsCheck.php:72
+msgid "WordPress core files"
+msgstr ""
+
+#: src/Scanner/Checks/Online/CoreChecksumsCheck.php:87
+msgid "WordPress.org has no checksums for this WordPress version, or could not be reached."
+msgstr ""
+
+#. translators: %d: number of files.
+#: src/Scanner/Checks/Online/CoreChecksumsCheck.php:121
+#, php-format
+msgid "%d WordPress core file differs from the official version"
+msgid_plural "%d WordPress core files differ from the official version"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Online/CoreChecksumsCheck.php:122
+msgid "Reinstall WordPress from Dashboard > Updates (\"Re-install version\"). It replaces core files and keeps your content, plugins and themes. Then change your passwords if you did not edit these files yourself."
+msgstr ""
+
+#: src/Scanner/Checks/Online/CoreChecksumsCheck.php:124
+msgid "Core files should never change outside updates. Changed core files are a common place to hide malicious code."
+msgstr ""
+
+#. translators: %d: number of files.
+#: src/Scanner/Checks/Online/CoreChecksumsCheck.php:135
+#, php-format
+msgid "%d unknown PHP file in wp-admin or wp-includes"
+msgid_plural "%d unknown PHP files in wp-admin or wp-includes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Online/CoreChecksumsCheck.php:136
+msgid "These files are not part of WordPress. Check where they came from and remove them if nothing on your site needs them; reinstalling WordPress does not remove them."
+msgstr ""
+
+#: src/Scanner/Checks/Online/CoreChecksumsCheck.php:138
+msgid "Nothing but WordPress itself should add PHP files to these folders."
+msgstr ""
+
+#. translators: %d: number of files.
+#: src/Scanner/Checks/Online/CoreChecksumsCheck.php:149
+#, php-format
+msgid "%d WordPress core file is missing"
+msgid_plural "%d WordPress core files are missing"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Online/CoreChecksumsCheck.php:150
+msgid "Some sites delete files such as readme.html on purpose. If you did not, reinstall WordPress from Dashboard > Updates."
+msgstr ""
+
+#: src/Scanner/Checks/Online/CoreChecksumsCheck.php:158
+msgid "WordPress core files match the official version."
+msgstr ""
+
+#: src/Scanner/Checks/Online/PluginChecksumsCheck.php:63
+msgid "Plugin files"
+msgstr ""
+
+#. translators: %s: file path.
+#: src/Scanner/Checks/Online/PluginChecksumsCheck.php:151
+#, php-format
+msgid "%s (changed)"
+msgstr ""
+
+#. translators: %s: file path.
+#: src/Scanner/Checks/Online/PluginChecksumsCheck.php:158
+#, php-format
+msgid "%s (not in the plugin)"
+msgstr ""
+
+#. translators: %d: number of files.
+#: src/Scanner/Checks/Online/PluginChecksumsCheck.php:168
+#, php-format
+msgid "%d plugin file differs from WordPress.org"
+msgid_plural "%d plugin files differ from WordPress.org"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Online/PluginChecksumsCheck.php:169
+msgid "If you did not edit these plugins yourself, reinstall them: deactivate, delete and install them again from Plugins > Add New (settings are usually kept, but back up first). Remove files that are not part of the plugin."
+msgstr ""
+
+#: src/Scanner/Checks/Online/PluginChecksumsCheck.php:171
+msgid "Files that differ from the official plugin can be hand edits, or code someone added to the site."
+msgstr ""
+
+#. translators: %d: number of plugins.
+#: src/Scanner/Checks/Online/PluginChecksumsCheck.php:182
+#, php-format
+msgid "%d plugin could not be compared with WordPress.org"
+msgid_plural "%d plugins could not be compared with WordPress.org"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Online/PluginChecksumsCheck.php:183
+msgid "These plugins are not hosted on WordPress.org (or this version is not), so there are no official checksums for them."
+msgstr ""
+
+#: src/Scanner/Checks/Online/PluginChecksumsCheck.php:191
+msgid "Plugin files from WordPress.org match the official versions."
+msgstr ""
+
+#: src/Scanner/Checks/Online/VulnerabilityCheck.php:67
+msgid "Known vulnerabilities"
+msgstr ""
+
+#: src/Scanner/Checks/Online/VulnerabilityCheck.php:82
+msgid "Vulnerability lookup needs your consent in Sitewarden > Settings."
+msgstr ""
+
+#: src/Scanner/Checks/Online/VulnerabilityCheck.php:195
+msgid "no fix yet"
+msgstr ""
+
+#. translators: %s: version.
+#: src/Scanner/Checks/Online/VulnerabilityCheck.php:197
+#, php-format
+msgid "fixed in %s"
+msgstr ""
+
+#: src/Scanner/Checks/Online/VulnerabilityCheck.php:202
+msgid "At least one of these has no fix yet. Consider deactivating it and using an alternative until the author releases a fix."
+msgstr ""
+
+#. translators: %s: version.
+#: src/Scanner/Checks/Online/VulnerabilityCheck.php:205
+#, php-format
+msgid "Update to version %s or later."
+msgstr ""
+
+#. translators: 1: plugin, theme or WordPress name, 2: version, 3: number of vulnerabilities.
+#: src/Scanner/Checks/Online/VulnerabilityCheck.php:214
+#, php-format
+msgid "%1$s %2$s has %3$d known vulnerability"
+msgid_plural "%1$s %2$s has %3$d known vulnerabilities"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: provider name.
+#: src/Scanner/Checks/Online/VulnerabilityCheck.php:222
+#, php-format
+msgid "Reported by %s. Attackers scan for sites running versions with published vulnerabilities."
+msgstr ""
+
+#. translators: 1: why the lookup stopped, 2: number of plugins and themes.
+#: src/Scanner/Checks/Online/VulnerabilityCheck.php:232
+#, php-format
+msgid "%1$s %2$d item was not checked; the next scan continues."
+msgid_plural "%1$s %2$d items were not checked; the next scans continue."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: provider name.
+#: src/Scanner/Checks/Online/VulnerabilityCheck.php:239
+#, php-format
+msgid "No known vulnerabilities in the installed versions (checked with %s)."
 msgstr ""
 
 #: src/Scanner/Checks/Server/CertificateCheck.php:51
@@ -1081,14 +1336,60 @@ msgstr ""
 msgid "Code patterns"
 msgstr ""
 
-#: src/Scanner/Group.php:45
-msgid "Online services"
-msgstr ""
-
 #. translators: %s: error message.
 #: src/Scanner/Scanner.php:341
 #, php-format
 msgid "This check could not run: %s"
+msgstr ""
+
+#. translators: %s: provider name.
+#: src/Vulnerability/HttpProvider.php:55
+#, php-format
+msgid "%s could not be reached."
+msgstr ""
+
+#. translators: %s: provider name.
+#: src/Vulnerability/HttpProvider.php:65
+#, php-format
+msgid "%s rejected the API key."
+msgstr ""
+
+#. translators: %s: provider name.
+#: src/Vulnerability/HttpProvider.php:69
+#, php-format
+msgid "The %s request limit is reached for now."
+msgstr ""
+
+#. translators: 1: provider name, 2: HTTP status code.
+#: src/Vulnerability/HttpProvider.php:77
+#, php-format
+msgid "%1$s answered with an error (HTTP %2$d)."
+msgstr ""
+
+#: src/Vulnerability/PatchstackProvider.php:26
+msgid "I agree to send the WordPress version and the slugs and versions of installed plugins and themes to Patchstack (patchstack.com), and I accept its terms. The site address, users and files are not sent."
+msgstr ""
+
+#: src/Vulnerability/PatchstackProvider.php:30
+msgid "Needs a Patchstack API key, available on paid plans. Results are kept for a day."
+msgstr ""
+
+#: src/Vulnerability/PatchstackProvider.php:67
+msgid "Connected."
+msgstr ""
+
+#: src/Vulnerability/WpscanProvider.php:25
+msgid "I agree to send the WordPress version and the slugs of installed plugins and themes to WPScan (wpscan.com), and I accept its terms. Plugin and theme versions, the site address, users and files are not sent."
+msgstr ""
+
+#: src/Vulnerability/WpscanProvider.php:29
+msgid "The free plan allows 25 requests a day and is for non-commercial use; commercial sites need a paid plan. Results are kept for a day, so a site with more than about 24 plugins and themes is covered over several days."
+msgstr ""
+
+#. translators: 1: plan name, 2: requests left, 3: daily limit.
+#: src/Vulnerability/WpscanProvider.php:58
+#, php-format
+msgid "Connected. Plan: %1$s. Requests left today: %2$d of %3$d."
 msgstr ""
 
 #: assets/src/admin/App.js:22
@@ -1103,14 +1404,26 @@ msgstr ""
 msgid "The last scan was stopped."
 msgstr ""
 
-#: assets/src/admin/App.js:148
+#: assets/src/admin/App.js:154
 msgid "Run scan"
 msgstr ""
 
 #. translators: %s: date and time of the last scan.
-#: assets/src/admin/App.js:155
+#: assets/src/admin/App.js:161
 #, js-format
 msgid "Last scan: %s"
+msgstr ""
+
+#: assets/src/admin/App.js:181
+msgid "Vulnerability lookup is not configured."
+msgstr ""
+
+#: assets/src/admin/App.js:186
+msgid "Version checks work offline. To match installed plugins and themes against known vulnerabilities, connect WPScan or Patchstack."
+msgstr ""
+
+#: assets/src/admin/App.js:191
+msgid "Set up in Settings"
 msgstr ""
 
 #: assets/src/admin/components/Findings.js:7
