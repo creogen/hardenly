@@ -53,7 +53,6 @@ class Plugin {
 	}
 
 	public function init(): void {
-		$this->hooks->add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_frontend_assets' ] );
 		$this->hooks->add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
 	}
 
@@ -65,16 +64,6 @@ class Plugin {
 	 */
 	public function enqueue_admin_assets(): void {
 		$this->enqueue_entry( 'admin' );
-	}
-
-	/**
-	 * Loads assets/build/frontend.{js,css}, built from assets/src/frontend.
-	 *
-	 * Runs on every front-end page. Load assets only where the plugin outputs something,
-	 * or delete this method if the plugin has no front end.
-	 */
-	public function enqueue_frontend_assets(): void {
-		$this->enqueue_entry( 'frontend' );
 	}
 
 	/**

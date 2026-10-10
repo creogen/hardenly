@@ -19,14 +19,15 @@ npm start        # rebuild JavaScript and CSS on change
 | `sitewarden.php` | Plugin header and bootstrap |
 | `src/` | PHP code, PSR-4 namespace `Sitewarden\` |
 | `tests/unit/` | PHPUnit tests; WordPress calls are mocked through WPAL |
-| `assets/src/admin/`, `assets/src/frontend/` | JavaScript and CSS entry points, built to `assets/build/` |
+| `assets/src/admin/` | Admin JavaScript and CSS entry point, built to `assets/build/` |
 | `languages/` | Translation template, `make i18n` |
 | `uninstall.php` | Cleanup when the plugin is deleted |
 | `readme.txt` | The WordPress.org plugin page |
 | `.wordpress-org/` | WordPress.org banners, icons, screenshots and Live Preview blueprint |
 
 WordPress functions are called through [WPAL](https://github.com/merkushin/WPAL) services, so the
-code can be unit-tested without WordPress. [AGENTS.md](AGENTS.md) has the conventions.
+code can be unit-tested without WordPress. [AGENTS.md](AGENTS.md) has the conventions and
+[docs/SPEC.md](docs/SPEC.md) the product specification.
 
 ## Release
 

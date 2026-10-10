@@ -74,7 +74,6 @@ function wp_set_script_translations( string $handle, string $domain = 'default',
 require $main_file;
 
 do_action( 'init' );
-do_action( 'wp_enqueue_scripts' );
 do_action( 'admin_enqueue_scripts', 'index.php' );
 
 $failures = [];

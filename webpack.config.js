@@ -12,7 +12,6 @@ module.exports = {
 	...defaultConfig,
 	entry: {
 		admin: './assets/src/admin/index.js',
-		frontend: './assets/src/frontend/index.js',
 	},
 	output: {
 		...defaultConfig.output,
