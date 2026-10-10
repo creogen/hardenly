@@ -11,6 +11,9 @@ declare( strict_types=1 );
 if ( ! defined( 'DAY_IN_SECONDS' ) ) {
 	define( 'DAY_IN_SECONDS', 86400 );
 }
+if ( ! defined( 'HOUR_IN_SECONDS' ) ) {
+	define( 'HOUR_IN_SECONDS', 3600 );
+}
 
 /**
  * Lets AdminIncludes::plugins() see the admin plugin functions as loaded.
@@ -38,5 +41,13 @@ function esc_html_e( string $text, string $domain = 'default' ): void {
 }
 
 function esc_attr( string $text ): string {
+	return htmlspecialchars( $text, ENT_QUOTES );
+}
+
+function esc_textarea( string $text ): string {
+	return htmlspecialchars( $text, ENT_QUOTES );
+}
+
+function esc_html( string $text ): string {
 	return htmlspecialchars( $text, ENT_QUOTES );
 }
