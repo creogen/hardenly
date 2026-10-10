@@ -6,6 +6,17 @@ use Merkushin\Wpal\Service\Assets;
 use Merkushin\Wpal\Service\Hooks;
 use Merkushin\Wpal\Service\Plugins;
 use Merkushin\Wpal\ServiceFactory;
+use Sitewarden\Admin\DashboardPage;
+use Sitewarden\Admin\Menu;
+use Sitewarden\Rest\ScanController;
+use Sitewarden\Scanner\Check;
+use Sitewarden\Scanner\CheckRegistry;
+use Sitewarden\Scanner\Scanner;
+use Sitewarden\Scanner\Score;
+use Sitewarden\Storage\Lock;
+use Sitewarden\Storage\ReportStore;
+use Sitewarden\Storage\RunStore;
+use Sitewarden\Storage\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -45,6 +56,13 @@ class Plugin {
 	 */
 	private $plugins;
 
+	/**
+	 * Set by init().
+	 *
+	 * @var Menu|null
+	 */
+	private $menu = null;
+
 	public function __construct( string $plugin_file ) {
 		$this->plugin_file = $plugin_file;
 		$this->hooks       = ServiceFactory::create_hooks();
@@ -52,18 +70,58 @@ class Plugin {
 		$this->plugins     = ServiceFactory::create_plugins();
 	}
 
+	/**
+	 * Creates the plugin's objects and hooks them into WordPress.
+	 */
 	public function init(): void {
+		$reports    = new ReportStore();
+		$scanner    = new Scanner(
+			new CheckRegistry( $this->default_checks() ),
+			new RunStore(),
+			$reports,
+			new Settings(),
+			new Lock( 'sitewarden_lock' ),
+			$this->score()
+		);
+		$rest       = new ScanController( $scanner, $reports );
+		$this->menu = new Menu( new DashboardPage() );
+
+		$this->hooks->add_action( 'admin_menu', [ $this->menu, 'register' ] );
 		$this->hooks->add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
+		$this->hooks->add_action( 'rest_api_init', [ $rest, 'register_routes' ] );
+		$this->hooks->add_action( Scanner::TICK_HOOK, [ $scanner, 'handle_tick_event' ] );
 	}
 
 	/**
-	 * Loads assets/build/admin.{js,css}, built from assets/src/admin.
+	 * Loads assets/build/admin.{js,css}, built from assets/src/admin, on the plugin's screens.
 	 *
-	 * Runs on every admin screen. Once you know where the plugin's UI lives, return early on
-	 * other screens: admin_enqueue_scripts passes the screen's hook suffix as its argument.
+	 * @param string $hook_suffix Screen being loaded, passed by admin_enqueue_scripts.
 	 */
-	public function enqueue_admin_assets(): void {
+	public function enqueue_admin_assets( $hook_suffix = '' ): void {
+		if ( null === $this->menu || ! $this->menu->is_plugin_screen( (string) $hook_suffix ) ) {
+			return;
+		}
 		$this->enqueue_entry( 'admin' );
+	}
+
+	/**
+	 * Built-in checks; extensions add theirs through the `sitewarden_checks` filter.
+	 *
+	 * @return Check[]
+	 */
+	private function default_checks(): array {
+		return [];
+	}
+
+	private function score(): Score {
+		/**
+		 * Filters the weights of the security score.
+		 *
+		 * @param array $weights `severity` => penalty per problem by severity, `group_cap` => the most
+		 *                       one check group can take off the score. See Score::DEFAULT_WEIGHTS.
+		 */
+		$weights = $this->hooks->apply_filters( 'sitewarden_score_weights', Score::DEFAULT_WEIGHTS );
+		return new Score( is_array( $weights ) ? $weights : Score::DEFAULT_WEIGHTS );
 	}
 
 	/**

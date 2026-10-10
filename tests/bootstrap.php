@@ -4,3 +4,5 @@
 define( 'ABSPATH', __DIR__ . '/' );
 
 require_once dirname( __DIR__ ) . '/vendor/autoload.php';
+require_once __DIR__ . '/stubs/functions.php';
+require_once __DIR__ . '/stubs/WP_Error.php';

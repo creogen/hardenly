@@ -38,7 +38,12 @@ The slug `sitewarden` was free on wordpress.org when the project started (checke
 
 Each check implements `Sitewarden\Scanner\Check`: `id()`, `title()`, `group()`, `run( Context ): Result[]`.
 A `Result` has: `check_id`, `status` (`pass|warning|fail|info|skipped`), `severity` (`info|low|medium|high|critical`),
-`message`, `remediation`, optional `details` (e.g. file paths, capped).
+`message` (shown as the finding's title), `remediation`, optional `description` (why it matters), `details` (e.g. file
+paths, capped at 500, each cut to 500 characters) and `key` (tells apart several results of one check).
+
+A long-running check calls `Context::should_yield()` while it works and, when true, `Context::pause( $cursor )`; the
+scanner calls it again in the next batch with that cursor in `Context::cursor()`. A check that throws is reported as
+`skipped` and the scan goes on. Results that are not `Result` objects or name another check are dropped.
 
 ### 3.1 Offline (default on)
 
@@ -72,15 +77,20 @@ src/Plugin.php                wires hooks, VERSION constant
 src/Admin/Menu.php            top-level menu + capability gate
 src/Admin/DashboardPage.php   score, findings table, "Run scan" button
 src/Admin/SettingsPage.php    modules, thresholds, email, providers
-src/Rest/ScanController.php   start/status/results endpoints
+src/Rest/ScanController.php   scan start/status/tick/stop and report endpoints
 src/Scanner/Scanner.php       orchestrates checks, batching, progress
 src/Scanner/Check.php         interface
-src/Scanner/Context.php       config, time budget, WPAL services
+src/Scanner/Context.php       settings, time budget, memory guard, cursor
+src/Scanner/CheckRegistry.php built-in checks + `sitewarden_checks`, validated, in group order
+src/Scanner/Group.php         group ids, labels and run order
 src/Scanner/Result.php        value object
 src/Scanner/Checks/...        one class per check (grouped by folder)
 src/Scanner/FileWalker.php    resumable directory iterator (cursor)
 src/Scanner/Score.php         score calculation
-src/Storage/ReportStore.php   options-backed storage
+src/Storage/ReportStore.php   latest report and history (options)
+src/Storage/RunStore.php      state of the active run (option)
+src/Storage/Settings.php      settings with defaults (option)
+src/Storage/Lock.php          atomic lock (INSERT IGNORE, like WP_Upgrader::create_lock)
 src/Vulnerability/...         provider interface + adapters
 src/Report/EmailReport.php    summary email
 src/Cron/Schedule.php         scheduled scan
@@ -89,10 +99,12 @@ src/Cron/Schedule.php         scheduled scan
 ### 4.1 Scan lifecycle
 1. Admin clicks "Run scan" (or the schedule fires) and the scanner creates a **run** with state `queued`.
 2. A WP-Cron single event (`sitewarden_scan_tick`) processes work in batches under a time budget (default 10 s)
-   and memory guard, then reschedules itself until done. Admin UI polls REST for progress.
+   and memory guard, then reschedules itself until done. While the dashboard is open it calls
+   `POST sitewarden/v1/scan/tick` (5 s batches), so a scan also progresses where WP-Cron is slow or disabled.
 3. Fast checks (config, users, versions, headers) run first; the file walk is cursor-based and resumable.
 4. On completion the scanner stores the report, computes the score, and sends the email if enabled.
-5. Only one run at a time (lock transient with expiry). A stalled run is detected and marked `failed`.
+5. Only one run at a time, and only one batch at a time (atomic lock with expiry). A run without progress for
+   15 minutes is marked `failed`; a stopped run is marked `stopped`. Partial results are discarded in both cases.
 
 Action Scheduler is **not** bundled. WP-Cron is enough and keeps the plugin small.
 
@@ -100,7 +112,8 @@ Action Scheduler is **not** bundled. WP-Cron is enough and keeps the plugin smal
 - `sitewarden_settings`: all settings in one option.
 - `sitewarden_latest_report`: full latest report (findings capped, e.g. 500 per check).
 - `sitewarden_report_history`: last 10 summaries (date, score, counts).
-- `sitewarden_run_state`, `sitewarden_lock`: transient/option for the active run.
+- `sitewarden_run_state`: option for the active (or last failed/stopped) run.
+- `sitewarden_lock`: option row used as the batch lock, written with direct queries (see `Lock`).
 - No custom tables in v1. Everything removed in `uninstall.php`, including cron events.
 
 ### 4.3 Score

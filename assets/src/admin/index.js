@@ -1,7 +1,11 @@
 /**
- * Entry point for the admin script, built to assets/build/admin.js.
- *
- * Import WordPress packages (`@wordpress/i18n`, `@wordpress/api-fetch`, ...) as usual:
- * they become script dependencies instead of being bundled.
+ * The dashboard screen, rendered into the element DashboardPage outputs.
  */
+import { createElement, createRoot } from '@wordpress/element';
+import App from './App';
 import './index.css';
+
+const root = document.getElementById( 'sitewarden-dashboard' );
+if ( root ) {
+	createRoot( root ).render( <App /> );
+}
