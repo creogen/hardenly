@@ -28,8 +28,8 @@ class UploadsPhpCheckTest extends CheckTestCase {
 		$result = $this->result(
 			$this->check(
 				[
-					'wp-content/uploads/2026/03/cache.php' => '<?php eval( $_POST["x"] );',
-					'wp-content/uploads/shell.PHTML'       => '<?php system( "id" );',
+					'wp-content/uploads/2026/03/cache.php' => '<?php echo 1;',
+					'wp-content/uploads/shell.PHTML'       => '<?php echo 2;',
 				]
 			)
 		);
