@@ -4,6 +4,7 @@ namespace Sitewarden\Storage;
 
 use Merkushin\Wpal\Service\Options;
 use Merkushin\Wpal\ServiceFactory;
+use Sitewarden\Report\Summary;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -50,13 +51,41 @@ class ReportStore {
 	public function save( array $report ): void {
 		$this->options->update_option( self::LATEST_OPTION, $report, false );
 
-		$summary = [
+		$history = array_slice( array_merge( [ self::summary( $report ) ], $this->history() ), 0, self::HISTORY_SIZE );
+		$this->options->update_option( self::HISTORY_OPTION, $history, false );
+	}
+
+	/**
+	 * Replaces the latest report after a change such as an ignored finding, and its summary
+	 * in the history.
+	 *
+	 * @param array<string, mixed> $report The latest report, changed.
+	 */
+	public function replace_latest( array $report ): void {
+		$this->options->update_option( self::LATEST_OPTION, $report, false );
+
+		$history = $this->history();
+		if ( isset( $history[0]['id'] ) && ( $report['id'] ?? null ) === $history[0]['id'] ) {
+			$history[0] = self::summary( $report );
+			$this->options->update_option( self::HISTORY_OPTION, $history, false );
+		}
+	}
+
+	/**
+	 * What the history keeps of a report: enough for the dashboard and the email.
+	 *
+	 * @param array<string, mixed> $report Report.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private static function summary( array $report ): array {
+		return [
 			'id'          => $report['id'] ?? '',
 			'finished_at' => $report['finished_at'] ?? 0,
 			'score'       => $report['score'] ?? 0,
 			'counts'      => $report['counts'] ?? [],
+			// High and critical problems, to tell new ones apart in the email.
+			'serious'     => Summary::serious_ids( $report ),
 		];
-		$history = array_slice( array_merge( [ $summary ], $this->history() ), 0, self::HISTORY_SIZE );
-		$this->options->update_option( self::HISTORY_OPTION, $history, false );
 	}
 }

@@ -2,11 +2,11 @@
 
 namespace Sitewarden\Scanner;
 
-use InvalidArgumentException;
 use Merkushin\Wpal\Service\Cron;
 use Merkushin\Wpal\Service\Environment;
 use Merkushin\Wpal\Service\Hooks;
 use Merkushin\Wpal\ServiceFactory;
+use Sitewarden\Report\Summary;
 use Sitewarden\Storage\Lock;
 use Sitewarden\Storage\ReportStore;
 use Sitewarden\Storage\RunStore;
@@ -73,9 +73,9 @@ class Scanner {
 	private $lock;
 
 	/**
-	 * @var Score
+	 * @var Summary
 	 */
-	private $score;
+	private $summary;
 
 	/**
 	 * @var callable(): float
@@ -103,7 +103,7 @@ class Scanner {
 	 * @param ReportStore   $reports  Finished reports.
 	 * @param Settings      $settings Plugin settings.
 	 * @param Lock          $lock     Keeps batches from overlapping.
-	 * @param Score         $score    Score calculation.
+	 * @param Summary       $summary  Score and counts of a report.
 	 * @param callable|null $clock    Returns the time in seconds; microtime() by default.
 	 */
 	public function __construct(
@@ -112,7 +112,7 @@ class Scanner {
 		ReportStore $reports,
 		Settings $settings,
 		Lock $lock,
-		Score $score,
+		Summary $summary,
 		?callable $clock = null
 	) {
 		$this->registry    = $registry;
@@ -120,7 +120,7 @@ class Scanner {
 		$this->reports     = $reports;
 		$this->settings    = $settings;
 		$this->lock        = $lock;
-		$this->score       = $score;
+		$this->summary     = $summary;
 		$this->clock       = $clock ?? static function (): float {
 			return microtime( true );
 		};
@@ -390,17 +390,7 @@ class Scanner {
 	 * @param array<string, mixed> $state Finished run.
 	 */
 	private function complete( array $state ): void {
-		$results = [];
-		foreach ( $state['results'] as $data ) {
-			try {
-				$results[] = Result::from_array( $data );
-			} catch ( InvalidArgumentException $e ) {
-				continue;
-			}
-		}
-
 		$checks = [];
-		$groups = [];
 		foreach ( $state['checks'] as $id ) {
 			$check = $this->registry->get( $id );
 			if ( null !== $check ) {
@@ -408,42 +398,22 @@ class Scanner {
 					'title' => $check->title(),
 					'group' => $check->group(),
 				];
-				$groups[ $id ] = $check->group();
-			}
-		}
-
-		$counts  = array_fill_keys( Result::SEVERITIES, 0 );
-		$passed  = 0;
-		$skipped = 0;
-		foreach ( $results as $result ) {
-			if ( $result->is_problem() ) {
-				++$counts[ $result->severity() ];
-			} elseif ( Result::STATUS_PASS === $result->status() ) {
-				++$passed;
-			} elseif ( Result::STATUS_SKIPPED === $result->status() ) {
-				++$skipped;
 			}
 		}
 
 		$finished_at = $this->now();
-		$report      = [
-			'id'          => $state['id'],
-			'trigger'     => $state['trigger'],
-			'started_at'  => $state['started_at'],
-			'finished_at' => $finished_at,
-			'duration'    => $finished_at - (int) $state['started_at'],
-			'score'       => $this->score->calculate( $results, $groups ),
-			'counts'      => $counts,
-			'passed'      => $passed,
-			'skipped'     => $skipped,
-			'checks'      => $checks,
-			'results'     => array_map(
-				static function ( Result $result ): array {
-					return $result->to_array();
-				},
-				$results
-			),
-		];
+		$report      = $this->summary->apply(
+			[
+				'id'          => $state['id'],
+				'trigger'     => $state['trigger'],
+				'started_at'  => $state['started_at'],
+				'finished_at' => $finished_at,
+				'duration'    => $finished_at - (int) $state['started_at'],
+				'checks'      => $checks,
+				'results'     => $state['results'],
+			],
+			$this->settings->ignored_ids()
+		);
 
 		$this->reports->save( $report );
 		$this->runs->delete();
@@ -451,7 +421,7 @@ class Scanner {
 		/**
 		 * Fires after a scan's report is stored.
 		 *
-		 * @param array $report The report: score, counts, results and check metadata.
+		 * @param array $report The report: score, counts, results (with `id` and `ignored`) and check metadata.
 		 */
 		$this->hooks->do_action( 'sitewarden_scan_completed', $report );
 	}
