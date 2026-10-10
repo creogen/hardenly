@@ -105,6 +105,21 @@ export default function App() {
 	const start = run( api.startScan );
 	const stop = run( api.stopScan );
 
+	// Ignoring, restoring and skipping return the updated report data.
+	const change = ( request ) => ( value ) => {
+		setBusy( true );
+		setError( null );
+		request( value )
+			.then( setData )
+			.catch( setError )
+			.finally( () => setBusy( false ) );
+	};
+	const actions = {
+		ignore: change( api.ignoreFinding ),
+		restore: change( api.restoreFinding ),
+		skip: change( api.skipFile ),
+	};
+
 	if ( error && ! data ) {
 		return (
 			<div className="notice notice-error inline">
@@ -116,7 +131,7 @@ export default function App() {
 		return <p>{ __( 'Loading…', 'sitewarden' ) }</p>;
 	}
 
-	const { report, history, groups } = data;
+	const { report, history, groups, skip_files: skipFiles = [] } = data;
 
 	return (
 		<div className="sitewarden">
@@ -168,7 +183,13 @@ export default function App() {
 					}` }
 				>
 					<Summary report={ report } history={ history } />
-					<Findings report={ report } groups={ groups } />
+					<Findings
+						report={ report }
+						groups={ groups }
+						skipFiles={ skipFiles }
+						actions={ active ? null : actions }
+						busy={ busy }
+					/>
 				</div>
 			) }
 		</div>
