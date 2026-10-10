@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1544" height="500" viewBox="0 0 1544 500">
+	<defs>
+		<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#0B1622"/>
+			<stop offset="1" stop-color="#16324A"/>
+		</linearGradient>
+		<linearGradient id="shield" x1="0" y1="0" x2="0" y2="1">
+			<stop offset="0" stop-color="#4C9BE0"/>
+			<stop offset="1" stop-color="#2271B1"/>
+		</linearGradient>
+		<radialGradient id="glow" cx="1250" cy="250" r="420" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#2271B1" stop-opacity="0.35"/>
+			<stop offset="1" stop-color="#2271B1" stop-opacity="0"/>
+		</radialGradient>
+	</defs>
+	<rect width="1544" height="500" fill="url(#bg)"/>
+	<rect width="1544" height="500" fill="url(#glow)"/>
+
+	<!-- Scan rings around the shield. -->
+	<g fill="none" stroke="#FFFFFF">
+		<circle cx="1250" cy="250" r="190" stroke-opacity="0.10" stroke-width="2"/>
+		<circle cx="1250" cy="250" r="260" stroke-opacity="0.07" stroke-width="2"/>
+		<circle cx="1250" cy="250" r="330" stroke-opacity="0.05" stroke-width="2"/>
+		<circle cx="1250" cy="250" r="400" stroke-opacity="0.035" stroke-width="2"/>
+	</g>
+
+	<!-- Shield, the icon at 1.25x. -->
+	<g transform="translate(1090 90) scale(1.25)">
+		<path d="M128 34 L208 64 V122 C208 170 173 209 128 224 C83 209 48 170 48 122 V64 Z" fill="url(#shield)"/>
+		<path d="M128 34 V224 C83 209 48 170 48 122 V64 Z" fill="#FFFFFF" fill-opacity="0.1"/>
+		<path d="M88 128 L117 157 L170 100" fill="none" stroke="#FFFFFF" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+	</g>
+
+	<!-- Result chips, as on the dashboard. -->
+	<g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif" font-size="26" fill="#FFFFFF">
+		<g transform="translate(760 118)">
+			<rect width="340" height="62" rx="31" fill="#FFFFFF" fill-opacity="0.08" stroke="#FFFFFF" stroke-opacity="0.18"/>
+			<circle cx="34" cy="31" r="15" fill="#34C759"/>
+			<path d="M27 31 l5 5 l10 -11" fill="none" stroke="#0B1622" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+			<text x="62" y="40">Core files match</text>
+		</g>
+		<g transform="translate(720 219)">
+			<rect width="390" height="62" rx="31" fill="#FFFFFF" fill-opacity="0.08" stroke="#FFFFFF" stroke-opacity="0.18"/>
+			<path d="M34 16 l15 28 h-30 z" fill="#F5B83D"/>
+			<rect x="32.5" y="25" width="3" height="10" rx="1.5" fill="#0B1622"/>
+			<circle cx="34" cy="39.5" r="1.8" fill="#0B1622"/>
+			<text x="62" y="40">2 plugins out of date</text>
+		</g>
+		<g transform="translate(760 320)">
+			<rect width="340" height="62" rx="31" fill="#FFFFFF" fill-opacity="0.08" stroke="#FFFFFF" stroke-opacity="0.18"/>
+			<circle cx="34" cy="31" r="15" fill="#72AEE6"/>
+			<rect x="32.5" y="28" width="3" height="11" rx="1.5" fill="#0B1622"/>
+			<circle cx="34" cy="23" r="2" fill="#0B1622"/>
+			<text x="62" y="40">Here is how to fix it</text>
+		</g>
+	</g>
+
+	<!-- Tagline, top left; the bottom left is where WordPress.org writes the plugin name. -->
+	<g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif" fill="#FFFFFF">
+		<text x="72" y="118" font-size="52" font-weight="700">Find security problems.</text>
+		<text x="72" y="182" font-size="52" font-weight="700" fill="#9CC8F0">Learn how to fix them.</text>
+		<text x="72" y="236" font-size="26" fill="#FFFFFF" fill-opacity="0.7">Read-only. Offline by default.</text>
+	</g>
+</svg>
