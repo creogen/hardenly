@@ -4,7 +4,7 @@
  * Plugin URI:        https://github.com/creogen/sitewarden
  * Description:       Security scanner for your WordPress website.
  * Version:           1.0.0
- * Requires at least: 6.5
+ * Requires at least: 6.2
  * Requires PHP:      7.4
  * Author:            Dmitry Merkushin
  * License:           GPL-2.0-or-later
