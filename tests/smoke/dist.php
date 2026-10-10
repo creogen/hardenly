@@ -26,6 +26,7 @@ if ( is_dir( $build_dir . '/vendor' ) ) {
 }
 
 define( 'ABSPATH', __DIR__ . '/' );
+require __DIR__ . '/../stubs/WP_Error.php';
 
 $GLOBALS['smoke_actions']  = [];
 $GLOBALS['smoke_enqueued'] = [];
@@ -142,6 +143,159 @@ function add_submenu_page( string $parent_slug, string $page_title, string $menu
 	return 'toplevel_page_' . $menu_slug;
 }
 
+define( 'DAY_IN_SECONDS', 86400 );
+
+function _n( string $single, string $plural, int $number, string $domain = 'default' ): string {
+	return 1 === $number ? $single : $plural;
+}
+
+/**
+ * @param mixed $value Value.
+ * @param mixed $autoload Autoload.
+ */
+function add_option( string $option, $value = '', string $deprecated = '', $autoload = null ): bool {
+	return update_option( $option, $value );
+}
+
+/**
+ * @return array<string, string>
+ */
+function wp_load_alloptions( bool $force_cache = false ): array {
+	return [ 'blogname' => 'Smoke' ];
+}
+
+/**
+ * @return mixed
+ */
+function get_site_transient( string $transient ) {
+	return false;
+}
+
+function get_bloginfo( string $show = '', string $filter = 'raw' ): string {
+	return '6.8.3';
+}
+
+function wp_get_environment_type(): string {
+	return 'production';
+}
+
+/**
+ * @param int|string $value Value.
+ *
+ * @return false
+ */
+function get_user_by( string $field, $value ) {
+	return false;
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function count_users( string $strategy = 'time', ?int $site_id = null ): array {
+	return [ 'avail_roles' => [ 'administrator' => 1 ] ];
+}
+
+/**
+ * @param array<string, mixed> $args Query.
+ *
+ * @return object[]
+ */
+function get_users( array $args = [] ): array {
+	return [];
+}
+
+/**
+ * @return mixed
+ */
+function get_user_meta( int $user_id, string $key = '', bool $single = false ) {
+	return '';
+}
+
+/**
+ * @return array<string, array<string, string>>
+ */
+function get_plugins( string $plugin_folder = '' ): array {
+	return [ 'sitewarden/sitewarden.php' => [ 'Name' => 'Sitewarden' ] ];
+}
+
+function is_plugin_active( string $plugin ): bool {
+	return true;
+}
+
+/**
+ * @param array<string, mixed> $args Arguments.
+ *
+ * @return object[]
+ */
+function wp_get_themes( array $args = [] ): array {
+	return [];
+}
+
+function get_stylesheet(): string {
+	return 'twentytwentyfive';
+}
+
+function get_template(): string {
+	return 'twentytwentyfive';
+}
+
+function home_url( string $path = '', ?string $scheme = null ): string {
+	return 'https://example.com' . $path;
+}
+
+function site_url( string $path = '', ?string $scheme = null ): string {
+	return 'https://example.com/' . ltrim( $path, '/' );
+}
+
+function content_url( string $path = '' ): string {
+	return 'https://example.com/wp-content/' . $path;
+}
+
+function rest_url( string $path = '', string $scheme = 'rest' ): string {
+	return 'https://example.com/wp-json/' . $path;
+}
+
+/**
+ * @return mixed
+ */
+function wp_parse_url( string $url, int $component = -1 ) {
+	return parse_url( $url, $component ); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url -- Stand-in for it.
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function wp_upload_dir( ?string $time = null, bool $create_dir = true, bool $refresh_cache = false ): array {
+	return [
+		'basedir' => __DIR__ . '/missing-uploads',
+		'baseurl' => 'https://example.com/wp-content/uploads',
+		'error'   => false,
+	];
+}
+
+/**
+ * Every request fails: the smoke test has no web server.
+ *
+ * @param array<string, mixed> $args Arguments.
+ */
+function wp_remote_get( string $url, array $args = [] ): WP_Error {
+	return new WP_Error();
+}
+
+/**
+ * @param array<string, mixed> $args Arguments.
+ */
+function wp_remote_post( string $url, array $args = [] ): WP_Error {
+	return new WP_Error();
+}
+
+/**
+ * @param mixed $thing Value.
+ */
+function is_wp_error( $thing ): bool {
+	return $thing instanceof WP_Error;
+}
+
 // Stand-in for $wpdb, enough for the scan lock (Storage\Lock): every lock is free.
 // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- WordPress is not loaded here.
 $GLOBALS['wpdb'] = new class() {
@@ -149,6 +303,11 @@ $GLOBALS['wpdb'] = new class() {
 	 * @var string
 	 */
 	public $options = 'wp_options';
+
+	/**
+	 * @var string
+	 */
+	public $base_prefix = 'wp_';
 
 	/**
 	 * @param mixed ...$args Values.
@@ -224,6 +383,15 @@ foreach ( $GLOBALS['smoke_events'] as $event ) {
 $sitewarden_report = $sitewarden_rest->get_report();
 if ( ! isset( $sitewarden_report['report']['score'] ) ) {
 	$failures[] = 'The scan did not store a report.';
+} elseif ( count( $sitewarden_report['report']['checks'] ) < 29 ) {
+	$failures[] = 'The scan ran ' . count( $sitewarden_report['report']['checks'] ) . ' checks, expected all built-in ones.';
+} else {
+	foreach ( $sitewarden_report['report']['results'] as $sitewarden_result ) {
+		// A check that throws is reported as skipped with this message: in the build, it means a missing class or function.
+		if ( false !== strpos( $sitewarden_result['message'], 'could not run' ) ) {
+			$failures[] = $sitewarden_result['check_id'] . ': ' . $sitewarden_result['message'];
+		}
+	}
 }
 
 foreach ( $GLOBALS['smoke_enqueued'] as $url ) {

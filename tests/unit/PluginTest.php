@@ -18,6 +18,8 @@ use Sitewarden\Scanner\Scanner;
  * services for mocks with ServiceFactory::set_custom_*() and check the calls.
  */
 class PluginTest extends TestCase {
+	use OptionsFake;
+
 	private const PLUGIN_URL = 'https://example.com/wp-content/plugins/sitewarden/';
 
 	/**
@@ -45,6 +47,7 @@ class PluginTest extends TestCase {
 	private $actions = [];
 
 	protected function setUp(): void {
+		$this->fake_options();
 		$this->hooks  = $this->createMock( Hooks::class );
 		$this->assets = $this->createMock( Assets::class );
 		$plugins      = $this->createMock( Plugins::class );
@@ -81,7 +84,7 @@ class PluginTest extends TestCase {
 
 		$plugin->init();
 
-		self::assertSame( [ 'admin_menu', 'admin_enqueue_scripts', 'rest_api_init', Scanner::TICK_HOOK ], array_keys( $this->actions ) );
+		self::assertSame( [ 'admin_menu', 'admin_enqueue_scripts', 'rest_api_init', Scanner::TICK_HOOK, 'wp_login' ], array_keys( $this->actions ) );
 		self::assertEquals( [ $plugin, 'enqueue_admin_assets' ], $this->actions['admin_enqueue_scripts'] );
 		self::assertIsArray( $this->actions['admin_menu'] );
 		self::assertInstanceOf( Menu::class, $this->actions['admin_menu'][0] );
