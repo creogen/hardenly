@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * A check that walks a directory tree over as many batches as it needs.
  *
- * Subclasses pick the root and decide which files match; matching paths are kept in the
- * cursor between batches (capped) and turned into results when the walk is done.
+ * Subclasses pick the root and inspect each file; what they report about matching files is
+ * kept in the cursor between batches (capped) and turned into results when the walk is done.
  */
 abstract class FileWalkCheck implements Check {
 	/**
@@ -58,18 +58,20 @@ abstract class FileWalkCheck implements Check {
 	abstract protected function root( Context $context ): ?string;
 
 	/**
-	 * Whether a file is reported, e.g. a PHP file in uploads.
+	 * Inspects a file and says what to report about it, if anything.
 	 *
-	 * @param string  $relative Path relative to the root.
+	 * @param string  $path     Path relative to the WordPress root, for reporting.
 	 * @param string  $absolute Absolute path.
 	 * @param Context $context  Settings of the run.
+	 *
+	 * @return string|null What to report (usually the path), or null when the file is fine.
 	 */
-	abstract protected function matches( string $relative, string $absolute, Context $context ): bool;
+	abstract protected function inspect( string $path, string $absolute, Context $context ): ?string;
 
 	/**
 	 * Results once the walk is done.
 	 *
-	 * @param string[] $matches Matching paths, relative to the WordPress root, capped at MAX_MATCHES.
+	 * @param string[] $matches What inspect() reported, capped at MAX_MATCHES.
 	 * @param int      $total   Number of matching files.
 	 *
 	 * @return Result[]
@@ -92,10 +94,11 @@ abstract class FileWalkCheck implements Check {
 			$root,
 			isset( $cursor['walk'] ) && is_array( $cursor['walk'] ) ? $cursor['walk'] : null,
 			function ( string $relative, string $absolute ) use ( $context, $prefix, &$matches, &$total ): void {
-				if ( $this->matches( $relative, $absolute, $context ) ) {
+				$match = $this->inspect( $prefix . $relative, $absolute, $context );
+				if ( null !== $match ) {
 					++$total;
 					if ( count( $matches ) < self::MAX_MATCHES ) {
-						$matches[] = $prefix . $relative;
+						$matches[] = $match;
 					}
 				}
 			},
