@@ -6,16 +6,22 @@ use Merkushin\Wpal\Service\Capabilities;
 use Merkushin\Wpal\Service\Dates;
 use Merkushin\Wpal\Service\Nonces;
 use Merkushin\Wpal\Service\Options;
+use Merkushin\Wpal\Service\Redirects;
 use Merkushin\Wpal\Service\Settings as SettingsApi;
+use Merkushin\Wpal\Service\Transient;
+use Merkushin\Wpal\Service\Urls;
+use Merkushin\Wpal\Service\Users;
 use Merkushin\Wpal\ServiceFactory;
 use Sitewarden\Cron\Schedule;
 use Sitewarden\Scanner\Group;
 use Sitewarden\Storage\Settings;
+use Sitewarden\Vulnerability\ProviderException;
+use Sitewarden\Vulnerability\ProviderRegistry;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The Settings screen: what to scan, schedule and email, and ignored findings.
+ * The Settings screen: what to scan, schedule and email, online services and ignored findings.
  *
  * A plain Settings API form: it posts to options.php, which checks the nonce and the
  * `manage_options` capability, and saves through Settings::sanitize_form().
@@ -23,6 +29,16 @@ defined( 'ABSPATH' ) || exit;
 class SettingsPage {
 	public const SLUG  = 'sitewarden-settings';
 	public const GROUP = 'sitewarden';
+
+	/**
+	 * admin-post.php action of the "Test connection" button.
+	 */
+	public const TEST_ACTION = 'sitewarden_test_provider';
+
+	/**
+	 * Holds the last connection test's outcome for a minute, to show after the redirect.
+	 */
+	public const TEST_TRANSIENT = 'sitewarden_provider_test';
 
 	/**
 	 * @var Settings
@@ -59,9 +75,39 @@ class SettingsPage {
 	 */
 	private $dates;
 
-	public function __construct( Settings $settings, Schedule $schedule ) {
+	/**
+	 * @var ProviderRegistry
+	 */
+	private $providers;
+
+	/**
+	 * @var Transient
+	 */
+	private $transients;
+
+	/**
+	 * @var Users
+	 */
+	private $users;
+
+	/**
+	 * @var Urls
+	 */
+	private $urls;
+
+	/**
+	 * @var Redirects
+	 */
+	private $redirects;
+
+	public function __construct( Settings $settings, Schedule $schedule, ProviderRegistry $providers ) {
 		$this->settings     = $settings;
 		$this->schedule     = $schedule;
+		$this->providers    = $providers;
+		$this->transients   = ServiceFactory::create_transient();
+		$this->users        = ServiceFactory::create_users();
+		$this->urls         = ServiceFactory::create_urls();
+		$this->redirects    = ServiceFactory::create_redirects();
 		$this->settings_api = ServiceFactory::create_settings();
 		$this->capabilities = ServiceFactory::create_capabilities();
 		$this->nonces       = ServiceFactory::create_nonces();
@@ -95,6 +141,7 @@ class SettingsPage {
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Sitewarden Settings', 'sitewarden' ); ?></h1>
 			<?php $this->settings_api->settings_errors(); ?>
+			<?php $this->render_test_notice(); ?>
 			<form method="post" action="options.php">
 				<input type="hidden" name="option_page" value="<?php echo esc_attr( self::GROUP ); ?>">
 				<input type="hidden" name="action" value="update">
@@ -184,6 +231,8 @@ class SettingsPage {
 					</tr>
 				</table>
 
+				<?php $this->render_online_services( $settings ); ?>
+
 				<h2 class="title"><?php esc_html_e( 'Ignored findings', 'sitewarden' ); ?></h2>
 				<?php if ( [] === $settings['ignored'] ) : ?>
 					<p><?php esc_html_e( 'No findings are ignored. Use "Ignore this finding" on the dashboard to hide a finding you have reviewed.', 'sitewarden' ); ?></p>
@@ -233,6 +282,170 @@ class SettingsPage {
 					<button type="submit" class="button button-primary"><?php esc_html_e( 'Save Changes', 'sitewarden' ); ?></button>
 				</p>
 			</form>
+
+			<?php if ( '' !== $settings['vuln_provider'] && '' !== $settings['vuln_api_key'] ) : ?>
+				<form method="post" action="<?php echo esc_url( (string) $this->urls->admin_url( 'admin-post.php' ) ); ?>">
+					<input type="hidden" name="action" value="<?php echo esc_attr( self::TEST_ACTION ); ?>">
+					<?php $this->nonces->wp_nonce_field( self::TEST_ACTION ); ?>
+					<button type="submit" class="button"><?php esc_html_e( 'Test the vulnerability lookup connection', 'sitewarden' ); ?></button>
+					<span class="description"><?php esc_html_e( 'Uses the saved key and makes one request to the provider.', 'sitewarden' ); ?></span>
+				</form>
+			<?php endif; ?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * The "Online services" section: everything here is off by default and sends data out.
+	 *
+	 * @param array<string, mixed> $settings Current settings.
+	 */
+	private function render_online_services( array $settings ): void {
+		$name     = Settings::OPTION;
+		$key      = (string) $settings['vuln_api_key'];
+		$selected = (string) $settings['vuln_provider'];
+		?>
+		<h2 class="title"><?php esc_html_e( 'Online services', 'sitewarden' ); ?></h2>
+		<p><?php esc_html_e( 'Off by default. Turning one on sends data from your site to a third party, as described under each option. Nothing else ever leaves your site.', 'sitewarden' ); ?></p>
+		<table class="form-table" role="presentation">
+			<tr>
+				<th scope="row"><?php esc_html_e( 'File integrity', 'sitewarden' ); ?></th>
+				<td>
+					<label>
+						<input type="checkbox" name="<?php echo esc_attr( $name ); ?>[checksums_enabled]" value="1" <?php echo $settings['checksums_enabled'] ? 'checked' : ''; ?>>
+						<?php esc_html_e( 'Compare WordPress core and plugin files with WordPress.org', 'sitewarden' ); ?>
+					</label>
+					<p class="description">
+						<?php esc_html_e( 'Sends your WordPress version and language, and the slugs and versions of installed plugins, to api.wordpress.org and downloads.wordpress.org to get the official file checksums.', 'sitewarden' ); ?>
+						<a href="https://wordpress.org/about/privacy/"><?php esc_html_e( 'WordPress.org privacy policy', 'sitewarden' ); ?></a>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Vulnerability lookup', 'sitewarden' ); ?></th>
+				<td>
+					<fieldset>
+						<legend class="screen-reader-text"><?php esc_html_e( 'Vulnerability lookup provider', 'sitewarden' ); ?></legend>
+						<p>
+							<label>
+								<input type="radio" name="<?php echo esc_attr( $name ); ?>[vuln_provider]" value="" <?php echo '' === $selected ? 'checked' : ''; ?>>
+								<?php esc_html_e( 'None', 'sitewarden' ); ?>
+							</label>
+						</p>
+						<?php foreach ( $this->providers->all() as $id => $provider ) : ?>
+							<p>
+								<label>
+									<input type="radio" name="<?php echo esc_attr( $name ); ?>[vuln_provider]" value="<?php echo esc_attr( $id ); ?>" <?php echo $id === $selected ? 'checked' : ''; ?>>
+									<?php echo esc_html( $provider->name() ); ?>
+								</label>
+								<br><span class="description">
+									<?php echo esc_html( $provider->plan_note() ); ?>
+									<a href="<?php echo esc_url( $provider->signup_url() ); ?>"><?php esc_html_e( 'Get a key', 'sitewarden' ); ?></a>
+									· <a href="<?php echo esc_url( $provider->terms_url() ); ?>"><?php esc_html_e( 'Terms', 'sitewarden' ); ?></a>
+								</span>
+							</p>
+						<?php endforeach; ?>
+					</fieldset>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label for="sitewarden-api-key"><?php esc_html_e( 'API key', 'sitewarden' ); ?></label></th>
+				<td>
+					<input type="password" id="sitewarden-api-key" class="regular-text" autocomplete="off" name="<?php echo esc_attr( $name ); ?>[vuln_api_key]" value="">
+					<?php if ( '' !== $key ) : ?>
+						<p class="description">
+							<?php
+							/* translators: %s: last four characters of the saved key. */
+							echo esc_html( sprintf( __( 'A key ending in %s is saved. Leave the field empty to keep it.', 'sitewarden' ), substr( $key, -4 ) ) );
+							?>
+						</p>
+						<p>
+							<label>
+								<input type="checkbox" name="<?php echo esc_attr( $name ); ?>[vuln_remove_key]" value="1">
+								<?php esc_html_e( 'Remove the saved key', 'sitewarden' ); ?>
+							</label>
+						</p>
+					<?php else : ?>
+						<p class="description"><?php esc_html_e( 'Your own key from the provider you chose.', 'sitewarden' ); ?></p>
+					<?php endif; ?>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Consent', 'sitewarden' ); ?></th>
+				<td>
+					<?php
+					$provider = $this->providers->get( $selected );
+					if ( null === $provider ) :
+						?>
+						<p class="description"><?php esc_html_e( 'Choose a provider and save to see what it receives.', 'sitewarden' ); ?></p>
+					<?php else : ?>
+						<label>
+							<input type="checkbox" name="<?php echo esc_attr( $name ); ?>[vuln_consent]" value="1" <?php echo $settings['vuln_consent'] ? 'checked' : ''; ?>>
+							<?php echo esc_html( $provider->data_sent() ); ?>
+						</label>
+						<?php if ( ! $settings['vuln_consent'] ) : ?>
+							<p class="description"><?php esc_html_e( 'Lookups do not run until you agree.', 'sitewarden' ); ?></p>
+						<?php endif; ?>
+					<?php endif; ?>
+				</td>
+			</tr>
+		</table>
+		<?php
+	}
+
+	/**
+	 * Handles "Test connection" (admin-post.php): checks the saved key with one request.
+	 */
+	public function handle_test(): void {
+		$this->redirects->wp_safe_redirect( $this->test(), 303 );
+		exit;
+	}
+
+	/**
+	 * Runs the connection test and returns where to go next.
+	 */
+	public function test(): string {
+		$back = (string) $this->urls->admin_url( 'admin.php?page=' . self::SLUG );
+		if ( ! $this->capabilities->current_user_can( Menu::CAPABILITY ) ) {
+			return $back;
+		}
+		$this->nonces->check_admin_referer( self::TEST_ACTION );
+
+		$settings = $this->settings->get();
+		$provider = $this->providers->get( (string) $settings['vuln_provider'] );
+		if ( null === $provider || '' === $settings['vuln_api_key'] ) {
+			$outcome = [ false, __( 'Choose a provider and save a key first.', 'sitewarden' ) ];
+		} elseif ( true !== $settings['vuln_consent'] ) {
+			$outcome = [ false, __( 'Agree to send data to the provider and save before testing.', 'sitewarden' ) ];
+		} else {
+			try {
+				$outcome = [ true, $provider->test( (string) $settings['vuln_api_key'] ) ];
+			} catch ( ProviderException $e ) {
+				$outcome = [ false, $e->getMessage() ];
+			}
+		}
+
+		$this->transients->set_transient(
+			self::TEST_TRANSIENT,
+			[
+				'user'    => (int) $this->users->get_current_user_id(),
+				'ok'      => $outcome[0],
+				'message' => $outcome[1],
+			],
+			MINUTE_IN_SECONDS
+		);
+		return $back;
+	}
+
+	private function render_test_notice(): void {
+		$test = $this->transients->get_transient( self::TEST_TRANSIENT );
+		if ( ! is_array( $test ) || ( $test['user'] ?? 0 ) !== (int) $this->users->get_current_user_id() ) {
+			return;
+		}
+		$this->transients->delete_transient( self::TEST_TRANSIENT );
+		?>
+		<div class="notice <?php echo ! empty( $test['ok'] ) ? 'notice-success' : 'notice-error'; ?>">
+			<p><?php echo esc_html( (string) ( $test['message'] ?? '' ) ); ?></p>
 		</div>
 		<?php
 	}
@@ -252,6 +465,7 @@ class SettingsPage {
 			Group::DATABASE => __( 'Table prefix and size of autoloaded options.', 'sitewarden' ),
 			Group::FILES    => __( 'PHP in uploads, file permissions, backups, debug log, .git and .env, recent changes.', 'sitewarden' ),
 			Group::CODE     => __( 'Hidden or injected code in PHP files. The slowest check; findings need review.', 'sitewarden' ),
+			Group::ONLINE   => __( 'File integrity and vulnerability lookups. Run only when turned on under Online services below.', 'sitewarden' ),
 		];
 
 		$groups = [];

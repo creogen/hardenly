@@ -13,6 +13,12 @@ use PHPUnit\Framework\TestCase;
 use Sitewarden\Admin\SettingsPage;
 use Sitewarden\Cron\Schedule;
 use Sitewarden\Storage\Settings;
+use Sitewarden\Vulnerability\ProviderRegistry;
+use Sitewarden\Vulnerability\VulnerabilityProvider;
+use Merkushin\Wpal\Service\Hooks;
+use Merkushin\Wpal\Service\Transient;
+use Merkushin\Wpal\Service\Urls;
+use Merkushin\Wpal\Service\Users;
 
 class SettingsPageTest extends TestCase {
 	/**
@@ -32,7 +38,38 @@ class SettingsPageTest extends TestCase {
 		ServiceFactory::set_custom_nonces( $this->nonces );
 		ServiceFactory::set_custom_options( $this->createMock( Options::class ) );
 		ServiceFactory::set_custom_dates( $this->createMock( Dates::class ) );
+		$this->transients = $this->createMock( Transient::class );
+		ServiceFactory::set_custom_transient( $this->transients );
+		$users = $this->createMock( Users::class );
+		$users->method( 'get_current_user_id' )->willReturn( 1 );
+		ServiceFactory::set_custom_users( $users );
+		$urls = $this->createMock( Urls::class );
+		$urls->method( 'admin_url' )->willReturnCallback(
+			static function ( string $path ): string {
+				return 'https://example.com/wp-admin/' . $path;
+			}
+		);
+		ServiceFactory::set_custom_urls( $urls );
+		$hooks = $this->createMock( Hooks::class );
+		$hooks->method( 'apply_filters' )->willReturnArgument( 1 );
+		ServiceFactory::set_custom_hooks( $hooks );
+		$this->provider = $this->createMock( VulnerabilityProvider::class );
+		$this->provider->method( 'id' )->willReturn( 'fake' );
+		$this->provider->method( 'name' )->willReturn( 'Fake DB' );
+		$this->provider->method( 'data_sent' )->willReturn( 'I agree to send slugs to Fake DB.' );
+		$this->provider->method( 'signup_url' )->willReturn( 'https://fake.example/signup' );
+		$this->provider->method( 'terms_url' )->willReturn( 'https://fake.example/terms' );
 	}
+
+	/**
+	 * @var Transient&MockObject
+	 */
+	private $transients;
+
+	/**
+	 * @var VulnerabilityProvider&MockObject
+	 */
+	private $provider;
 
 	/**
 	 * @param array<string, mixed> $values Settings.
@@ -43,7 +80,7 @@ class SettingsPageTest extends TestCase {
 		ServiceFactory::set_custom_capabilities( $capabilities );
 		$settings = $this->createMock( Settings::class );
 		$settings->method( 'get' )->willReturn( array_merge( Settings::DEFAULTS, $values ) );
-		return new SettingsPage( $settings, $this->createMock( Schedule::class ) );
+		return new SettingsPage( $settings, $this->createMock( Schedule::class ), new ProviderRegistry( [ $this->provider ] ) );
 	}
 
 	private function render( SettingsPage $page ): string {
@@ -98,6 +135,67 @@ class SettingsPageTest extends TestCase {
 		self::assertStringNotContainsString( '<script>', $html );
 		self::assertStringNotContainsString( '<img', $html );
 		self::assertStringContainsString( 'name="sitewarden_settings[restore][config.salts]"', $html );
+	}
+
+	public function testRender_SavedKey_ShowsOnlyItsLastCharacters(): void {
+		$html = $this->render(
+			$this->page(
+				[
+					'vuln_provider' => 'fake',
+					'vuln_api_key'  => 'abcdefgh-SECRET-wxyz',
+				]
+			)
+		);
+
+		self::assertStringNotContainsString( 'SECRET', $html );
+		self::assertStringContainsString( 'A key ending in wxyz is saved.', $html );
+		self::assertStringContainsString( 'I agree to send slugs to Fake DB.', $html );
+		self::assertStringContainsString( 'Lookups do not run until you agree.', $html );
+		self::assertStringContainsString( 'name="action" value="sitewarden_test_provider"', $html );
+	}
+
+	public function testRender_OnlineServices_AreOffByDefault(): void {
+		$html = $this->render( $this->page( [] ) );
+
+		self::assertMatchesRegularExpression( '~name="sitewarden_settings\[checksums_enabled\]" value="1" >~', $html );
+		self::assertMatchesRegularExpression( '~name="sitewarden_settings\[vuln_provider\]" value="" checked>~', $html );
+		self::assertStringNotContainsString( 'sitewarden_test_provider', $html, 'Nothing to test without a key.' );
+	}
+
+	public function testTest_ConsentGiven_StoresTheProviderAnswer(): void {
+		$this->provider->expects( self::once() )->method( 'test' )->with( 'key' )->willReturn( 'Connected.' );
+		$this->transients->expects( self::once() )
+			->method( 'set_transient' )
+			->with(
+				SettingsPage::TEST_TRANSIENT,
+				[
+					'user'    => 1,
+					'ok'      => true,
+					'message' => 'Connected.',
+				]
+			);
+		$this->nonces->expects( self::once() )->method( 'check_admin_referer' )->with( SettingsPage::TEST_ACTION );
+
+		$back = $this->page(
+			[
+				'vuln_provider' => 'fake',
+				'vuln_api_key'  => 'key',
+				'vuln_consent'  => true,
+			]
+		)->test();
+
+		self::assertSame( 'https://example.com/wp-admin/admin.php?page=sitewarden-settings', $back );
+	}
+
+	public function testTest_NoConsent_SendsNothing(): void {
+		$this->provider->expects( self::never() )->method( 'test' );
+
+		$this->page(
+			[
+				'vuln_provider' => 'fake',
+				'vuln_api_key'  => 'key',
+			]
+		)->test();
 	}
 
 	public function testRender_OtherUser_OutputsNothing(): void {
