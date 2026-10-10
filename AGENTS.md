@@ -73,3 +73,34 @@ $this->options->get_option( 'sitewarden_settings', [] );
 
 The version lives in four places: the plugin header, `readme.txt` (Stable tag), `Plugin::VERSION` and `package.json`.
 `make version-check` fails when they differ. Add each change to the `== Changelog ==` in `readme.txt`.
+
+## Product
+
+Product rules for Sitewarden. The sections above take precedence for style, layout and tooling.
+
+- Read the product spec in `docs/SPEC.md` before starting any milestone. Work milestone by milestone (M0 to M6).
+- Sitewarden is **read-only**: never modify, delete, move or chmod site files; never write to the DB beyond the
+  plugin's own options/transients. No auto-fix code in v1.
+- **Offline by default.** Any outbound request (WordPress.org checksums, vulnerability providers) must be behind
+  an explicit opt-in setting, send the minimum data, and be listed in `readme.txt` under external services.
+- Loopback requests (own site headers/XML-RPC checks) are allowed and must be documented in `readme.txt`.
+- Extension points (`sitewarden_checks`, `sitewarden_vulnerability_providers`, `sitewarden_scan_completed`,
+  `sitewarden_score_weights`) are public API: see `docs/SPEC.md` 5.1. Validate what they return.
+
+## Product rules
+
+- Name: `Sitewarden`; namespace `Sitewarden\`; prefix `sitewarden_`; text domain `sitewarden`.
+- PHP 7.4 syntax only. Call WordPress through WPAL services where one exists (see "Calling WordPress" above).
+- One class per file. Each scan check is its own class in `src/Scanner/Checks/` implementing `Check`, with a
+  matching test in `tests/unit/Scanner/Checks/`.
+- Scans must be batched and resumable: respect the time budget and memory guard in `Context`; never loop over the
+  whole filesystem in one request.
+- File contents and names from disk are untrusted: escape on output, cap sizes, never `include`/`eval`.
+- Heuristic findings are worded as "suspicious", never "malware" or "infected".
+- Anything the plugin stores must be removed in `uninstall.php` (options, transients, cron events).
+- When adding a check: add it to the spec table in `docs/SPEC.md`, add tests, run `make i18n`, then `make check`.
+
+## Definition of done
+
+`make check` passes; `make dist && make smoke` passes if WordPress calls or the build changed; changelog entry in
+`readme.txt`; version synced in all four places when releasing.
