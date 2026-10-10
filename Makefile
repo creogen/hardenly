@@ -10,7 +10,7 @@ POT_ARGS := --slug=$(PLUGIN) --domain=$(PLUGIN) --include=$(PLUGIN).php,uninstal
 DIST_FILES := $(PLUGIN).php uninstall.php readme.txt src LICENSE
 
 .PHONY: all install build-js test test-js lint lint-php lint-js phpstan check version-check \
-	i18n i18n-check dist smoke plugin-check playground clean
+	i18n i18n-check docs docs-check dist smoke plugin-check playground clean
 
 all: dist
 
@@ -40,7 +40,7 @@ phpstan:
 	composer phpstan
 
 # Everything CI checks on the sources. Run before every commit.
-check: lint phpstan test test-js i18n-check version-check
+check: lint phpstan test test-js i18n-check docs-check version-check
 
 # The version must match in the plugin header, readme.txt (Stable tag), Plugin::VERSION and
 # package.json. With TAG=v1.2.3 (or 1.2.3) it must also match the release tag.
@@ -67,6 +67,15 @@ i18n-check:
 	@grep -v -e '^"POT-Creation-Date:' -e '^# Copyright' languages/$(PLUGIN).pot > build/expected.pot
 	@grep -v -e '^"POT-Creation-Date:' -e '^# Copyright' build/$(PLUGIN).pot > build/actual.pot
 	@diff -u build/expected.pot build/actual.pot || (echo "languages/$(PLUGIN).pot is out of date, run 'make i18n'." && exit 1)
+
+# Regenerates docs/developer/hooks.md from the hook docblocks in src/. Run after adding or
+# changing a hook. The developer docs are published to GitHub Pages from main.
+docs:
+	php bin/hook-docs.php
+
+# Fails when docs/developer/hooks.md is out of date with the sources.
+docs-check:
+	@php bin/hook-docs.php --check
 
 # Builds the release zip in build/, so the working copy is never modified: copies the plugin
 # files and built assets, installs runtime dependencies, keeps only the WPAL services the

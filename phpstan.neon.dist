@@ -8,6 +8,7 @@ parameters:
 		- uninstall.php
 		- src
 		- tests
+		- bin
 	excludePaths:
 		- tests/fixtures/*/assets/build/*
 		# Stand-ins for WordPress functions and classes that phpstan-wordpress already knows.

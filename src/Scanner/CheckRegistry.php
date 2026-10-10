@@ -52,8 +52,14 @@ class CheckRegistry {
 		/**
 		 * Filters the checks a scan runs.
 		 *
-		 * @param Check[] $checks Built-in checks. Add, remove or replace entries; each must implement
-		 *                        Hardenly\Scanner\Check and have a unique id.
+		 * Entries that do not implement `Hardenly\Scanner\Check`, or whose id is invalid or already
+		 * taken, are dropped. Ids use lower-case letters, digits, `_`, `-` and `.` (at most 100).
+		 * Checks run by group (see `Hardenly\Scanner\Group`), then in the order of this array;
+		 * unknown groups run last.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param Check[] $checks Built-in checks. Add, remove or replace entries.
 		 */
 		$filtered = $this->hooks->apply_filters( 'hardenly_checks', $this->default_checks );
 

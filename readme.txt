@@ -95,6 +95,10 @@ No. All built-in checks work without one. A key from WPScan or Patchstack is onl
 
 The code check looks for patterns often used to hide code, but some legitimate plugins use them too. Review the file; if it is expected, add it to "Files to skip".
 
+= Can other plugins extend Hardenly? =
+
+Yes. Developers can add their own checks and vulnerability databases, change how the score is weighted and react when a scan finishes. See the developer docs at https://creogen.github.io/hardenly/.
+
 == Screenshots ==
 
 1. The dashboard: security score, problem counts and findings with how to fix them.
@@ -107,3 +111,4 @@ The code check looks for patterns often used to hide code, but some legitimate p
 = 1.0.0 =
 * Initial release.
 * Works on multisite: network activation, a per-site dashboard for super admins, and a network overview.
+* Developer docs for the hooks and extension points: https://creogen.github.io/hardenly/
