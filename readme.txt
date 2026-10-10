@@ -12,16 +12,29 @@ Find security problems on your WordPress site and learn how to fix them. Read-on
 
 == Description ==
 
-Sitewarden checks your WordPress settings, users, plugins, themes and files, gives your site a security score, and tells you what to fix and how. It only reads: it never changes, moves or deletes anything on your site.
+Sitewarden checks your WordPress site for security problems, gives it a security score, and tells you what to fix and how. It only reads: it never changes, moves or deletes anything on your site, and it works offline unless you turn on an online service.
 
-* Outdated WordPress, plugins, themes and PHP.
-* Risky configuration: debug output, file editing in the dashboard, missing security keys.
-* Users: an "admin" username, too many administrators, usernames that can be listed.
-* Files: PHP in uploads, backups and `.git` or `.env` in the web root, recently changed files.
-* Suspicious code patterns, such as hidden code that decodes and runs itself. These are warnings to review, not proof of an infection.
-* HTTPS, certificate expiry, security headers, XML-RPC.
+**What it checks**
 
-Scans run in small steps in the background, so they are safe on shared hosting.
+* Outdated WordPress, plugins, themes and PHP, and plugins and themes you no longer use.
+* Risky configuration: PHP errors shown to visitors, file editing in the dashboard, missing or weak security keys, HTTPS for logins.
+* Users: an "admin" username, too many administrators, administrators who have not logged in for months, usernames visitors can list.
+* Files: PHP files in uploads, files anyone on the server can change, backups and database dumps in public folders, a public debug log, exposed `.git` and `.env` files, recently changed files.
+* Suspicious code: patterns often used to hide or inject code, such as code that decodes and runs itself. These are warnings to review, not proof of an infection.
+* Server: HTTPS, certificate expiry, security headers, folder listing, XML-RPC.
+* Database: the default table prefix and the size of autoloaded options.
+
+**Optional online services** (off by default)
+
+* Compare WordPress core and plugin files with the official copies on WordPress.org, to find changed or added files.
+* Look up known vulnerabilities in your installed versions with WPScan or Patchstack, using your own API key.
+
+**Made for everyday use**
+
+* Scans run in small steps in the background, so they are safe on shared hosting and you can leave the page.
+* Each finding explains why it matters and how to fix it. Ignore findings you have reviewed, and skip files you trust.
+* Daily or weekly automatic scans, with an optional email summary when something changes.
+* Clear wording, no colour-only status, and no upsells: everything is in the free plugin.
 
 = Privacy =
 
@@ -51,6 +64,8 @@ The uncompiled JavaScript and CSS and the build instructions are at https://gith
 
 1. In your dashboard, go to **Plugins → Add New Plugin** and search for "Sitewarden", or upload the plugin zip.
 2. Activate the plugin.
+3. Go to **Sitewarden** in the admin menu and click **Run first scan**.
+4. Optional: in **Sitewarden → Settings**, choose what to scan, turn on automatic scans and email reports, and set up online services.
 
 == Frequently Asked Questions ==
 
@@ -62,24 +77,30 @@ No. It only reads files and settings and tells you what to fix. Ignoring a findi
 
 Yes. In Sitewarden > Settings, choose a daily or weekly scan, and optionally an email summary. Scans run through WP-Cron, so they start with the first visit after the scheduled time.
 
+= Does it slow down my site? =
+
+No. Sitewarden does nothing on the front end. Scans run in the background in short steps of a few seconds, through WP-Cron or while the Sitewarden screen is open.
+
+= Does it work on multisite? =
+
+Sitewarden scans one site at a time. Activate it on each site you want to scan; activating it for the whole network is not supported.
+
+= Do I need an API key? =
+
+No. All built-in checks work without one. A key from WPScan or Patchstack is only needed if you want to look up known vulnerabilities in your installed versions.
+
 = Why does a finding say it is suspicious, not infected? =
 
 The code check looks for patterns often used to hide code, but some legitimate plugins use them too. Review the file; if it is expected, add it to "Files to skip".
 
 == Screenshots ==
 
-1. Describe the first screenshot, .wordpress-org/screenshot-1.png.
+1. The dashboard: security score, problem counts and findings with how to fix them.
+2. A scan in progress. Scans run in small background steps.
+3. Settings: what to scan, files to skip, automatic scans and email reports.
+4. Optional online services, each off until you turn it on.
 
 == Changelog ==
 
 = 1.0.0 =
 * Initial release.
-* Requires WordPress 6.2 or later.
-* Scanner core: checks run in the background in small batches, with a security score and a dashboard.
-* 29 offline checks: configuration, users, versions, files, server and HTTP, and database.
-* Records each user's last login date, for the inactive administrators check.
-* Suspicious code check: looks for patterns often used to hide or inject code in PHP files.
-* Settings screen: choose check groups, the recently changed files threshold and files to skip.
-* Ignore findings you have reviewed, and skip files from the dashboard.
-* Daily or weekly automatic scans, with an optional email summary.
-* Optional online services: compare core and plugin files with WordPress.org, and look up known vulnerabilities with WPScan or Patchstack using your own API key. All off by default.
