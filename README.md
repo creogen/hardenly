@@ -26,7 +26,8 @@ npm start        # rebuild JavaScript and CSS on change
 | `.wordpress-org/` | WordPress.org banners, icons, screenshots and Live Preview blueprint |
 
 WordPress functions are called through [WPAL](https://github.com/merkushin/WPAL) services, so the
-code can be unit-tested without WordPress. [AGENTS.md](AGENTS.md) has the conventions.
+code can be unit-tested without WordPress. [AGENTS.md](AGENTS.md) has the conventions and
+[docs/SPEC.md](docs/SPEC.md) the product specification.
 
 ## Release
 
