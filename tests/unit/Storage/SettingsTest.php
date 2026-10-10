@@ -2,6 +2,8 @@
 
 namespace Sitewarden\Tests\Storage;
 
+use Merkushin\Wpal\Service\Sanitization;
+use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\TestCase;
 use Sitewarden\Storage\Settings;
 use Sitewarden\Tests\OptionsFake;
@@ -11,6 +13,25 @@ class SettingsTest extends TestCase {
 
 	protected function setUp(): void {
 		$this->fake_options();
+		$sanitization = $this->createMock( Sanitization::class );
+		$sanitization->method( 'sanitize_key' )->willReturnCallback(
+			static function ( $key ): string {
+				return (string) preg_replace( '/[^a-z0-9_\-]/', '', strtolower( (string) $key ) );
+			}
+		);
+		$sanitization->method( 'sanitize_text_field' )->willReturnCallback(
+			static function ( $text ): string {
+				return trim( strip_tags( (string) $text ) );
+			}
+		);
+		$sanitization->method( 'sanitize_user' )->willReturnArgument( 0 );
+		$sanitization->method( 'sanitize_email' )->willReturnCallback( 'trim' );
+		$sanitization->method( 'is_email' )->willReturnCallback(
+			static function ( $email ) {
+				return false !== filter_var( $email, FILTER_VALIDATE_EMAIL ) ? $email : false;
+			}
+		);
+		ServiceFactory::set_custom_sanitization( $sanitization );
 	}
 
 	public function testGet_NothingStored_ReturnsDefaults(): void {
@@ -23,9 +44,86 @@ class SettingsTest extends TestCase {
 		self::assertSame( 3, ( new Settings() )->get()['modified_days'] );
 	}
 
-	public function testGet_StoredNotAnArray_ReturnsDefaults(): void {
-		$this->stored_options[ Settings::OPTION ] = 'broken';
+	public function testSanitize_InvalidValues_FallsBackOrDropsThem(): void {
+		$clean = ( new Settings() )->sanitize(
+			[
+				'disabled_groups' => [ 'Files', '<b>x</b>', [] ],
+				'modified_days'   => 9999,
+				'skip_files'      => [ '/wp-content/x.php', '../../etc/passwd', 'a/../b.php', 'ok\\win.php', '', 'wp-content/x.php' ],
+				'schedule'        => 'hourly',
+				'email_to'        => 'not an email',
+				'ignored'         => [
+					'config.salts'        => [ 'message' => '<b>Keys</b>' ],
+					'bad id!'             => [ 'message' => 'x' ],
+					'files.backups:a.sql' => 'not an array',
+				],
+			]
+		);
 
-		self::assertSame( Settings::DEFAULTS, ( new Settings() )->get() );
+		self::assertSame( [ 'files', 'bxb' ], $clean['disabled_groups'] );
+		self::assertSame( 365, $clean['modified_days'] );
+		self::assertSame( [ 'wp-content/x.php', 'ok/win.php' ], $clean['skip_files'] );
+		self::assertSame( 'off', $clean['schedule'] );
+		self::assertSame( '', $clean['email_to'] );
+		self::assertSame( [ 'config.salts' ], array_keys( $clean['ignored'] ) );
+		self::assertSame( 'Keys', $clean['ignored']['config.salts']['message'] );
+	}
+
+	public function testSanitizeForm_FormSubmission_MapsFieldsAndKeepsIgnoredFindings(): void {
+		$this->stored_options[ Settings::OPTION ] = [
+			'ignored' => [
+				'config.salts'  => [ 'message' => 'Keys' ],
+				'server.xmlrpc' => [ 'message' => 'XML-RPC' ],
+			],
+		];
+
+		$clean = ( new Settings() )->sanitize_form(
+			[
+				'form'          => '1',
+				'all_groups'    => [ 'config', 'files', 'code' ],
+				'groups'        => [ 'config' => '1' ],
+				'modified_days' => '14',
+				'skip_files'    => "wp-content/a.php\r\nwp-content/b.php\n",
+				'schedule'      => 'weekly',
+				'email_enabled' => '1',
+				'email_to'      => 'owner@example.com',
+				'restore'       => [ 'server.xmlrpc' => '1' ],
+			]
+		);
+
+		self::assertSame( [ 'files', 'code' ], $clean['disabled_groups'] );
+		self::assertSame( 14, $clean['modified_days'] );
+		self::assertSame( [ 'wp-content/a.php', 'wp-content/b.php' ], $clean['skip_files'] );
+		self::assertSame( 'weekly', $clean['schedule'] );
+		self::assertTrue( $clean['email_enabled'] );
+		self::assertFalse( $clean['email_only_changes'], 'Unchecked boxes are off.' );
+		self::assertSame( 'owner@example.com', $clean['email_to'] );
+		self::assertSame( [ 'config.salts' ], array_keys( $clean['ignored'] ) );
+	}
+
+	public function testSanitizeForm_StoredShape_IsSanitizedAsIs(): void {
+		$settings = ( new Settings() )->sanitize( [ 'schedule' => 'daily' ] );
+
+		self::assertSame( $settings, ( new Settings() )->sanitize_form( $settings ) );
+	}
+
+	public function testIgnoreAndRestore_Always_UpdateTheList(): void {
+		$settings = new Settings();
+
+		$settings->ignore( 'config.salts', 'Keys', 'admin' );
+		$settings->ignore( 'files.backups', 'Backups', 'admin' );
+		$settings->restore( 'config.salts' );
+
+		self::assertSame( [ 'files.backups' ], $settings->ignored_ids() );
+		self::assertSame( 'admin', $settings->get()['ignored']['files.backups']['by'] );
+	}
+
+	public function testSkipFile_Always_AddsTheCleanPathOnce(): void {
+		$settings = new Settings();
+
+		$settings->skip_file( '/wp-content/uploads/x.php' );
+		$settings->skip_file( 'wp-content/uploads/x.php' );
+
+		self::assertSame( [ 'wp-content/uploads/x.php' ], $settings->get()['skip_files'] );
 	}
 }
