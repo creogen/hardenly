@@ -31,7 +31,7 @@ The slug `hardenly` was free on wordpress.org when the project started (checked 
 - No auto-fix, quarantine, deletion or any write to site files/DB (beyond the plugin's own data).
 - No firewall, login protection or live traffic monitoring.
 - No malware signature database. Heuristics only.
-- No multisite network admin support (single site only; network-activation is blocked or documented).
+- No network-wide scanning on multisite: each site runs its own scans (see "Multisite" below).
 - No bundled vulnerability database.
 
 ## 3. Scan modules
@@ -272,6 +272,19 @@ Hooks are documented in `readme.txt` (FAQ) and covered by tests. Anything regist
 6. **M5 Online (opt-in)**: checksums, provider interface + WPScan/Patchstack adapters, consent UI, `readme.txt`
    external-services section.
 7. **M6 Release**: `readme.txt`, screenshots/banners, `docs/FIRST-RELEASE.md` review checklist, submit.
+
+### Multisite
+Decided 2026-10-10, replacing "single site only": refusing network activation left network owners with no
+Hardenly anywhere.
+- Network activation is allowed. Each site keeps its own settings, reports, schedule and ignored findings (options
+  are per site); file, version and configuration checks cover the whole installation, so they match across sites.
+- Only super admins can use Hardenly on multisite (`Admin\Access`: `manage_network_options`; `manage_options` on a
+  single site). Reports show server-wide details that site administrators in a network should not see. The same
+  capability guards the menu, both screens, the REST routes and `options.php` (`option_page_capability_hardenly`).
+- Network Admin > Hardenly (`Admin\NetworkPage`) lists sites (up to 200) with the last scan date and score from
+  each site's history and a link to its dashboard.
+- Network deactivation clears scheduled events on every site; uninstall removes options, transients and events
+  from every site, and the shared user meta once.
 
 ## 8. Decisions (2026-10-10)
 1. Minimum WordPress version: 6.2.

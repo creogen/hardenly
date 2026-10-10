@@ -3,13 +3,13 @@
 namespace Hardenly\Tests;
 
 use Merkushin\Wpal\Service\Assets;
-use Merkushin\Wpal\Service\Errors;
 use Merkushin\Wpal\Service\Hooks;
 use Merkushin\Wpal\Service\Plugins;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Hardenly\Admin\Menu;
+use Hardenly\Admin\NetworkPage;
 use Hardenly\Admin\SettingsPage;
 use Hardenly\Cron\Schedule;
 use Hardenly\Report\EmailReport;
@@ -25,6 +25,8 @@ use Hardenly\Users\LastLogin;
  * services for mocks with ServiceFactory::set_custom_*() and check the calls.
  */
 class PluginTest extends TestCase {
+	use SitesFake;
+
 	use OptionsFake;
 
 	private const PLUGIN_URL = 'https://example.com/wp-content/plugins/hardenly/';
@@ -54,6 +56,7 @@ class PluginTest extends TestCase {
 	private $actions = [];
 
 	protected function setUp(): void {
+		$this->fake_sites();
 		$this->fake_options();
 		$this->hooks  = $this->createMock( Hooks::class );
 		$this->assets = $this->createMock( Assets::class );
@@ -106,6 +109,7 @@ class PluginTest extends TestCase {
 			[
 				'admin_menu'                        => [ Menu::class . '::register' ],
 				'admin_init'                        => [ SettingsPage::class . '::register' ],
+				'network_admin_menu'                => [ NetworkPage::class . '::register' ],
 				'admin_post_hardenly_test_provider' => [ SettingsPage::class . '::handle_test' ],
 				'admin_enqueue_scripts'             => [ Plugin::class . '::enqueue_admin_assets' ],
 				'rest_api_init'                     => [ ScanController::class . '::register_routes', FindingsController::class . '::register_routes' ],
@@ -118,22 +122,6 @@ class PluginTest extends TestCase {
 			],
 			$classes
 		);
-	}
-
-	public function testActivate_NetworkWide_IsRefused(): void {
-		$errors = $this->createMock( Errors::class );
-		$errors->expects( self::once() )->method( 'wp_die' );
-		ServiceFactory::set_custom_errors( $errors );
-
-		Plugin::activate( true );
-	}
-
-	public function testActivate_SingleSite_IsAllowed(): void {
-		$errors = $this->createMock( Errors::class );
-		$errors->expects( self::never() )->method( 'wp_die' );
-		ServiceFactory::set_custom_errors( $errors );
-
-		Plugin::activate( false );
 	}
 
 	public function testEnqueueAdminAssets_OtherScreen_EnqueuesNothing(): void {

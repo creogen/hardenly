@@ -3,6 +3,7 @@
 namespace Hardenly\Tests\Cron;
 
 use Merkushin\Wpal\Service\Cron;
+use Merkushin\Wpal\Service\Sites;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -76,6 +77,28 @@ class ScheduleTest extends TestCase {
 		$this->cron->method( 'wp_next_scheduled' )->willReturn( false );
 
 		self::assertNull( $this->schedule( 'off' )->next_run() );
+	}
+
+	public function testDeactivate_NetworkWide_ClearsEverySite(): void {
+		$sites = $this->createMock( Sites::class );
+		$sites->method( 'is_multisite' )->willReturn( true );
+		$sites->method( 'get_sites' )->willReturn( [ 1, 2, 3 ] );
+		$sites->expects( self::exactly( 3 ) )->method( 'switch_to_blog' );
+		$sites->expects( self::exactly( 3 ) )->method( 'restore_current_blog' );
+		ServiceFactory::set_custom_sites( $sites );
+		$this->cron->expects( self::exactly( 3 ) )->method( 'wp_clear_scheduled_hook' )->with( Schedule::HOOK );
+
+		Schedule::deactivate( true );
+	}
+
+	public function testDeactivate_OneSite_ClearsOnlyIt(): void {
+		$sites = $this->createMock( Sites::class );
+		$sites->method( 'is_multisite' )->willReturn( true );
+		$sites->expects( self::never() )->method( 'switch_to_blog' );
+		ServiceFactory::set_custom_sites( $sites );
+		$this->cron->expects( self::once() )->method( 'wp_clear_scheduled_hook' )->with( Schedule::HOOK );
+
+		Schedule::deactivate( false );
 	}
 
 	public function testClearAll_Always_RemovesBothEvents(): void {

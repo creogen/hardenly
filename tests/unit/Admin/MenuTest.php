@@ -6,17 +6,21 @@ use Merkushin\Wpal\Service\Plugins;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Hardenly\Tests\SitesFake;
 use Hardenly\Admin\DashboardPage;
 use Hardenly\Admin\Menu;
 use Hardenly\Admin\SettingsPage;
 
 class MenuTest extends TestCase {
+	use SitesFake;
+
 	/**
 	 * @var Plugins&MockObject
 	 */
 	private $plugins;
 
 	protected function setUp(): void {
+		$this->fake_sites();
 		$this->plugins = $this->createMock( Plugins::class );
 		ServiceFactory::set_custom_plugins( $this->plugins );
 	}
@@ -43,6 +47,15 @@ class MenuTest extends TestCase {
 			],
 			$submenus
 		);
+	}
+
+	public function testRegister_Multisite_ShowsTheMenuToSuperAdminsOnly(): void {
+		$this->fake_sites( true );
+		$this->plugins->expects( self::once() )
+			->method( 'add_menu_page' )
+			->with( self::anything(), self::anything(), 'manage_network_options' );
+
+		( new Menu( new DashboardPage(), $this->createMock( SettingsPage::class ) ) )->register();
 	}
 
 	public function testIsPluginScreen_AfterRegister_KnowsItsScreens(): void {

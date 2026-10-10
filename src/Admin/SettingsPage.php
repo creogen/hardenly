@@ -2,7 +2,6 @@
 
 namespace Hardenly\Admin;
 
-use Merkushin\Wpal\Service\Capabilities;
 use Merkushin\Wpal\Service\Dates;
 use Merkushin\Wpal\Service\Nonces;
 use Merkushin\Wpal\Service\Options;
@@ -24,7 +23,8 @@ defined( 'ABSPATH' ) || exit;
  * The Settings screen: what to scan, schedule and email, online services and ignored findings.
  *
  * A plain Settings API form: it posts to options.php, which checks the nonce and the
- * `manage_options` capability, and saves through Settings::sanitize_form().
+ * capability from capability() (see the `option_page_capability_` filter), and saves through
+ * Settings::sanitize_form().
  */
 class SettingsPage {
 	public const SLUG  = 'hardenly-settings';
@@ -56,9 +56,9 @@ class SettingsPage {
 	private $settings_api;
 
 	/**
-	 * @var Capabilities
+	 * @var Access
 	 */
-	private $capabilities;
+	private $access;
 
 	/**
 	 * @var Nonces
@@ -109,10 +109,19 @@ class SettingsPage {
 		$this->urls         = ServiceFactory::create_urls();
 		$this->redirects    = ServiceFactory::create_redirects();
 		$this->settings_api = ServiceFactory::create_settings();
-		$this->capabilities = ServiceFactory::create_capabilities();
+		$this->access       = new Access();
 		$this->nonces       = ServiceFactory::create_nonces();
 		$this->options      = ServiceFactory::create_options();
 		$this->dates        = ServiceFactory::create_dates();
+	}
+
+	/**
+	 * The capability options.php requires to save these settings: the same as the screens,
+	 * so administrators of single sites in a network cannot post them either.
+	 * Handles `option_page_capability_hardenly`.
+	 */
+	public function capability(): string {
+		return $this->access->capability();
 	}
 
 	/**
@@ -132,7 +141,7 @@ class SettingsPage {
 	}
 
 	public function render(): void {
-		if ( ! $this->capabilities->current_user_can( Menu::CAPABILITY ) ) {
+		if ( ! $this->access->can_manage() ) {
 			return;
 		}
 		$settings = $this->settings->get();
@@ -406,7 +415,7 @@ class SettingsPage {
 	 */
 	public function test(): string {
 		$back = (string) $this->urls->admin_url( 'admin.php?page=' . self::SLUG );
-		if ( ! $this->capabilities->current_user_can( Menu::CAPABILITY ) ) {
+		if ( ! $this->access->can_manage() ) {
 			return $back;
 		}
 		$this->nonces->check_admin_referer( self::TEST_ACTION );

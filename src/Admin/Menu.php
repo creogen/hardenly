@@ -8,17 +8,21 @@ use Merkushin\Wpal\ServiceFactory;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The top-level "Hardenly" menu with Dashboard and Settings. Only users who can manage
- * options see it.
+ * The top-level "Hardenly" menu with Dashboard and Settings. Only users Access allows see it:
+ * administrators, or super admins on multisite.
  */
 class Menu {
-	public const CAPABILITY = 'manage_options';
-	public const SLUG       = 'hardenly';
+	public const SLUG = 'hardenly';
 
 	/**
 	 * @var DashboardPage
 	 */
 	private $dashboard;
+
+	/**
+	 * @var Access
+	 */
+	private $access;
 
 	/**
 	 * @var SettingsPage
@@ -40,6 +44,7 @@ class Menu {
 	public function __construct( DashboardPage $dashboard, SettingsPage $settings ) {
 		$this->dashboard = $dashboard;
 		$this->settings  = $settings;
+		$this->access    = new Access();
 		$this->plugins   = ServiceFactory::create_plugins();
 	}
 
@@ -47,7 +52,7 @@ class Menu {
 		$top = $this->plugins->add_menu_page(
 			__( 'Hardenly', 'hardenly' ),
 			__( 'Hardenly', 'hardenly' ),
-			self::CAPABILITY,
+			$this->access->capability(),
 			self::SLUG,
 			[ $this->dashboard, 'render' ],
 			'dashicons-shield'
@@ -58,7 +63,7 @@ class Menu {
 			self::SLUG,
 			__( 'Hardenly', 'hardenly' ),
 			__( 'Dashboard', 'hardenly' ),
-			self::CAPABILITY,
+			$this->access->capability(),
 			self::SLUG,
 			[ $this->dashboard, 'render' ]
 		);
@@ -67,7 +72,7 @@ class Menu {
 			self::SLUG,
 			__( 'Hardenly Settings', 'hardenly' ),
 			__( 'Settings', 'hardenly' ),
-			self::CAPABILITY,
+			$this->access->capability(),
 			SettingsPage::SLUG,
 			[ $this->settings, 'render' ]
 		);

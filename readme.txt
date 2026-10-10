@@ -83,7 +83,9 @@ No. Hardenly does nothing on the front end. Scans run in the background in short
 
 = Does it work on multisite? =
 
-Hardenly scans one site at a time. Activate it on each site you want to scan; activating it for the whole network is not supported.
+Yes. Network-activate it, or activate it on single sites. Each site gets its own Hardenly screen, settings and reports, and Network Admin > Hardenly lists every site with its last score. On multisite only super admins can use Hardenly, because its reports show details about the whole server. Deleting the plugin removes its data from every site.
+
+Install it as a normal plugin: WordPress does not load plugins from folders inside `mu-plugins`.
 
 = Do I need an API key? =
 
@@ -104,3 +106,4 @@ The code check looks for patterns often used to hide code, but some legitimate p
 
 = 1.0.0 =
 * Initial release.
+* Works on multisite: network activation, a per-site dashboard for super admins, and a network overview.
