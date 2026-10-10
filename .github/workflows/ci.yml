@@ -22,8 +22,18 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
-          tools: composer:v2, wp-cli
+          tools: composer:v2
           coverage: none
+
+      # For `make i18n-check`. setup-php's wp-cli tool carries on when its download fails, so the
+      # job then fails later with "wp: No such file or directory"; download it here with retries.
+      - name: Install WP-CLI
+        run: |
+          curl --fail --silent --show-error --location --retry 5 --retry-all-errors \
+            --output "$RUNNER_TEMP/wp" https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x "$RUNNER_TEMP/wp"
+          sudo mv "$RUNNER_TEMP/wp" /usr/local/bin/wp
+          wp --info
 
       - uses: actions/setup-node@v6
         with:
