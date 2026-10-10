@@ -7,6 +7,7 @@ use Merkushin\Wpal\Service\RestApi;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Hardenly\Tests\SitesFake;
 use Hardenly\Rest\ScanController;
 use Hardenly\Scanner\Scanner;
 use Hardenly\Rest\ReportPayload;
@@ -15,6 +16,8 @@ use Hardenly\Storage\Settings;
 use WP_Error;
 
 class ScanControllerTest extends TestCase {
+	use SitesFake;
+
 	/**
 	 * @var RestApi&MockObject
 	 */
@@ -36,6 +39,7 @@ class ScanControllerTest extends TestCase {
 	private $reports;
 
 	protected function setUp(): void {
+		$this->fake_sites();
 		$this->rest         = $this->createMock( RestApi::class );
 		$this->capabilities = $this->createMock( Capabilities::class );
 		$this->scanner      = $this->createMock( Scanner::class );

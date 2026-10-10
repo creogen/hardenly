@@ -10,6 +10,7 @@ use Merkushin\Wpal\Service\Settings as SettingsApi;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Hardenly\Tests\SitesFake;
 use Hardenly\Admin\SettingsPage;
 use Hardenly\Cron\Schedule;
 use Hardenly\Storage\Settings;
@@ -21,6 +22,8 @@ use Merkushin\Wpal\Service\Urls;
 use Merkushin\Wpal\Service\Users;
 
 class SettingsPageTest extends TestCase {
+	use SitesFake;
+
 	/**
 	 * @var SettingsApi&MockObject
 	 */
@@ -32,6 +35,7 @@ class SettingsPageTest extends TestCase {
 	private $nonces;
 
 	protected function setUp(): void {
+		$this->fake_sites();
 		$this->settings_api = $this->createMock( SettingsApi::class );
 		$this->nonces       = $this->createMock( Nonces::class );
 		ServiceFactory::set_custom_settings( $this->settings_api );
@@ -196,6 +200,12 @@ class SettingsPageTest extends TestCase {
 				'vuln_api_key'  => 'key',
 			]
 		)->test();
+	}
+
+	public function testCapability_Multisite_KeepsSiteAdministratorsFromSavingSettings(): void {
+		$this->fake_sites( true );
+
+		self::assertSame( 'manage_network_options', $this->page( [] )->capability() );
 	}
 
 	public function testRender_OtherUser_OutputsNothing(): void {

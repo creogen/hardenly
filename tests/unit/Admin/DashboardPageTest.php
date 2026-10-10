@@ -5,9 +5,16 @@ namespace Hardenly\Tests\Admin;
 use Merkushin\Wpal\Service\Capabilities;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\TestCase;
+use Hardenly\Tests\SitesFake;
 use Hardenly\Admin\DashboardPage;
 
 class DashboardPageTest extends TestCase {
+	use SitesFake;
+
+	protected function setUp(): void {
+		$this->fake_sites();
+	}
+
 	private function render( bool $can_manage ): string {
 		$capabilities = $this->createMock( Capabilities::class );
 		$capabilities->method( 'current_user_can' )->with( 'manage_options' )->willReturn( $can_manage );

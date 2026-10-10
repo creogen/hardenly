@@ -2,7 +2,7 @@
 
 namespace Hardenly\Rest;
 
-use Merkushin\Wpal\Service\Capabilities;
+use Hardenly\Admin\Access;
 use Merkushin\Wpal\Service\RestApi;
 use Merkushin\Wpal\ServiceFactory;
 use Hardenly\Scanner\Scanner;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * REST routes for the dashboard: start, follow and stop a scan, and read the report.
  *
- * All routes need `manage_options`. The dashboard sends the REST nonce through api-fetch.
+ * All routes need the Access capability (`manage_options`, or super admin on multisite). The dashboard sends the REST nonce through api-fetch.
  */
 class ScanController {
 	public const NAMESPACE = 'hardenly/v1';
@@ -39,15 +39,15 @@ class ScanController {
 	private $rest;
 
 	/**
-	 * @var Capabilities
+	 * @var Access
 	 */
-	private $capabilities;
+	private $access;
 
 	public function __construct( Scanner $scanner, ReportPayload $payload ) {
-		$this->scanner      = $scanner;
-		$this->payload      = $payload;
-		$this->rest         = ServiceFactory::create_rest_api();
-		$this->capabilities = ServiceFactory::create_capabilities();
+		$this->scanner = $scanner;
+		$this->payload = $payload;
+		$this->rest    = ServiceFactory::create_rest_api();
+		$this->access  = new Access();
 	}
 
 	public function register_routes(): void {
@@ -97,7 +97,7 @@ class ScanController {
 	}
 
 	public function can_manage(): bool {
-		return (bool) $this->capabilities->current_user_can( 'manage_options' );
+		return $this->access->can_manage();
 	}
 
 	/**

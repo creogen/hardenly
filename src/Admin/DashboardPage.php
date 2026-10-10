@@ -2,9 +2,6 @@
 
 namespace Hardenly\Admin;
 
-use Merkushin\Wpal\Service\Capabilities;
-use Merkushin\Wpal\ServiceFactory;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -14,16 +11,16 @@ class DashboardPage {
 	public const ROOT_ID = 'hardenly-dashboard';
 
 	/**
-	 * @var Capabilities
+	 * @var Access
 	 */
-	private $capabilities;
+	private $access;
 
 	public function __construct() {
-		$this->capabilities = ServiceFactory::create_capabilities();
+		$this->access = new Access();
 	}
 
 	public function render(): void {
-		if ( ! $this->capabilities->current_user_can( Menu::CAPABILITY ) ) {
+		if ( ! $this->access->can_manage() ) {
 			return;
 		}
 		?>
