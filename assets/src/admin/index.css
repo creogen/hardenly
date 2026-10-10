@@ -1,1 +1,332 @@
-/* Styles for the admin entry point, built to assets/build/admin.css. */
+/* Dashboard styles. Colours come from the WordPress admin palette. */
+
+.sitewarden {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	max-width: 1080px;
+}
+
+.sitewarden h2 {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.sitewarden .notice.inline {
+	margin: 0;
+}
+
+.sitewarden-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+}
+
+.sitewarden-header h1 {
+	padding: 0;
+}
+
+.sitewarden-header .button {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.sitewarden-icon {
+	flex: none;
+}
+
+.sitewarden-muted {
+	margin: 0;
+	color: #50575e;
+}
+
+.sitewarden-small {
+	font-size: 12px;
+}
+
+.sitewarden-card {
+	box-sizing: border-box;
+	padding: 16px 20px;
+	border: 1px solid #c3c4c7;
+	background: #fff;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.sitewarden-results {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+/* Previous results while a new scan runs. */
+.sitewarden-stale {
+	opacity: 0.6;
+}
+
+/* First run */
+
+.sitewarden-first-run {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 40px;
+	align-items: flex-start;
+	padding: 40px;
+}
+
+.sitewarden-first-run__icon {
+	color: #2271b1;
+}
+
+.sitewarden-first-run__body {
+	flex: 1 1 420px;
+	max-width: 640px;
+	font-size: 14px;
+}
+
+.sitewarden-first-run__body h2 {
+	font-size: 20px;
+}
+
+.sitewarden-first-run__body ul {
+	padding-left: 18px;
+	list-style: disc;
+}
+
+/* Progress */
+
+.sitewarden-progress {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.sitewarden-progress h2 {
+	font-size: 16px;
+}
+
+.sitewarden-progress__bar {
+	height: 10px;
+	overflow: hidden;
+	border-radius: 5px;
+	background: #dcdcde;
+}
+
+.sitewarden-progress__fill {
+	height: 100%;
+	background: #2271b1;
+	transition: width 0.3s ease;
+}
+
+.sitewarden-progress__footer {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+	padding-top: 12px;
+	border-top: 1px solid #f0f0f1;
+}
+
+.sitewarden-progress__footer p {
+	flex: 1 1 300px;
+}
+
+/* Summary */
+
+.sitewarden-summary {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 20px;
+}
+
+.sitewarden-summary .sitewarden-card {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.sitewarden-summary .sitewarden-score {
+	flex-direction: row;
+	align-items: center;
+	gap: 20px;
+}
+
+.sitewarden-score__text {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.sitewarden-score__track,
+.sitewarden-score__value {
+	fill: none;
+	stroke-width: 12;
+}
+
+.sitewarden-score__track {
+	stroke: #dcdcde;
+}
+
+.sitewarden-score__value {
+	stroke-linecap: round;
+}
+
+.sitewarden-score__value--good {
+	stroke: #007017;
+}
+
+.sitewarden-score__value--attention {
+	stroke: #996800;
+}
+
+.sitewarden-score__value--risk {
+	stroke: #b32d2e;
+}
+
+.sitewarden-score__number {
+	fill: #1d2327;
+	font-size: 30px;
+	font-weight: 600;
+}
+
+.sitewarden-score__of {
+	fill: #50575e;
+	font-size: 11px;
+}
+
+.sitewarden-change {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.sitewarden-change--up {
+	color: #007017;
+}
+
+.sitewarden-change--down {
+	color: #b32d2e;
+}
+
+.sitewarden-counts {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 8px;
+	margin: 0;
+}
+
+.sitewarden-counts__item {
+	display: flex;
+	flex-direction: column-reverse;
+}
+
+.sitewarden-counts dd {
+	margin: 0;
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.sitewarden-history {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.sitewarden-history th,
+.sitewarden-history td {
+	padding: 3px 0;
+	text-align: left;
+}
+
+/* Findings */
+
+.sitewarden-findings {
+	display: flex;
+	flex-direction: column;
+}
+
+.sitewarden-findings__title {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 8px !important;
+}
+
+.sitewarden-finding + .sitewarden-finding {
+	margin-top: -1px;
+}
+
+.sitewarden-finding summary {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 8px;
+	min-height: 28px;
+	cursor: pointer;
+}
+
+.sitewarden-finding__title {
+	flex-grow: 1;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.sitewarden-tag {
+	padding: 0 8px;
+	border: 1px solid #c3c4c7;
+	border-radius: 10px;
+	color: #50575e;
+	font-size: 12px;
+}
+
+.sitewarden-finding__body {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding-top: 10px;
+}
+
+.sitewarden-finding__body p {
+	margin: 0;
+}
+
+.sitewarden-finding__details {
+	margin: 0;
+	padding-left: 18px;
+	list-style: disc;
+	word-break: break-all;
+}
+
+.sitewarden-finding__fix {
+	padding: 10px 12px;
+	background: #f6f7f7;
+}
+
+/* Severity colours, always next to a text label. */
+
+.sitewarden-severity--critical {
+	color: #8a2424;
+}
+
+.sitewarden-severity--high {
+	color: #b32d2e;
+}
+
+.sitewarden-severity--medium {
+	color: #996800;
+}
+
+.sitewarden-severity--low,
+.sitewarden-severity--info {
+	color: #2271b1;
+}
+
+.sitewarden-severity--none {
+	color: #50575e;
+}
+
+.sitewarden-counts__item dt {
+	color: #1d2327;
+}
