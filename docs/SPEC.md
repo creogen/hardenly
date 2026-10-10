@@ -93,6 +93,26 @@ Built-in checks (M2), in `src/Scanner/Checks/<Group>/`:
 | `files.uploads_php` | `UploadsPhpCheck` | PHP files in uploads, ignoring comment-only `index.php` files: high |
 | `files.recently_modified` | `RecentlyModifiedCheck` | PHP files changed within the threshold (default 7 days): note |
 
+Code patterns (M3): `code.suspicious` (`Code\SuspiciousCodeCheck`) walks all PHP files (`.php`, `.phtml`, `.inc`
+and variants, first 1 MB of each) with `Scanner\Code\PatternMatcher` and reports one **warning**, high if any
+file matches a high rule, else medium. Details: `path:line excerpt (rules)`. Comments are ignored (tokenizer);
+the per-file allowlist is "Files to skip".
+
+| Rule | Severity | Matches |
+| --- | --- | --- |
+| `eval_decode` | high | `eval`/`assert` of `base64_decode`, `gzinflate`, `str_rot13`, `hex2bin` and similar |
+| `eval_request` | high | `eval`/`assert`/`create_function` with `$_GET`/`$_POST`/`$_REQUEST`/`$_COOKIE` in the call |
+| `exec_request` | high | `system`, `exec`, `shell_exec`, `passthru`, `popen`, `proc_open`, `pcntl_exec` with request data (not methods) |
+| `request_function` | high | `$_GET['f'](...)`: calling a function named by request data |
+| `include_request` | high | `include`/`require` of a path with request data |
+| `preg_replace_e` | medium | `preg_replace` with the `/e` modifier |
+| `encoded_blob` | medium | base64 string of 2000+ characters in a file that also calls `base64_decode`/`gzinflate`/`eval` |
+| `hex_escapes` | medium | 12+ `\xNN` escapes in a row that decode to readable code (not binary tables) |
+| `chr_chain` | medium | 8+ concatenated `chr(N)` calls |
+
+Samples live in `tests/fixtures/code/{suspicious,benign}/*.txt`. Benign baseline: no matches in WordPress core,
+Plugin Check and the dev `vendor/` (about 7,000 files).
+
 File walks use `Scanner\FileWalker` (resumable, never follows symlinks) through `FileWalkCheck`; paths in "Files to
 skip" are not walked. All raw file access is in `Site\Filesystem`; loopback requests go through `Site\Loopback`
 (own site only, no redirects, 512 KB body limit, `https_local_ssl_verify`).
