@@ -78,7 +78,31 @@ class Schedule {
 	}
 
 	/**
-	 * Removes all of the plugin's scheduled events. Runs on deactivation.
+	 * Handles deactivation: removes the scheduled events of this site, or of every site when
+	 * the plugin was active for the whole network.
+	 *
+	 * @param mixed $network_wide Whether the plugin is deactivated for the whole network.
+	 */
+	public static function deactivate( $network_wide = false ): void {
+		$sites = ServiceFactory::create_sites();
+		if ( ! $network_wide || ! $sites->is_multisite() ) {
+			self::clear_all();
+			return;
+		}
+		foreach ( (array) $sites->get_sites(
+			[
+				'fields' => 'ids',
+				'number' => 0,
+			]
+		) as $site_id ) {
+			$sites->switch_to_blog( (int) $site_id );
+			self::clear_all();
+			$sites->restore_current_blog();
+		}
+	}
+
+	/**
+	 * Removes all of the plugin's scheduled events on the current site.
 	 */
 	public static function clear_all(): void {
 		$cron = ServiceFactory::create_cron();

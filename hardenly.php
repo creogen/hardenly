@@ -28,8 +28,5 @@ if ( file_exists( __DIR__ . '/vendor-prefixed/autoload.php' ) ) {
 
 add_action( 'init', [ new Plugin( __FILE__ ), 'init' ] );
 
-// Single sites only: network activation is refused (see Plugin::activate()).
-register_activation_hook( __FILE__, [ Plugin::class, 'activate' ] );
-
-// Scheduled scans and pending scan batches stop with the plugin.
-register_deactivation_hook( __FILE__, [ Cron\Schedule::class, 'clear_all' ] );
+// Scheduled scans and pending scan batches stop with the plugin, on every site when it was network-active.
+register_deactivation_hook( __FILE__, [ Cron\Schedule::class, 'deactivate' ] );

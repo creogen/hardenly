@@ -8,6 +8,7 @@ use Merkushin\Wpal\Service\Plugins;
 use Merkushin\Wpal\ServiceFactory;
 use Hardenly\Admin\DashboardPage;
 use Hardenly\Admin\Menu;
+use Hardenly\Admin\NetworkPage;
 use Hardenly\Admin\SettingsPage;
 use Hardenly\Cron\Schedule;
 use Hardenly\Report\EmailReport;
@@ -82,23 +83,6 @@ class Plugin {
 	}
 
 	/**
-	 * Refuses network activation on multisite: the scanner and its settings work per site.
-	 * Activating it on single sites of a network works.
-	 *
-	 * @param mixed $network_wide Whether the plugin is being activated for the whole network.
-	 */
-	public static function activate( $network_wide = false ): void {
-		if ( ! $network_wide ) {
-			return;
-		}
-		ServiceFactory::create_errors()->wp_die(
-			esc_html__( 'Hardenly scans one site at a time and cannot be activated for the whole network. Activate it on each site you want to scan instead.', 'hardenly' ),
-			esc_html__( 'Plugin not activated', 'hardenly' ),
-			[ 'back_link' => true ]
-		);
-	}
-
-	/**
 	 * Creates the plugin's objects and hooks them into WordPress.
 	 */
 	public function init(): void {
@@ -127,6 +111,8 @@ class Plugin {
 
 		$this->hooks->add_action( 'admin_menu', [ $this->menu, 'register' ] );
 		$this->hooks->add_action( 'admin_init', [ $settings_page, 'register' ] );
+		$this->hooks->add_filter( 'option_page_capability_' . SettingsPage::GROUP, [ $settings_page, 'capability' ] );
+		$this->hooks->add_action( 'network_admin_menu', [ new NetworkPage(), 'register' ] );
 		$this->hooks->add_action( 'admin_post_' . SettingsPage::TEST_ACTION, [ $settings_page, 'handle_test' ] );
 		$this->hooks->add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
 		$this->hooks->add_action( 'rest_api_init', [ $scans, 'register_routes' ] );

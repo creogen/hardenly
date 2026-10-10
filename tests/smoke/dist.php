@@ -140,6 +140,7 @@ function register_rest_route( string $route_namespace, string $route, array $arg
 }
 
 function add_menu_page( string $page_title, string $menu_title, string $capability, string $menu_slug, callable $callback, string $icon_url = '', ?int $position = null ): string {
+	$GLOBALS['smoke_pages'][ $menu_slug ] = $callback;
 	return 'toplevel_page_' . $menu_slug;
 }
 
@@ -299,10 +300,6 @@ function wp_remote_post( string $url, array $args = [] ): WP_Error {
  */
 function is_wp_error( $thing ): bool {
 	return $thing instanceof WP_Error;
-}
-
-function register_activation_hook( string $file, callable $callback ): void {
-	$GLOBALS['smoke_activate'] = $callback;
 }
 
 function register_deactivation_hook( string $file, callable $callback ): void {
@@ -469,6 +466,52 @@ function wp_safe_remote_get( string $url, array $args = [] ): WP_Error {
 	return new WP_Error();
 }
 
+function is_multisite(): bool {
+	return false;
+}
+
+/**
+ * One site, as a network would list it.
+ *
+ * @param array<string, mixed> $args Query.
+ *
+ * @return object[]|int
+ */
+function get_sites( $args = [] ) {
+	if ( ! empty( $args['count'] ) ) {
+		return 1;
+	}
+	return [
+		(object) [
+			'blog_id' => 1,
+			'domain'  => 'example.com',
+			'path'    => '/',
+		],
+	];
+}
+
+/**
+ * @param mixed $default_value Default.
+ *
+ * @return mixed
+ */
+function get_blog_option( int $id, string $option, $default_value = false ) {
+	return get_option( $option, $default_value );
+}
+
+/**
+ * @param mixed $default_value Default.
+ *
+ * @return mixed
+ */
+function get_site_option( string $option, $default_value = false, bool $deprecated = true ) {
+	return $default_value;
+}
+
+function get_admin_url( ?int $blog_id = null, string $path = '', string $scheme = 'admin' ): string {
+	return 'https://example.com/wp-admin/' . $path;
+}
+
 // Stand-in for $wpdb, enough for the scan lock (Storage\Lock): every lock is free.
 // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- WordPress is not loaded here.
 $GLOBALS['wpdb'] = new class() {
@@ -621,8 +664,15 @@ $hardenly_settings_html = (string) ob_get_clean();
 if ( false === strpos( $hardenly_settings_html, 'action="options.php"' ) ) {
 	$failures[] = 'The settings screen did not render.';
 }
-( $GLOBALS['smoke_activate'] )( false );
-( $GLOBALS['smoke_deactivate'] )();
+( $GLOBALS['smoke_deactivate'] )( false );
+
+// The Network Admin page, as on multisite.
+do_action( 'network_admin_menu' );
+ob_start();
+( $GLOBALS['smoke_pages']['hardenly-network'] )();
+if ( false === strpos( (string) ob_get_clean(), 'Open dashboard' ) ) {
+	$failures[] = 'The Network Admin page did not render.';
+}
 
 foreach ( $GLOBALS['smoke_enqueued'] as $url ) {
 	$file = $build_dir . '/' . substr( $url, strlen( plugin_dir_url( $main_file ) ) );
