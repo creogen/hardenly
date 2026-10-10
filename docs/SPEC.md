@@ -47,6 +47,9 @@ scanner calls it again in the next batch with that cursor in `Context::cursor()`
 
 ### 3.1 Offline (default on)
 
+Each check's id, severity and class are in the table below the summary. Severities: problems are `fail`
+(or `warning` for heuristics); `info` results are notes that do not lower the score.
+
 | Group | Checks |
 | --- | --- |
 | Versions | WP core, plugins, themes outdated, read from the `update_core` / `update_plugins` / `update_themes` site transients that WordPress already maintains (no own HTTP calls). PHP version vs. supported branches (small bundled table, updated per release). Inactive plugins/themes still installed. |
@@ -56,6 +59,43 @@ scanner calls it again in the next batch with that cursor in `Context::cursor()`
 | Code patterns | Heuristic scan of PHP files for obfuscation and dangerous constructs (`eval(base64_decode`, `gzinflate`+`eval`, `assert` on request vars, `preg_replace /e`, long encoded blobs, `$_REQUEST` passed to `system/exec/passthru`). Report as **warning**, never as "infected". Per-file allowlist for false positives. |
 | Server/HTTP | Site URL uses HTTPS, certificate expiry (via local stream context to own host), security headers on the home page (`X-Frame-Options`/CSP `frame-ancestors`, `X-Content-Type-Options`, `Referrer-Policy`, `Strict-Transport-Security`), directory listing on `uploads/`, XML-RPC enabled, `wp-cron` exposure. Loopback requests only (own site), documented in `readme.txt`. |
 | Database | Table prefix, autoloaded options size warning, leftover transients are out of scope. |
+
+Built-in checks (M2), in `src/Scanner/Checks/<Group>/`:
+
+| Id | Class | Reports |
+| --- | --- | --- |
+| `config.debug_display` | `DebugDisplayCheck` | PHP errors shown to visitors: high in production, low elsewhere |
+| `config.file_edit` | `FileEditCheck` | Dashboard file editor on (no `DISALLOW_FILE_EDIT`/`_MODS`): medium |
+| `config.force_ssl_admin` | `ForceSslAdminCheck` | HTTPS site without `FORCE_SSL_ADMIN`: low; skipped without HTTPS |
+| `config.salts` | `SaltsCheck` | Keys missing, shorter than 32, placeholder or repeated: high |
+| `config.environment` | `EnvironmentTypeCheck` | Not `production`: note |
+| `users.admin_username` | `AdminUsernameCheck` | User "admin": medium if administrator, else low |
+| `users.admin_count` | `AdminCountCheck` | More than 3 administrators: low |
+| `users.inactive_admins` | `InactiveAdminsCheck` | Administrators without a login in 90 days: low. Logins are recorded by `Users\LastLogin` (user meta `sitewarden_last_login`); skipped until 90 days of records exist |
+| `users.enumeration` | `UserEnumerationCheck` | `/?author=N` redirect or public `/wp/v2/users` (loopback): low |
+| `versions.core` | `CoreVersionCheck` | Update in the same branch: high; newer branch: medium |
+| `versions.plugins` / `versions.themes` | `PluginUpdatesCheck` / `ThemeUpdatesCheck` | Updates available: high |
+| `versions.php` | `PhpVersionCheck` | Past end of security support: high; ending within 180 days: low |
+| `versions.inactive` | `InactiveExtensionsCheck` | Inactive plugins and themes (keeps the active theme, its parent and the newest default theme): low |
+| `server.https` | `HttpsCheck` | Home or site URL without HTTPS: high |
+| `server.certificate` | `CertificateCheck` | Expired: critical; < 14 days: high; < 30 days: medium (`Site\TlsProbe`) |
+| `server.headers` | `SecurityHeadersCheck` | Missing security headers on the home page (loopback): low |
+| `server.directory_listing` | `DirectoryListingCheck` | Listing of `uploads/` (loopback): medium |
+| `server.xmlrpc` | `XmlRpcCheck` | `system.listMethods` answered (loopback): low |
+| `server.wp_cron` | `WpCronCheck` | WP-Cron runs on visits: note |
+| `database.table_prefix` | `TablePrefixCheck` | `wp_` prefix: low |
+| `database.autoload_size` | `AutoloadSizeCheck` | Autoloaded options over 800 KB (Site Health's limit): low |
+| `files.permissions` | `PermissionsCheck` | World-writable WordPress folder, `wp-config.php` (also one level up) or `.htaccess`: high |
+| `files.leftovers` | `LeftoverFilesCheck` | `readme.html`, `license.txt`, `wp-config-sample.php`: low |
+| `files.backups` | `BackupFilesCheck` | In the WordPress or wp-content folder (not subfolders): database dumps and config copies high, other archives medium |
+| `files.debug_log` | `DebugLogCheck` | `wp-content/debug.log`: high if downloadable (loopback), else low |
+| `files.exposed` | `ExposedFilesCheck` | `.git`, `.svn`, `.hg`, `.env` in the WordPress folder: critical if readable (loopback), else low |
+| `files.uploads_php` | `UploadsPhpCheck` | PHP files in uploads, ignoring comment-only `index.php` files: high |
+| `files.recently_modified` | `RecentlyModifiedCheck` | PHP files changed within the threshold (default 7 days): note |
+
+File walks use `Scanner\FileWalker` (resumable, never follows symlinks) through `FileWalkCheck`; paths in "Files to
+skip" are not walked. All raw file access is in `Site\Filesystem`; loopback requests go through `Site\Loopback`
+(own site only, no redirects, 512 KB body limit, `https_local_ssl_verify`).
 
 ### 3.2 Online (opt-in, off by default, user consent in settings)
 

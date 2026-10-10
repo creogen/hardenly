@@ -25,7 +25,11 @@ Scans run in small steps in the background, so they are safe on shared hosting.
 
 = Privacy =
 
-By default Sitewarden sends nothing outside your site. It stores its settings and the latest scan results in your database.
+By default Sitewarden sends nothing outside your site. It stores its settings, the latest scan results and each user's last login date in your database. Deleting the plugin removes all of it.
+
+To see what visitors see, some checks send requests from your site to itself (loopback requests, the same kind Site Health uses): the home page (security headers), `/?author=` and `/wp-json/wp/v2/users` (username listing), `xmlrpc.php`, the uploads folder (folder listing), and `debug.log`, `.git` and `.env` when those files exist. The certificate check opens a connection to your own site's address to read its expiry date. None of these requests go to other sites.
+
+Version checks read the update information WordPress already downloads; Sitewarden makes no requests of its own for them.
 
 = Source code =
 
@@ -52,3 +56,5 @@ The answer.
 * Initial release.
 * Requires WordPress 6.2 or later.
 * Scanner core: checks run in the background in small batches, with a security score and a dashboard.
+* 29 offline checks: configuration, users, versions, files, server and HTTP, and database.
+* Records each user's last login date, for the inactive administrators check.
