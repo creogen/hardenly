@@ -41,6 +41,14 @@ class Settings {
 		'email_only_changes' => true,
 		// Recipient; empty means the site admin email.
 		'email_to'           => '',
+		// Online services, all off by default.
+		// Compare core and plugin files with WordPress.org checksums.
+		'checksums_enabled'  => false,
+		// Vulnerability lookup provider id ('' for none), its API key, and the user's consent to
+		// send plugin and theme slugs and versions to it.
+		'vuln_provider'      => '',
+		'vuln_api_key'       => '',
+		'vuln_consent'       => false,
 	];
 
 	/**
@@ -160,6 +168,20 @@ class Settings {
 		$settings['email_enabled']      = ! empty( $input['email_enabled'] );
 		$settings['email_only_changes'] = ! empty( $input['email_only_changes'] );
 		$settings['email_to']           = $input['email_to'] ?? '';
+		$settings['checksums_enabled']  = ! empty( $input['checksums_enabled'] );
+
+		// The key belongs to a provider: switching providers drops it. An empty field keeps
+		// the saved key, so it never has to be shown in the form.
+		$provider = (string) ( $input['vuln_provider'] ?? '' );
+		$key      = trim( (string) ( $input['vuln_api_key'] ?? '' ) );
+		if ( $provider !== $settings['vuln_provider'] || ! empty( $input['vuln_remove_key'] ) ) {
+			$settings['vuln_api_key'] = '';
+		}
+		if ( '' !== $key ) {
+			$settings['vuln_api_key'] = $key;
+		}
+		$settings['vuln_provider'] = $provider;
+		$settings['vuln_consent']  = ! empty( $input['vuln_consent'] );
 
 		$restore = isset( $input['restore'] ) && is_array( $input['restore'] ) ? array_keys( $input['restore'] ) : [];
 		foreach ( $restore as $id ) {
@@ -217,7 +239,20 @@ class Settings {
 		$email             = (string) $this->sanitization->sanitize_email( (string) ( $settings['email_to'] ?? '' ) );
 		$clean['email_to'] = '' !== $email && $this->sanitization->is_email( $email ) ? $email : '';
 
+		$clean['checksums_enabled'] = (bool) ( $settings['checksums_enabled'] ?? false );
+		$clean['vuln_provider']     = (string) $this->sanitization->sanitize_key( (string) ( $settings['vuln_provider'] ?? '' ) );
+		$clean['vuln_api_key']      = substr( (string) preg_replace( '/[^\x21-\x7E]/', '', (string) ( $settings['vuln_api_key'] ?? '' ) ), 0, 200 );
+		$clean['vuln_consent']      = '' !== $clean['vuln_provider'] && (bool) ( $settings['vuln_consent'] ?? false );
+
 		return $clean;
+	}
+
+	/**
+	 * Whether vulnerability lookups may run: a provider, its key and the user's consent.
+	 */
+	public function vulnerability_lookup_ready(): bool {
+		$settings = $this->get();
+		return '' !== $settings['vuln_provider'] && '' !== $settings['vuln_api_key'] && true === $settings['vuln_consent'];
 	}
 
 	/**

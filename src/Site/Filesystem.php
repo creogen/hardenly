@@ -72,6 +72,17 @@ class Filesystem {
 	}
 
 	/**
+	 * MD5 hash of a file, as WordPress.org checksums list them, or null when it cannot be read.
+	 */
+	public function md5( string $path ): ?string {
+		if ( ! is_file( $path ) || ! is_readable( $path ) ) {
+			return null;
+		}
+		$hash = md5_file( $path );
+		return false === $hash ? null : $hash;
+	}
+
+	/**
 	 * Reads up to $max_bytes from the start of a file.
 	 *
 	 * @param string $path      File path.

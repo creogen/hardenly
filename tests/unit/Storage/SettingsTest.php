@@ -101,6 +101,45 @@ class SettingsTest extends TestCase {
 		self::assertSame( [ 'config.salts' ], array_keys( $clean['ignored'] ) );
 	}
 
+	public function testSanitizeForm_OnlineServices_KeepTheKeyUnlessReplacedOrRemoved(): void {
+		$this->stored_options[ Settings::OPTION ] = [
+			'vuln_provider' => 'wpscan',
+			'vuln_api_key'  => 'saved-key',
+			'vuln_consent'  => true,
+		];
+		$form                                     = [
+			'form'              => '1',
+			'checksums_enabled' => '1',
+			'vuln_provider'     => 'wpscan',
+			'vuln_api_key'      => '',
+			'vuln_consent'      => '1',
+		];
+		$settings                                 = new Settings();
+
+		self::assertSame( 'saved-key', $settings->sanitize_form( $form )['vuln_api_key'], 'An empty field keeps the key.' );
+		self::assertTrue( $settings->sanitize_form( $form )['checksums_enabled'] );
+		self::assertSame( 'new-key', $settings->sanitize_form( [ 'vuln_api_key' => ' new-key ' ] + $form )['vuln_api_key'] );
+		self::assertSame( '', $settings->sanitize_form( [ 'vuln_remove_key' => '1' ] + $form )['vuln_api_key'] );
+		self::assertSame( '', $settings->sanitize_form( [ 'vuln_provider' => 'patchstack' ] + $form )['vuln_api_key'], 'A new provider needs its own key.' );
+		self::assertFalse( $settings->sanitize_form( [ 'vuln_consent' => '' ] + $form )['vuln_consent'] );
+	}
+
+	public function testSanitize_NoProvider_NoConsent(): void {
+		self::assertFalse( ( new Settings() )->sanitize( [ 'vuln_consent' => true ] )['vuln_consent'] );
+	}
+
+	public function testVulnerabilityLookupReady_NeedsProviderKeyAndConsent(): void {
+		$this->stored_options[ Settings::OPTION ] = [
+			'vuln_provider' => 'wpscan',
+			'vuln_api_key'  => 'k',
+			'vuln_consent'  => false,
+		];
+		self::assertFalse( ( new Settings() )->vulnerability_lookup_ready() );
+
+		$this->stored_options[ Settings::OPTION ]['vuln_consent'] = true;
+		self::assertTrue( ( new Settings() )->vulnerability_lookup_ready() );
+	}
+
 	public function testSanitizeForm_StoredShape_IsSanitizedAsIs(): void {
 		$settings = ( new Settings() )->sanitize( [ 'schedule' => 'daily' ] );
 

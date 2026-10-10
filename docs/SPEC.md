@@ -129,6 +129,26 @@ skip" are not walked. All raw file access is in `Site\Filesystem`; loopback requ
 Only plugin/theme slugs and versions are sent to providers, never site URL, user data or file contents.
 Document exactly what is sent in `readme.txt` (WordPress.org guideline 7).
 
+Implementation (M5):
+- Settings: `checksums_enabled`, `vuln_provider`, `vuln_api_key` (never printed back; the form shows the last four
+  characters, an empty field keeps it, switching provider drops it), `vuln_consent` (per provider, required).
+  "Test connection" posts to `admin-post.php` (`sitewarden_test_provider`, nonce + `manage_options`).
+- `online.core_checksums` (`CoreChecksumsCheck`): core files vs `get_core_checksums()` (cached a day in the
+  `sitewarden_core_checksums` transient; falls back to `en_US`), leaving out `wp-content/`. Changed files: high fail;
+  unknown PHP files in `wp-admin`/`wp-includes`: high warning; missing files: note.
+- `online.plugin_checksums` (`PluginChecksumsCheck`): plugin files vs
+  `downloads.wordpress.org/plugin-checksums/{slug}/{version}.json` (md5 may be a string or a list). Changed and
+  added PHP files: one high warning; plugins without checksums (not on WordPress.org, single-file): note.
+  Both use `Integrity\ChecksumComparer` (resumable: verify listed files, then walk for added PHP files).
+- `online.vulnerabilities` (`VulnerabilityCheck`): core, plugins with a folder, themes; one result per vulnerable
+  component (key `plugin/slug`), severity from CVSS (unknown = high), remediation "update to X" or "no fix yet".
+  Results cached a day per provider, component and version (`sitewarden_vulnerability_cache` option). A rejected
+  key, rate limit or outage stops the lookups: findings so far are kept plus a "not checked" result.
+- Providers (`Vulnerability\VulnerabilityProvider`): `WpscanProvider` (API v3, `Authorization: Token token=…`,
+  per-slug endpoints matched to the installed version locally, v4 `affected_versions` ranges supported; free plan
+  25 requests/day, non-commercial) and `PatchstackProvider` (API v2 `product/{type}/{slug}/{version}`, `PSKey`
+  header, server-side version filtering; keys on paid plans only).
+
 ## 4. Architecture
 
 ```

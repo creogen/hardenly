@@ -29,6 +29,7 @@ define( 'ABSPATH', __DIR__ . '/' );
 require __DIR__ . '/../stubs/WP_Error.php';
 require __DIR__ . '/../stubs/WP_REST_Request.php';
 define( 'HOUR_IN_SECONDS', 3600 );
+define( 'MINUTE_IN_SECONDS', 60 );
 
 $GLOBALS['smoke_actions']  = [];
 $GLOBALS['smoke_enqueued'] = [];
@@ -404,6 +405,66 @@ function is_email( string $email, bool $deprecated = false ) {
 	return false !== filter_var( $email, FILTER_VALIDATE_EMAIL ) ? $email : false;
 }
 
+/**
+ * @param mixed $data Data.
+ */
+function smoke_json( $data ): string {
+	return (string) json_encode( $data );
+}
+
+function admin_url( string $path = '', string $scheme = 'admin' ): string {
+	return 'https://example.com/wp-admin/' . $path;
+}
+
+function get_current_user_id(): int {
+	return 1;
+}
+
+function esc_url( string $url ): string {
+	return htmlspecialchars( $url, ENT_QUOTES );
+}
+
+/**
+ * @return mixed
+ */
+function get_transient( string $transient ) {
+	return false;
+}
+
+/**
+ * @param mixed $value Value.
+ */
+function set_transient( string $transient, $value, int $expiration = 0 ): bool {
+	return true;
+}
+
+function delete_transient( string $transient ): bool {
+	$GLOBALS['smoke_deleted_transients'][] = $transient;
+	return true;
+}
+
+function get_locale(): string {
+	return 'en_US';
+}
+
+/**
+ * WordPress.org cannot be reached here.
+ *
+ * @return false
+ */
+function get_core_checksums( string $version, string $locale ) {
+	return false;
+}
+
+/**
+ * Every outbound request fails: the smoke test has no network.
+ *
+ * @param array<string, mixed> $args Arguments.
+ */
+function wp_safe_remote_get( string $url, array $args = [] ): WP_Error {
+	return new WP_Error();
+}
+
 // Stand-in for $wpdb, enough for the scan lock (Storage\Lock): every lock is free.
 // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- WordPress is not loaded here.
 $GLOBALS['wpdb'] = new class() {
@@ -484,6 +545,16 @@ if ( count( $GLOBALS['smoke_routes'] ) < 3 ) {
 
 // A whole scan: start it, then run the scheduled batch.
 $sitewarden_rest = $GLOBALS['smoke_actions']['rest_api_init'][0][0];
+// Turn on the online services, so their code runs in the build (requests fail here).
+update_option(
+	'sitewarden_settings',
+	[
+		'checksums_enabled' => true,
+		'vuln_provider'     => 'wpscan',
+		'vuln_api_key'      => 'smoke-key',
+		'vuln_consent'      => true,
+	]
+);
 $sitewarden_rest->start();
 foreach ( $GLOBALS['smoke_events'] as $event ) {
 	do_action( $event[0], ...$event[1] );
@@ -491,7 +562,7 @@ foreach ( $GLOBALS['smoke_events'] as $event ) {
 $sitewarden_report = $sitewarden_rest->get_report();
 if ( ! isset( $sitewarden_report['report']['score'] ) ) {
 	$failures[] = 'The scan did not store a report.';
-} elseif ( count( $sitewarden_report['report']['checks'] ) < 30 ) {
+} elseif ( count( $sitewarden_report['report']['checks'] ) < 33 ) {
 	$failures[] = 'The scan ran ' . count( $sitewarden_report['report']['checks'] ) . ' checks, expected all built-in ones.';
 } else {
 	foreach ( $sitewarden_report['report']['results'] as $sitewarden_result ) {
@@ -500,6 +571,16 @@ if ( ! isset( $sitewarden_report['report']['score'] ) ) {
 			$failures[] = $sitewarden_result['check_id'] . ': ' . $sitewarden_result['message'];
 		}
 	}
+}
+
+$sitewarden_online = [];
+foreach ( $sitewarden_report['report']['results'] ?? [] as $sitewarden_result ) {
+	if ( 0 === strpos( $sitewarden_result['check_id'], 'online.' ) ) {
+		$sitewarden_online[ $sitewarden_result['check_id'] ] = $sitewarden_result['status'];
+	}
+}
+if ( 'skipped' !== ( $sitewarden_online['online.vulnerabilities'] ?? '' ) || 'skipped' !== ( $sitewarden_online['online.core_checksums'] ?? '' ) ) {
+	$failures[] = 'The online checks did not run as expected: ' . smoke_json( $sitewarden_online );
 }
 
 // Ignore and show again a problem the scan found, and skip a file.

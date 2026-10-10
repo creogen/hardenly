@@ -9,6 +9,15 @@ defined( 'ABSPATH' ) || exit;
  */
 class AdminIncludes {
 	/**
+	 * get_core_checksums().
+	 */
+	public static function updates(): void {
+		if ( ! function_exists( 'get_core_checksums' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/update.php';
+		}
+	}
+
+	/**
 	 * get_plugins() and is_plugin_active().
 	 */
 	public static function plugins(): void {

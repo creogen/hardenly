@@ -103,16 +103,17 @@ class PluginTest extends TestCase {
 		);
 		self::assertSame(
 			[
-				'admin_menu'                        => [ Menu::class . '::register' ],
-				'admin_init'                        => [ SettingsPage::class . '::register' ],
-				'admin_enqueue_scripts'             => [ Plugin::class . '::enqueue_admin_assets' ],
-				'rest_api_init'                     => [ ScanController::class . '::register_routes', FindingsController::class . '::register_routes' ],
-				Scanner::TICK_HOOK                  => [ Scanner::class . '::handle_tick_event' ],
-				Schedule::HOOK                      => [ Schedule::class . '::run' ],
-				'add_option_sitewarden_settings'    => [ Schedule::class . '::sync' ],
-				'update_option_sitewarden_settings' => [ Schedule::class . '::sync', ReportRefresher::class . '::refresh' ],
-				'sitewarden_scan_completed'         => [ EmailReport::class . '::maybe_send' ],
-				'wp_login'                          => [ LastLogin::class . '::record' ],
+				'admin_menu'                          => [ Menu::class . '::register' ],
+				'admin_init'                          => [ SettingsPage::class . '::register' ],
+				'admin_post_sitewarden_test_provider' => [ SettingsPage::class . '::handle_test' ],
+				'admin_enqueue_scripts'               => [ Plugin::class . '::enqueue_admin_assets' ],
+				'rest_api_init'                       => [ ScanController::class . '::register_routes', FindingsController::class . '::register_routes' ],
+				Scanner::TICK_HOOK                    => [ Scanner::class . '::handle_tick_event' ],
+				Schedule::HOOK                        => [ Schedule::class . '::run' ],
+				'add_option_sitewarden_settings'      => [ Schedule::class . '::sync' ],
+				'update_option_sitewarden_settings'   => [ Schedule::class . '::sync', ReportRefresher::class . '::refresh' ],
+				'sitewarden_scan_completed'           => [ EmailReport::class . '::maybe_send' ],
+				'wp_login'                            => [ LastLogin::class . '::record' ],
 			],
 			$classes
 		);
