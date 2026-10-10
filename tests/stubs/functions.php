@@ -1,11 +1,32 @@
-<?php declare( strict_types=1 );
+<?php
 /**
- * Stand-ins for the WordPress functions and classes the plugin calls directly (translation,
+ * Stand-ins for the WordPress functions and constants the plugin uses directly (translation,
  * escaping), so unit tests run without WordPress. Everything else goes through WPAL mocks.
+ *
+ * @package Sitewarden
  */
+
+declare( strict_types=1 );
+
+if ( ! defined( 'DAY_IN_SECONDS' ) ) {
+	define( 'DAY_IN_SECONDS', 86400 );
+}
+
+/**
+ * Lets AdminIncludes::plugins() see the admin plugin functions as loaded.
+ *
+ * @return array<string, array<string, string>>
+ */
+function get_plugins(): array {
+	return [];
+}
 
 function __( string $text, string $domain = 'default' ): string {
 	return $text;
+}
+
+function _n( string $single, string $plural, int $number, string $domain = 'default' ): string {
+	return 1 === $number ? $single : $plural;
 }
 
 function esc_html__( string $text, string $domain = 'default' ): string {
