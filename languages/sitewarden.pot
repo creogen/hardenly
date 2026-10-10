@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-10T08:35:53+00:00\n"
+"POT-Creation-Date: 2026-10-10T10:57:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: sitewarden\n"
@@ -54,6 +54,754 @@ msgstr ""
 
 #: src/Rest/ScanController.php:119
 msgid "A scan is already running."
+msgstr ""
+
+#: src/Scanner/Checks/Config/DebugDisplayCheck.php:41
+msgid "Debug output"
+msgstr ""
+
+#: src/Scanner/Checks/Config/DebugDisplayCheck.php:52
+msgid "PHP errors are not shown to visitors."
+msgstr ""
+
+#: src/Scanner/Checks/Config/DebugDisplayCheck.php:60
+msgid "PHP errors are shown to visitors"
+msgstr ""
+
+#: src/Scanner/Checks/Config/DebugDisplayCheck.php:61
+msgid "In wp-config.php, set WP_DEBUG to false, or keep it on and set WP_DEBUG_DISPLAY to false and WP_DEBUG_LOG to a path outside the web root."
+msgstr ""
+
+#: src/Scanner/Checks/Config/DebugDisplayCheck.php:63
+msgid "Error messages reveal file paths, plugin names and other details that help attackers."
+msgstr ""
+
+#: src/Scanner/Checks/Config/EnvironmentTypeCheck.php:34
+msgid "Environment type"
+msgstr ""
+
+#: src/Scanner/Checks/Config/EnvironmentTypeCheck.php:44
+msgid "The site is marked as a production site."
+msgstr ""
+
+#. translators: %s: environment type, e.g. "staging".
+#: src/Scanner/Checks/Config/EnvironmentTypeCheck.php:51
+#, php-format
+msgid "The site is marked as a %s site"
+msgstr ""
+
+#: src/Scanner/Checks/Config/EnvironmentTypeCheck.php:52
+msgid "WP_ENVIRONMENT_TYPE in wp-config.php says this is not a live site, so debug output is rated lower. If this is your live site, remove WP_ENVIRONMENT_TYPE or set it to \"production\"."
+msgstr ""
+
+#: src/Scanner/Checks/Config/FileEditCheck.php:33
+msgid "File editing in the dashboard"
+msgstr ""
+
+#: src/Scanner/Checks/Config/FileEditCheck.php:42
+msgid "File editing in the dashboard is turned off."
+msgstr ""
+
+#: src/Scanner/Checks/Config/FileEditCheck.php:49
+msgid "File editing in the dashboard is turned on"
+msgstr ""
+
+#: src/Scanner/Checks/Config/FileEditCheck.php:50
+msgid "Add define( 'DISALLOW_FILE_EDIT', true ); to wp-config.php."
+msgstr ""
+
+#: src/Scanner/Checks/Config/FileEditCheck.php:52
+msgid "Anyone who gets into an administrator account can change theme and plugin code from the dashboard and take over the site."
+msgstr ""
+
+#: src/Scanner/Checks/Config/ForceSslAdminCheck.php:41
+msgid "HTTPS for the dashboard"
+msgstr ""
+
+#: src/Scanner/Checks/Config/ForceSslAdminCheck.php:51
+#: src/Scanner/Checks/Server/CertificateCheck.php:61
+msgid "The site does not use HTTPS."
+msgstr ""
+
+#: src/Scanner/Checks/Config/ForceSslAdminCheck.php:54
+msgid "Logins and the dashboard always use HTTPS."
+msgstr ""
+
+#: src/Scanner/Checks/Config/ForceSslAdminCheck.php:61
+msgid "HTTPS is not forced for logins and the dashboard"
+msgstr ""
+
+#: src/Scanner/Checks/Config/ForceSslAdminCheck.php:62
+msgid "Add define( 'FORCE_SSL_ADMIN', true ); to wp-config.php."
+msgstr ""
+
+#: src/Scanner/Checks/Config/ForceSslAdminCheck.php:64
+msgid "Without it, a login over plain HTTP sends the password unencrypted."
+msgstr ""
+
+#: src/Scanner/Checks/Config/SaltsCheck.php:49
+msgid "Security keys"
+msgstr ""
+
+#: src/Scanner/Checks/Config/SaltsCheck.php:68
+msgid "Security keys are set and unique."
+msgstr ""
+
+#: src/Scanner/Checks/Config/SaltsCheck.php:75
+msgid "Security keys are missing, weak or repeated"
+msgstr ""
+
+#: src/Scanner/Checks/Config/SaltsCheck.php:76
+msgid "Replace the keys in wp-config.php with new ones from https://api.wordpress.org/secret-key/1.1/salt/. Everyone will be logged out once."
+msgstr ""
+
+#: src/Scanner/Checks/Config/SaltsCheck.php:78
+msgid "The keys protect login cookies. With known or empty keys, cookies are easier to forge."
+msgstr ""
+
+#: src/Scanner/Checks/Database/AutoloadSizeCheck.php:39
+msgid "Autoloaded options"
+msgstr ""
+
+#: src/Scanner/Checks/Database/AutoloadSizeCheck.php:54
+msgid "Autoloaded options are a reasonable size."
+msgstr ""
+
+#. translators: %s: size in kilobytes.
+#: src/Scanner/Checks/Database/AutoloadSizeCheck.php:62
+#, php-format
+msgid "Autoloaded options take %s KB"
+msgstr ""
+
+#: src/Scanner/Checks/Database/AutoloadSizeCheck.php:63
+msgid "Look for options left by plugins you no longer use, and ask the authors of active plugins about large ones. Tools > Site Health shows the same problem."
+msgstr ""
+
+#: src/Scanner/Checks/Database/AutoloadSizeCheck.php:65
+msgid "WordPress loads these options on every request. A large set slows the site and makes it easier to overload."
+msgstr ""
+
+#: src/Scanner/Checks/Database/TablePrefixCheck.php:35
+msgid "Database table prefix"
+msgstr ""
+
+#: src/Scanner/Checks/Database/TablePrefixCheck.php:47
+msgid "Database tables use a custom prefix."
+msgstr ""
+
+#: src/Scanner/Checks/Database/TablePrefixCheck.php:54
+msgid "Database tables use the default \"wp_\" prefix"
+msgstr ""
+
+#: src/Scanner/Checks/Database/TablePrefixCheck.php:55
+msgid "Use a custom prefix ($table_prefix in wp-config.php) on new sites. Changing it on an existing site means renaming tables and some data, so do it only with a backup and a guide, or skip it: on its own the default prefix is a minor risk."
+msgstr ""
+
+#: src/Scanner/Checks/Database/TablePrefixCheck.php:57
+msgid "Automated SQL injection attacks often assume the default table names."
+msgstr ""
+
+#: src/Scanner/Checks/Files/BackupFilesCheck.php:58
+msgid "Backup files"
+msgstr ""
+
+#: src/Scanner/Checks/Files/BackupFilesCheck.php:87
+msgid "No backups or archives in public folders."
+msgstr ""
+
+#. translators: %d: number of files.
+#: src/Scanner/Checks/Files/BackupFilesCheck.php:96
+#, php-format
+msgid "%d backup or archive file is in a public folder"
+msgid_plural "%d backup or archive files are in public folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Files/BackupFilesCheck.php:97
+msgid "Move backups out of the web folders, to your computer or a backup service, and delete them from the server."
+msgstr ""
+
+#: src/Scanner/Checks/Files/BackupFilesCheck.php:99
+msgid "Anyone who guesses the file name can download it. Database dumps and copies of wp-config.php contain passwords."
+msgstr ""
+
+#: src/Scanner/Checks/Files/DebugLogCheck.php:55
+msgid "Debug log"
+msgstr ""
+
+#: src/Scanner/Checks/Files/DebugLogCheck.php:65
+msgid "There is no debug log in wp-content."
+msgstr ""
+
+#: src/Scanner/Checks/Files/DebugLogCheck.php:76
+msgid "The debug log can be downloaded by anyone"
+msgstr ""
+
+#: src/Scanner/Checks/Files/DebugLogCheck.php:77
+msgid "The debug log is in the wp-content folder"
+msgstr ""
+
+#: src/Scanner/Checks/Files/DebugLogCheck.php:78
+msgid "Delete wp-content/debug.log. If you need logging, set WP_DEBUG_LOG in wp-config.php to a path outside the web folders."
+msgstr ""
+
+#: src/Scanner/Checks/Files/DebugLogCheck.php:80
+msgid "The log can contain file paths, database errors and other details useful to attackers."
+msgstr ""
+
+#: src/Scanner/Checks/Files/ExposedFilesCheck.php:69
+msgid ".git and .env files"
+msgstr ""
+
+#: src/Scanner/Checks/Files/ExposedFilesCheck.php:96
+msgid "Anyone can download version control or environment files"
+msgstr ""
+
+#: src/Scanner/Checks/Files/ExposedFilesCheck.php:97
+msgid "Block access to these files in your server configuration right away, then move them out of the web folder. Change any passwords or keys they contain."
+msgstr ""
+
+#: src/Scanner/Checks/Files/ExposedFilesCheck.php:99
+msgid "These files can expose the site's code history, database passwords and API keys."
+msgstr ""
+
+#: src/Scanner/Checks/Files/ExposedFilesCheck.php:108
+msgid "Version control or environment files are in the WordPress folder"
+msgstr ""
+
+#: src/Scanner/Checks/Files/ExposedFilesCheck.php:109
+msgid "Visitors cannot read them now, but a server change could expose them. Move them out of the web folder if you can."
+msgstr ""
+
+#: src/Scanner/Checks/Files/ExposedFilesCheck.php:115
+msgid "No version control or environment files in the WordPress folder."
+msgstr ""
+
+#: src/Scanner/Checks/Files/LeftoverFilesCheck.php:45
+msgid "Leftover install files"
+msgstr ""
+
+#: src/Scanner/Checks/Files/LeftoverFilesCheck.php:63
+msgid "No leftover install files."
+msgstr ""
+
+#: src/Scanner/Checks/Files/LeftoverFilesCheck.php:70
+msgid "Install files that reveal the WordPress version are public"
+msgstr ""
+
+#: src/Scanner/Checks/Files/LeftoverFilesCheck.php:71
+msgid "Block them in your server configuration, or delete them after each WordPress update (updates bring them back)."
+msgstr ""
+
+#: src/Scanner/Checks/Files/LeftoverFilesCheck.php:73
+msgid "These files tell visitors which WordPress version runs the site, which helps attackers pick known holes."
+msgstr ""
+
+#: src/Scanner/Checks/Files/PermissionsCheck.php:43
+msgid "File permissions"
+msgstr ""
+
+#: src/Scanner/Checks/Files/PermissionsCheck.php:52
+msgid "Windows servers do not use these permissions."
+msgstr ""
+
+#: src/Scanner/Checks/Files/PermissionsCheck.php:66
+msgid "Key files cannot be changed by other users on the server."
+msgstr ""
+
+#: src/Scanner/Checks/Files/PermissionsCheck.php:73
+msgid "Key files can be changed by anyone on the server"
+msgstr ""
+
+#: src/Scanner/Checks/Files/PermissionsCheck.php:74
+msgid "Set folders to 755 and files to 644 (wp-config.php can be 600 or 640), in your hosting file manager or over SFTP. Ask your host if unsure."
+msgstr ""
+
+#: src/Scanner/Checks/Files/PermissionsCheck.php:76
+msgid "On shared hosting, other accounts or a compromised site next door could change these files."
+msgstr ""
+
+#: src/Scanner/Checks/Files/PermissionsCheck.php:95
+msgid "WordPress folder"
+msgstr ""
+
+#: src/Scanner/Checks/Files/RecentlyModifiedCheck.php:39
+msgid "Recently changed files"
+msgstr ""
+
+#: src/Scanner/Checks/Files/RecentlyModifiedCheck.php:56
+msgid "No PHP files changed recently."
+msgstr ""
+
+#. translators: %d: number of files.
+#: src/Scanner/Checks/Files/RecentlyModifiedCheck.php:65
+#, php-format
+msgid "%d PHP file changed recently"
+msgid_plural "%d PHP files changed recently"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Files/RecentlyModifiedCheck.php:66
+msgid "Updates change files, so most of these are expected. Look for files outside the plugins and themes you updated."
+msgstr ""
+
+#: src/Scanner/Checks/Files/RecentlyModifiedCheck.php:68
+msgid "An unexpected change to a PHP file can be a sign of a break-in."
+msgstr ""
+
+#: src/Scanner/Checks/Files/UploadsPhpCheck.php:45
+msgid "PHP files in uploads"
+msgstr ""
+
+#: src/Scanner/Checks/Files/UploadsPhpCheck.php:69
+msgid "The uploads folder has no PHP files."
+msgstr ""
+
+#. translators: %d: number of files.
+#: src/Scanner/Checks/Files/UploadsPhpCheck.php:78
+#, php-format
+msgid "%d PHP file found in the uploads folder"
+msgid_plural "%d PHP files found in the uploads folder"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Files/UploadsPhpCheck.php:79
+msgid "Check where each file came from. Remove anything you do not recognise and change your passwords. If a plugin needs the file, add it to \"Files to skip\". Consider blocking PHP in uploads on your server."
+msgstr ""
+
+#: src/Scanner/Checks/Files/UploadsPhpCheck.php:81
+msgid "The uploads folder should only hold media. PHP files there are a common sign of a break-in or a vulnerable plugin."
+msgstr ""
+
+#: src/Scanner/Checks/Server/CertificateCheck.php:51
+msgid "Certificate expiry"
+msgstr ""
+
+#: src/Scanner/Checks/Server/CertificateCheck.php:67
+msgid "The certificate could not be read from this server."
+msgstr ""
+
+#. translators: %d: number of days.
+#: src/Scanner/Checks/Server/CertificateCheck.php:73
+#, php-format
+msgid "The certificate is valid for %d more days."
+msgstr ""
+
+#: src/Scanner/Checks/Server/CertificateCheck.php:78
+msgid "The HTTPS certificate has expired"
+msgstr ""
+
+#. translators: %d: number of days.
+#: src/Scanner/Checks/Server/CertificateCheck.php:82
+#, php-format
+msgid "The HTTPS certificate expires in %d day"
+msgid_plural "The HTTPS certificate expires in %d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Server/CertificateCheck.php:90
+msgid "Renew the certificate, or ask your host why automatic renewal did not run."
+msgstr ""
+
+#: src/Scanner/Checks/Server/CertificateCheck.php:92
+msgid "With an expired certificate, browsers warn visitors away and some connections fail."
+msgstr ""
+
+#: src/Scanner/Checks/Server/DirectoryListingCheck.php:41
+msgid "Folder listing"
+msgstr ""
+
+#: src/Scanner/Checks/Server/DirectoryListingCheck.php:51
+msgid "The uploads folder address is unknown."
+msgstr ""
+
+#: src/Scanner/Checks/Server/DirectoryListingCheck.php:56
+msgid "The uploads folder could not be reached."
+msgstr ""
+
+#: src/Scanner/Checks/Server/DirectoryListingCheck.php:60
+msgid "Visitors cannot list the uploads folder."
+msgstr ""
+
+#: src/Scanner/Checks/Server/DirectoryListingCheck.php:67
+msgid "Visitors can list the files in the uploads folder"
+msgstr ""
+
+#: src/Scanner/Checks/Server/DirectoryListingCheck.php:68
+msgid "Turn off directory listing on the server (for Apache, add \"Options -Indexes\" to .htaccess), or ask your host."
+msgstr ""
+
+#: src/Scanner/Checks/Server/DirectoryListingCheck.php:70
+msgid "Listings show every uploaded file, including private documents and leftovers attackers look for."
+msgstr ""
+
+#: src/Scanner/Checks/Server/HttpsCheck.php:34
+msgid "HTTPS"
+msgstr ""
+
+#: src/Scanner/Checks/Server/HttpsCheck.php:50
+msgid "The site uses HTTPS."
+msgstr ""
+
+#: src/Scanner/Checks/Server/HttpsCheck.php:57
+msgid "The site does not use HTTPS"
+msgstr ""
+
+#: src/Scanner/Checks/Server/HttpsCheck.php:58
+msgid "Get a certificate from your host (most offer free ones), then change both addresses in Settings > General to https://. Tools > Site Health can help."
+msgstr ""
+
+#: src/Scanner/Checks/Server/HttpsCheck.php:60
+msgid "Without HTTPS, passwords and cookies travel unencrypted and can be read on public networks."
+msgstr ""
+
+#: src/Scanner/Checks/Server/SecurityHeadersCheck.php:41
+msgid "Security headers"
+msgstr ""
+
+#: src/Scanner/Checks/Server/SecurityHeadersCheck.php:53
+msgid "The home page could not be loaded to read its headers."
+msgstr ""
+
+#: src/Scanner/Checks/Server/SecurityHeadersCheck.php:59
+msgid "X-Frame-Options or Content-Security-Policy frame-ancestors (stops other sites framing yours)"
+msgstr ""
+
+#: src/Scanner/Checks/Server/SecurityHeadersCheck.php:62
+msgid "X-Content-Type-Options: nosniff (stops browsers guessing file types)"
+msgstr ""
+
+#: src/Scanner/Checks/Server/SecurityHeadersCheck.php:65
+msgid "Referrer-Policy (limits what other sites learn about your URLs)"
+msgstr ""
+
+#: src/Scanner/Checks/Server/SecurityHeadersCheck.php:68
+msgid "Strict-Transport-Security (keeps browsers on HTTPS)"
+msgstr ""
+
+#: src/Scanner/Checks/Server/SecurityHeadersCheck.php:72
+msgid "The home page sends the main security headers."
+msgstr ""
+
+#. translators: %d: number of headers.
+#: src/Scanner/Checks/Server/SecurityHeadersCheck.php:80
+#, php-format
+msgid "%d security header is missing"
+msgid_plural "%d security headers are missing"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Server/SecurityHeadersCheck.php:81
+msgid "Add the headers in your server configuration or with a security plugin. Your host can help. Test the site afterwards, especially embeds."
+msgstr ""
+
+#: src/Scanner/Checks/Server/SecurityHeadersCheck.php:83
+msgid "These headers tell browsers to block common attacks such as clickjacking."
+msgstr ""
+
+#: src/Scanner/Checks/Server/WpCronCheck.php:33
+msgid "WP-Cron"
+msgstr ""
+
+#: src/Scanner/Checks/Server/WpCronCheck.php:42
+msgid "Scheduled tasks run from a server cron job."
+msgstr ""
+
+#: src/Scanner/Checks/Server/WpCronCheck.php:48
+msgid "Scheduled tasks run on page visits"
+msgstr ""
+
+#: src/Scanner/Checks/Server/WpCronCheck.php:49
+msgid "This is the WordPress default and fine for most sites. On busy sites, a server cron job is more reliable, and lets you block public requests to wp-cron.php, which can be used to load the server: set DISABLE_WP_CRON to true and run wp-cron.php every few minutes. Ask your host."
+msgstr ""
+
+#: src/Scanner/Checks/Server/XmlRpcCheck.php:43
+msgid "XML-RPC"
+msgstr ""
+
+#: src/Scanner/Checks/Server/XmlRpcCheck.php:59
+msgid "xmlrpc.php could not be reached."
+msgstr ""
+
+#: src/Scanner/Checks/Server/XmlRpcCheck.php:64
+msgid "XML-RPC does not answer visitors."
+msgstr ""
+
+#. translators: %d: HTTP status code.
+#: src/Scanner/Checks/Server/XmlRpcCheck.php:71
+#, php-format
+msgid "xmlrpc.php gave an unexpected answer (HTTP %d)."
+msgstr ""
+
+#: src/Scanner/Checks/Server/XmlRpcCheck.php:80
+msgid "XML-RPC is enabled"
+msgstr ""
+
+#: src/Scanner/Checks/Server/XmlRpcCheck.php:81
+msgid "If you do not use the WordPress mobile app, Jetpack or remote publishing, block xmlrpc.php on the server or turn XML-RPC off with a security plugin."
+msgstr ""
+
+#: src/Scanner/Checks/Server/XmlRpcCheck.php:83
+msgid "XML-RPC lets attackers try many passwords in one request, and is used to amplify attacks on other sites."
+msgstr ""
+
+#: src/Scanner/Checks/Users/AdminCountCheck.php:39
+msgid "Number of administrators"
+msgstr ""
+
+#: src/Scanner/Checks/Users/AdminCountCheck.php:51
+msgid "Few users are administrators."
+msgstr ""
+
+#. translators: %d: number of administrators.
+#: src/Scanner/Checks/Users/AdminCountCheck.php:59
+#, php-format
+msgid "%d user is an administrator"
+msgid_plural "%d users are administrators"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Users/AdminCountCheck.php:60
+msgid "Give each person the lowest role they need, such as Editor, and remove accounts nobody uses."
+msgstr ""
+
+#: src/Scanner/Checks/Users/AdminCountCheck.php:62
+msgid "Every administrator account is a way in. The fewer there are, the fewer passwords can be stolen or guessed."
+msgstr ""
+
+#: src/Scanner/Checks/Users/AdminUsernameCheck.php:34
+msgid "The \"admin\" username"
+msgstr ""
+
+#: src/Scanner/Checks/Users/AdminUsernameCheck.php:44
+msgid "No user is called \"admin\"."
+msgstr ""
+
+#: src/Scanner/Checks/Users/AdminUsernameCheck.php:52
+msgid "A user is called \"admin\""
+msgstr ""
+
+#: src/Scanner/Checks/Users/AdminUsernameCheck.php:53
+msgid "Create a new administrator with a different username, log in as that user, then delete \"admin\" and give its content to the new user."
+msgstr ""
+
+#: src/Scanner/Checks/Users/AdminUsernameCheck.php:55
+msgid "Password-guessing attacks try \"admin\" first. Without a known username, they have to guess both."
+msgstr ""
+
+#: src/Scanner/Checks/Users/InactiveAdminsCheck.php:56
+msgid "Inactive administrators"
+msgstr ""
+
+#. translators: %d: number of days.
+#: src/Scanner/Checks/Users/InactiveAdminsCheck.php:73
+#, php-format
+msgid "Sitewarden records logins from the day it was installed. This check runs once it has %d days of records."
+msgstr ""
+
+#: src/Scanner/Checks/Users/InactiveAdminsCheck.php:86
+msgid "All administrators have logged in recently."
+msgstr ""
+
+#. translators: 1: number of administrators, 2: number of days.
+#: src/Scanner/Checks/Users/InactiveAdminsCheck.php:95
+#, php-format
+msgid "%1$d administrator has not logged in for %2$d days"
+msgid_plural "%1$d administrators have not logged in for %2$d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Users/InactiveAdminsCheck.php:99
+msgid "Remove administrator accounts nobody uses, or lower their role."
+msgstr ""
+
+#: src/Scanner/Checks/Users/InactiveAdminsCheck.php:101
+msgid "Forgotten accounts often have old passwords, and nobody notices when someone else uses them."
+msgstr ""
+
+#: src/Scanner/Checks/Users/UserEnumerationCheck.php:57
+msgid "Username listing"
+msgstr ""
+
+#. translators: %d: user ID.
+#: src/Scanner/Checks/Users/UserEnumerationCheck.php:80
+#, php-format
+msgid "Author archives: /?author=%d redirects to a URL with the username"
+msgstr ""
+
+#: src/Scanner/Checks/Users/UserEnumerationCheck.php:87
+msgid "REST API: /wp-json/wp/v2/users lists users"
+msgstr ""
+
+#: src/Scanner/Checks/Users/UserEnumerationCheck.php:92
+msgid "The site could not be reached to test this."
+msgstr ""
+
+#: src/Scanner/Checks/Users/UserEnumerationCheck.php:95
+msgid "Visitors cannot list usernames."
+msgstr ""
+
+#: src/Scanner/Checks/Users/UserEnumerationCheck.php:102
+msgid "Visitors can list usernames"
+msgstr ""
+
+#: src/Scanner/Checks/Users/UserEnumerationCheck.php:103
+msgid "Block author archives by ID and the users endpoint for logged-out visitors, with a security or SEO plugin or a few lines of code. Strong passwords and two-factor login matter more than hiding usernames."
+msgstr ""
+
+#: src/Scanner/Checks/Users/UserEnumerationCheck.php:105
+msgid "Knowing usernames makes password-guessing attacks easier."
+msgstr ""
+
+#: src/Scanner/Checks/Versions/CoreVersionCheck.php:41
+msgid "WordPress version"
+msgstr ""
+
+#: src/Scanner/Checks/Versions/CoreVersionCheck.php:51
+msgid "WordPress has not checked for updates yet."
+msgstr ""
+
+#. translators: %s: WordPress version.
+#: src/Scanner/Checks/Versions/CoreVersionCheck.php:66
+#, php-format
+msgid "WordPress %s is up to date."
+msgstr ""
+
+#. translators: 1: installed version, 2: available version.
+#: src/Scanner/Checks/Versions/CoreVersionCheck.php:76
+#, php-format
+msgid "WordPress %1$s is out of date: %2$s is available"
+msgstr ""
+
+#: src/Scanner/Checks/Versions/CoreVersionCheck.php:77
+msgid "Back up the site, then update WordPress in Dashboard > Updates."
+msgstr ""
+
+#: src/Scanner/Checks/Versions/CoreVersionCheck.php:80
+msgid "Minor releases mostly fix bugs and security holes. Attackers look for sites that have not installed them."
+msgstr ""
+
+#: src/Scanner/Checks/Versions/CoreVersionCheck.php:81
+msgid "Older major versions get security fixes only for a while. Staying current keeps the site covered."
+msgstr ""
+
+#: src/Scanner/Checks/Versions/InactiveExtensionsCheck.php:42
+msgid "Unused plugins and themes"
+msgstr ""
+
+#: src/Scanner/Checks/Versions/InactiveExtensionsCheck.php:53
+msgid "No unused plugins or themes are installed."
+msgstr ""
+
+#. translators: %d: number of plugins and themes.
+#: src/Scanner/Checks/Versions/InactiveExtensionsCheck.php:61
+#, php-format
+msgid "%d unused plugin or theme is installed"
+msgid_plural "%d unused plugins and themes are installed"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Versions/InactiveExtensionsCheck.php:62
+msgid "Delete what you do not need. Keep one default theme (such as the newest Twenty-something theme) to fall back on."
+msgstr ""
+
+#: src/Scanner/Checks/Versions/InactiveExtensionsCheck.php:64
+msgid "Inactive plugins and themes can still be attacked through their files, and they are easy to forget to update."
+msgstr ""
+
+#. translators: %s: plugin name.
+#: src/Scanner/Checks/Versions/InactiveExtensionsCheck.php:78
+#, php-format
+msgid "Plugin: %s"
+msgstr ""
+
+#. translators: %s: theme name.
+#: src/Scanner/Checks/Versions/InactiveExtensionsCheck.php:113
+#, php-format
+msgid "Theme: %s"
+msgstr ""
+
+#: src/Scanner/Checks/Versions/PhpVersionCheck.php:61
+msgid "PHP version"
+msgstr ""
+
+#. translators: %s: PHP version.
+#: src/Scanner/Checks/Versions/PhpVersionCheck.php:75
+#: src/Scanner/Checks/Versions/PhpVersionCheck.php:108
+#, php-format
+msgid "PHP %s gets security fixes."
+msgstr ""
+
+#. translators: %s: PHP version.
+#: src/Scanner/Checks/Versions/PhpVersionCheck.php:87
+#, php-format
+msgid "PHP %s no longer gets security fixes"
+msgstr ""
+
+#: src/Scanner/Checks/Versions/PhpVersionCheck.php:88
+msgid "Ask your host to move the site to a supported PHP version, or change it in your hosting control panel. Test the site afterwards."
+msgstr ""
+
+#: src/Scanner/Checks/Versions/PhpVersionCheck.php:90
+msgid "Security holes found in this PHP version are no longer fixed."
+msgstr ""
+
+#. translators: 1: PHP version, 2: date.
+#: src/Scanner/Checks/Versions/PhpVersionCheck.php:101
+#, php-format
+msgid "PHP %1$s stops getting security fixes on %2$s"
+msgstr ""
+
+#: src/Scanner/Checks/Versions/PhpVersionCheck.php:102
+msgid "Plan a move to a newer PHP version with your host."
+msgstr ""
+
+#: src/Scanner/Checks/Versions/PluginUpdatesCheck.php:42
+msgid "Plugin updates"
+msgstr ""
+
+#: src/Scanner/Checks/Versions/PluginUpdatesCheck.php:52
+msgid "WordPress has not checked for plugin updates yet."
+msgstr ""
+
+#: src/Scanner/Checks/Versions/PluginUpdatesCheck.php:66
+msgid "All plugins are up to date."
+msgstr ""
+
+#. translators: %d: number of plugins.
+#: src/Scanner/Checks/Versions/PluginUpdatesCheck.php:74
+#, php-format
+msgid "%d plugin is out of date"
+msgid_plural "%d plugins are out of date"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Versions/PluginUpdatesCheck.php:75
+msgid "Update them on the Plugins screen. Most attacks target security holes that updates have already closed."
+msgstr ""
+
+#: src/Scanner/Checks/Versions/ThemeUpdatesCheck.php:41
+msgid "Theme updates"
+msgstr ""
+
+#: src/Scanner/Checks/Versions/ThemeUpdatesCheck.php:51
+msgid "WordPress has not checked for theme updates yet."
+msgstr ""
+
+#: src/Scanner/Checks/Versions/ThemeUpdatesCheck.php:65
+msgid "All themes are up to date."
+msgstr ""
+
+#. translators: %d: number of themes.
+#: src/Scanner/Checks/Versions/ThemeUpdatesCheck.php:73
+#, php-format
+msgid "%d theme is out of date"
+msgid_plural "%d themes are out of date"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Scanner/Checks/Versions/ThemeUpdatesCheck.php:74
+msgid "Update them in Appearance > Themes. Inactive themes can be attacked too: update or delete them."
 msgstr ""
 
 #: src/Scanner/Group.php:38
@@ -140,20 +888,28 @@ msgstr ""
 msgid "Info"
 msgstr ""
 
+#: assets/src/admin/components/Findings.js:28
+msgid "Not checked"
+msgstr ""
+
 #. translators: %d: number of items not shown.
-#: assets/src/admin/components/Findings.js:43
+#: assets/src/admin/components/Findings.js:48
 #, js-format
 msgid "and %d more"
 msgid_plural "and %d more"
 msgstr[0] ""
 msgstr[1] ""
 
-#: assets/src/admin/components/Findings.js:57
+#: assets/src/admin/components/Findings.js:62
 msgid "How to fix:"
 msgstr ""
 
-#: assets/src/admin/components/Findings.js:76
+#: assets/src/admin/components/Findings.js:83
 msgid "No problems found. Keep WordPress, plugins and themes up to date and scan regularly."
+msgstr ""
+
+#: assets/src/admin/components/Findings.js:102
+msgid "Notes"
 msgstr ""
 
 #: assets/src/admin/components/FirstRun.js:16

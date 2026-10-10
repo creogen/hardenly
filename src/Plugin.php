@@ -9,7 +9,7 @@ use Merkushin\Wpal\ServiceFactory;
 use Sitewarden\Admin\DashboardPage;
 use Sitewarden\Admin\Menu;
 use Sitewarden\Rest\ScanController;
-use Sitewarden\Scanner\Check;
+use Sitewarden\Scanner\Checks\BuiltInChecks;
 use Sitewarden\Scanner\CheckRegistry;
 use Sitewarden\Scanner\Scanner;
 use Sitewarden\Scanner\Score;
@@ -17,6 +17,7 @@ use Sitewarden\Storage\Lock;
 use Sitewarden\Storage\ReportStore;
 use Sitewarden\Storage\RunStore;
 use Sitewarden\Storage\Settings;
+use Sitewarden\Users\LastLogin;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -74,9 +75,12 @@ class Plugin {
 	 * Creates the plugin's objects and hooks them into WordPress.
 	 */
 	public function init(): void {
+		$last_login = new LastLogin();
+		$last_login->start();
+
 		$reports    = new ReportStore();
 		$scanner    = new Scanner(
-			new CheckRegistry( $this->default_checks() ),
+			new CheckRegistry( BuiltInChecks::all( $last_login ) ),
 			new RunStore(),
 			$reports,
 			new Settings(),
@@ -90,6 +94,7 @@ class Plugin {
 		$this->hooks->add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
 		$this->hooks->add_action( 'rest_api_init', [ $rest, 'register_routes' ] );
 		$this->hooks->add_action( Scanner::TICK_HOOK, [ $scanner, 'handle_tick_event' ] );
+		$this->hooks->add_action( 'wp_login', [ $last_login, 'record' ], 10, 2 );
 	}
 
 	/**
@@ -102,15 +107,6 @@ class Plugin {
 			return;
 		}
 		$this->enqueue_entry( 'admin' );
-	}
-
-	/**
-	 * Built-in checks; extensions add theirs through the `sitewarden_checks` filter.
-	 *
-	 * @return Check[]
-	 */
-	private function default_checks(): array {
-		return [];
 	}
 
 	private function score(): Score {

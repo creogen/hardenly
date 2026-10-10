@@ -3,6 +3,7 @@ import {
 	groupBySeverity,
 	isActive,
 	isProblem,
+	notes,
 	progressPercent,
 	scoreChange,
 	scoreLevel,
@@ -60,6 +61,22 @@ describe( 'groupBySeverity', () => {
 
 	it( 'returns nothing without problems', () => {
 		expect( groupBySeverity( [ result( 'pass', 'info' ) ] ) ).toEqual( [] );
+	} );
+} );
+
+describe( 'notes', () => {
+	it( 'lists notes, then skipped checks, and no problems or passes', () => {
+		const list = notes( [
+			result( 'skipped', 'info', 'skipped' ),
+			result( 'fail', 'high', 'problem' ),
+			result( 'info', 'info', 'note' ),
+			result( 'pass', 'info', 'pass' ),
+		] );
+
+		expect( list.map( ( r ) => r.message ) ).toEqual( [
+			'note',
+			'skipped',
+		] );
 	} );
 } );
 
