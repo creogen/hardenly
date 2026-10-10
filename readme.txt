@@ -51,3 +51,4 @@ The answer.
 = 1.0.0 =
 * Initial release.
 * Requires WordPress 6.2 or later.
+* Scanner core: checks run in the background in small batches, with a security score and a dashboard.

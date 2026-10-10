@@ -9,13 +9,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-09T10:13:40+00:00\n"
+"POT-Creation-Date: 2026-10-10T08:35:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: sitewarden\n"
 
 #. Plugin Name of the plugin
 #: sitewarden.php
+#: src/Admin/DashboardPage.php:32
+#: src/Admin/Menu.php:41
+#: src/Admin/Menu.php:42
+#: src/Admin/Menu.php:52
+#: assets/src/admin/App.js:124
 msgid "Sitewarden"
 msgstr ""
 
@@ -32,4 +37,241 @@ msgstr ""
 #. Author of the plugin
 #: sitewarden.php
 msgid "Dmitry Merkushin"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:33
+#: assets/src/admin/App.js:116
+msgid "Loading…"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:35
+msgid "The Sitewarden dashboard needs JavaScript."
+msgstr ""
+
+#: src/Admin/Menu.php:53
+msgid "Dashboard"
+msgstr ""
+
+#: src/Rest/ScanController.php:119
+msgid "A scan is already running."
+msgstr ""
+
+#: src/Scanner/Group.php:38
+msgid "Configuration"
+msgstr ""
+
+#: src/Scanner/Group.php:39
+msgid "Users"
+msgstr ""
+
+#: src/Scanner/Group.php:40
+msgid "Versions"
+msgstr ""
+
+#: src/Scanner/Group.php:41
+msgid "Server & HTTP"
+msgstr ""
+
+#: src/Scanner/Group.php:42
+msgid "Database"
+msgstr ""
+
+#: src/Scanner/Group.php:43
+msgid "Files"
+msgstr ""
+
+#: src/Scanner/Group.php:44
+msgid "Code patterns"
+msgstr ""
+
+#: src/Scanner/Group.php:45
+msgid "Online services"
+msgstr ""
+
+#. translators: %s: error message.
+#: src/Scanner/Scanner.php:341
+#, php-format
+msgid "This check could not run: %s"
+msgstr ""
+
+#: assets/src/admin/App.js:22
+msgid "Something went wrong. Reload the page and try again."
+msgstr ""
+
+#: assets/src/admin/App.js:29
+msgid "The last scan stopped making progress and was cancelled. If this keeps happening, WP-Cron may be disabled on this site; keep this page open while the scan runs."
+msgstr ""
+
+#: assets/src/admin/App.js:40
+msgid "The last scan was stopped."
+msgstr ""
+
+#: assets/src/admin/App.js:133
+msgid "Run scan"
+msgstr ""
+
+#. translators: %s: date and time of the last scan.
+#: assets/src/admin/App.js:140
+#, js-format
+msgid "Last scan: %s"
+msgstr ""
+
+#: assets/src/admin/components/Findings.js:7
+#: assets/src/admin/components/Summary.js:17
+msgid "Critical"
+msgstr ""
+
+#: assets/src/admin/components/Findings.js:8
+#: assets/src/admin/components/Summary.js:18
+msgid "High"
+msgstr ""
+
+#: assets/src/admin/components/Findings.js:9
+#: assets/src/admin/components/Summary.js:19
+msgid "Medium"
+msgstr ""
+
+#: assets/src/admin/components/Findings.js:10
+#: assets/src/admin/components/Summary.js:20
+msgid "Low"
+msgstr ""
+
+#: assets/src/admin/components/Findings.js:11
+msgid "Info"
+msgstr ""
+
+#. translators: %d: number of items not shown.
+#: assets/src/admin/components/Findings.js:43
+#, js-format
+msgid "and %d more"
+msgid_plural "and %d more"
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/src/admin/components/Findings.js:57
+msgid "How to fix:"
+msgstr ""
+
+#: assets/src/admin/components/Findings.js:76
+msgid "No problems found. Keep WordPress, plugins and themes up to date and scan regularly."
+msgstr ""
+
+#: assets/src/admin/components/FirstRun.js:16
+msgid "Check your site for security problems"
+msgstr ""
+
+#: assets/src/admin/components/FirstRun.js:22
+msgid "Sitewarden looks at your WordPress settings, users, plugins, themes and files, and tells you what to fix and how. It only reads; it never changes or deletes anything on your site."
+msgstr ""
+
+#: assets/src/admin/components/FirstRun.js:29
+msgid "Works offline: nothing is sent outside your site unless you turn it on in Settings."
+msgstr ""
+
+#: assets/src/admin/components/FirstRun.js:35
+msgid "Runs in small steps in the background, so it is safe on shared hosting."
+msgstr ""
+
+#: assets/src/admin/components/FirstRun.js:48
+msgid "Run first scan"
+msgstr ""
+
+#. translators: %s: name of the check that is running.
+#: assets/src/admin/components/Progress.js:11
+#, js-format
+msgid "Checking: %s"
+msgstr ""
+
+#: assets/src/admin/components/Progress.js:14
+msgid "Starting the scan…"
+msgstr ""
+
+#: assets/src/admin/components/Progress.js:25
+msgid "Scan progress"
+msgstr ""
+
+#. translators: 1: percent done, 2: checks done, 3: total checks.
+#: assets/src/admin/components/Progress.js:38
+#, js-format
+msgid "%1$d%% · %2$d of %3$d checks done"
+msgstr ""
+
+#: assets/src/admin/components/Progress.js:46
+msgid "The scan runs in the background in small steps. You can leave this page; results appear here when it finishes."
+msgstr ""
+
+#: assets/src/admin/components/Progress.js:57
+msgid "Stop scan"
+msgstr ""
+
+#: assets/src/admin/components/Summary.js:11
+msgid "Good"
+msgstr ""
+
+#: assets/src/admin/components/Summary.js:12
+msgid "Needs attention"
+msgstr ""
+
+#: assets/src/admin/components/Summary.js:13
+msgid "At risk"
+msgstr ""
+
+#: assets/src/admin/components/Summary.js:33
+msgid "No change since the previous scan"
+msgstr ""
+
+#. translators: %d: points the score went up.
+#: assets/src/admin/components/Summary.js:41
+#, js-format
+msgid "Up %d since the previous scan"
+msgstr ""
+
+#. translators: %d: points the score went down.
+#: assets/src/admin/components/Summary.js:46
+#, js-format
+msgid "Down %d since the previous scan"
+msgstr ""
+
+#. translators: %d: security score.
+#: assets/src/admin/components/Summary.js:78
+#, js-format
+msgid "Score %d out of 100"
+msgstr ""
+
+#: assets/src/admin/components/Summary.js:110
+msgid "of 100"
+msgstr ""
+
+#. translators: %s: score band, e.g. "Needs attention".
+#: assets/src/admin/components/Summary.js:117
+#, js-format
+msgid "Security score: %s"
+msgstr ""
+
+#: assets/src/admin/components/Summary.js:123
+msgid "The score is an indicator, not a guarantee that the site is secure."
+msgstr ""
+
+#: assets/src/admin/components/Summary.js:136
+msgid "Findings"
+msgstr ""
+
+#. translators: %d: number of checks that passed.
+#: assets/src/admin/components/Summary.js:154
+#, js-format
+msgid "%d check passed"
+msgid_plural "%d checks passed"
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/src/admin/components/Summary.js:171
+msgid "Recent scans"
+msgstr ""
+
+#: assets/src/admin/components/Summary.js:177
+msgid "Date"
+msgstr ""
+
+#: assets/src/admin/components/Summary.js:180
+msgid "Score"
 msgstr ""
