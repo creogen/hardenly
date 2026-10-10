@@ -20,8 +20,9 @@ const COUNT_LABELS = {
 	low: __( 'Low', 'sitewarden' ),
 };
 
+// Date and time: several scans on one day are common.
 const formatDate = ( timestamp ) =>
-	dateI18n( getSettings().formats.date, timestamp * 1000 );
+	dateI18n( getSettings().formats.datetime, timestamp * 1000 );
 
 function ScoreChange( { change } ) {
 	if ( change === null ) {
