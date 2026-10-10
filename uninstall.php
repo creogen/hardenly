@@ -15,3 +15,4 @@ foreach ( [ 'sitewarden_settings', 'sitewarden_latest_report', 'sitewarden_repor
 delete_metadata( 'user', 0, 'sitewarden_last_login', '', true );
 
 wp_unschedule_hook( 'sitewarden_scan_tick' );
+wp_unschedule_hook( 'sitewarden_scheduled_scan' );

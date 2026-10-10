@@ -27,11 +27,14 @@ if ( is_dir( $build_dir . '/vendor' ) ) {
 
 define( 'ABSPATH', __DIR__ . '/' );
 require __DIR__ . '/../stubs/WP_Error.php';
+require __DIR__ . '/../stubs/WP_REST_Request.php';
+define( 'HOUR_IN_SECONDS', 3600 );
 
 $GLOBALS['smoke_actions']  = [];
 $GLOBALS['smoke_enqueued'] = [];
 $GLOBALS['smoke_options']  = [];
 $GLOBALS['smoke_routes']   = [];
+$GLOBALS['smoke_pages']    = [];
 $GLOBALS['smoke_events']   = [];
 
 function add_action( string $hook, callable $callback, int $priority = 10, int $accepted_args = 1 ): bool {
@@ -140,6 +143,7 @@ function add_menu_page( string $page_title, string $menu_title, string $capabili
 }
 
 function add_submenu_page( string $parent_slug, string $page_title, string $menu_title, string $capability, string $menu_slug, callable $callback, ?int $position = null ): string {
+	$GLOBALS['smoke_pages'][ $menu_slug ] = $callback;
 	return 'toplevel_page_' . $menu_slug;
 }
 
@@ -296,6 +300,110 @@ function is_wp_error( $thing ): bool {
 	return $thing instanceof WP_Error;
 }
 
+function register_deactivation_hook( string $file, callable $callback ): void {
+	$GLOBALS['smoke_deactivate'] = $callback;
+}
+
+/**
+ * @param array<string, mixed> $args Arguments.
+ */
+function register_setting( string $option_group, string $option_name, array $args = [] ): void {
+	$GLOBALS['smoke_setting'] = $args;
+}
+
+function settings_errors( string $setting = '', bool $sanitize = false, bool $hide_on_update = false ): void {
+}
+
+/**
+ * @param int|string $action Action.
+ */
+function wp_nonce_field( $action = -1, string $name = '_wpnonce', bool $referer = true, bool $display = true ): string {
+	echo '<input type="hidden" name="_wpnonce" value="nonce">';
+	return '';
+}
+
+function wp_date( string $format, ?int $timestamp = null, ?DateTimeZone $timezone = null ): string {
+	return gmdate( $format, $timestamp ?? time() );
+}
+
+function esc_html( string $text ): string {
+	return htmlspecialchars( $text, ENT_QUOTES );
+}
+
+function esc_html__( string $text, string $domain = 'default' ): string {
+	return esc_html( $text );
+}
+
+function esc_textarea( string $text ): string {
+	return esc_html( $text );
+}
+
+/**
+ * @param mixed[] $args Event arguments.
+ *
+ * @return false
+ */
+function wp_get_schedule( string $hook, array $args = [] ) {
+	return false;
+}
+
+/**
+ * @param mixed[] $args Event arguments.
+ *
+ * @return false
+ */
+function wp_next_scheduled( string $hook, array $args = [] ) {
+	return false;
+}
+
+function smoke_request( string $key, string $value ): WP_REST_Request {
+	$request = new WP_REST_Request( 'POST' );
+	$request->set_param( $key, $value );
+	return $request;
+}
+
+/**
+ * @param mixed[] $args Event arguments.
+ */
+function wp_schedule_event( int $timestamp, string $recurrence, string $hook, array $args = [], bool $wp_error = false ): bool {
+	return true;
+}
+
+function wp_unschedule_hook( string $hook, bool $wp_error = false ): int {
+	$GLOBALS['smoke_unscheduled'][] = $hook;
+	return 0;
+}
+
+function wp_get_current_user(): object {
+	return (object) [
+		'ID'         => 1,
+		'user_login' => 'admin',
+	];
+}
+
+function sanitize_key( string $key ): string {
+	return (string) preg_replace( '/[^a-z0-9_\-]/', '', strtolower( $key ) );
+}
+
+function sanitize_text_field( string $text ): string {
+	return trim( strip_tags( $text ) );
+}
+
+function sanitize_user( string $username, bool $strict = false ): string {
+	return $username;
+}
+
+function sanitize_email( string $email ): string {
+	return trim( $email );
+}
+
+/**
+ * @return string|false
+ */
+function is_email( string $email, bool $deprecated = false ) {
+	return false !== filter_var( $email, FILTER_VALIDATE_EMAIL ) ? $email : false;
+}
+
 // Stand-in for $wpdb, enough for the scan lock (Storage\Lock): every lock is free.
 // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- WordPress is not loaded here.
 $GLOBALS['wpdb'] = new class() {
@@ -393,6 +501,42 @@ if ( ! isset( $sitewarden_report['report']['score'] ) ) {
 		}
 	}
 }
+
+// Ignore and show again a problem the scan found, and skip a file.
+$sitewarden_findings = $GLOBALS['smoke_actions']['rest_api_init'][1][0];
+$sitewarden_problem  = null;
+foreach ( $sitewarden_report['report']['results'] ?? [] as $sitewarden_result ) {
+	if ( 'fail' === $sitewarden_result['status'] ) {
+		$sitewarden_problem = $sitewarden_result['id'];
+		break;
+	}
+}
+if ( null === $sitewarden_problem ) {
+	$failures[] = 'The scan found no problem to ignore.';
+} else {
+	$sitewarden_ignored = $sitewarden_findings->ignore( smoke_request( 'id', $sitewarden_problem ) );
+	if ( ! is_array( $sitewarden_ignored ) || 1 !== $sitewarden_ignored['report']['ignored'] ) {
+		$failures[] = 'Ignoring a finding did not work.';
+	}
+	$sitewarden_findings->restore( smoke_request( 'id', $sitewarden_problem ) );
+}
+$sitewarden_skipped = $sitewarden_findings->skip_file( smoke_request( 'path', 'wp-content/uploads/x.php' ) );
+if ( ! is_array( $sitewarden_skipped ) || [ 'wp-content/uploads/x.php' ] !== $sitewarden_skipped['skip_files'] ) {
+	$failures[] = 'Skipping a file did not work.';
+}
+
+// The settings screen.
+do_action( 'admin_init' );
+if ( ! isset( $GLOBALS['smoke_setting']['sanitize_callback'] ) ) {
+	$failures[] = 'The settings are not registered.';
+}
+ob_start();
+( $GLOBALS['smoke_pages']['sitewarden-settings'] )();
+$sitewarden_settings_html = (string) ob_get_clean();
+if ( false === strpos( $sitewarden_settings_html, 'action="options.php"' ) ) {
+	$failures[] = 'The settings screen did not render.';
+}
+( $GLOBALS['smoke_deactivate'] )();
 
 foreach ( $GLOBALS['smoke_enqueued'] as $url ) {
 	$file = $build_dir . '/' . substr( $url, strlen( plugin_dir_url( $main_file ) ) );
