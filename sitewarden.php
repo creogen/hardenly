@@ -27,3 +27,6 @@ if ( file_exists( __DIR__ . '/vendor-prefixed/autoload.php' ) ) {
 }
 
 add_action( 'init', [ new Plugin( __FILE__ ), 'init' ] );
+
+// Scheduled scans and pending scan batches stop with the plugin.
+register_deactivation_hook( __FILE__, [ Cron\Schedule::class, 'clear_all' ] );
