@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-10T12:13:56+00:00\n"
+"POT-Creation-Date: 2026-10-10T12:58:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: sitewarden\n"
@@ -86,7 +86,7 @@ msgid "Files to skip"
 msgstr ""
 
 #: src/Admin/SettingsPage.php:187
-msgid "One file or folder per line, relative to the WordPress folder. File checks never report them. \"Ignore this file\" on the dashboard adds lines here."
+msgid "One file or folder per line, relative to the WordPress folder. File checks never report them. \"Skip this file\" on the dashboard adds lines here."
 msgstr ""
 
 #: src/Admin/SettingsPage.php:192
@@ -298,6 +298,14 @@ msgstr ""
 #: src/Admin/SettingsPage.php:497
 #, php-format
 msgid "Next scan: %s. WP-Cron starts it with the first visit after that time."
+msgstr ""
+
+#: src/Plugin.php:95
+msgid "Sitewarden scans one site at a time and cannot be activated for the whole network. Activate it on each site you want to scan instead."
+msgstr ""
+
+#: src/Plugin.php:96
+msgid "Plugin not activated"
 msgstr ""
 
 #. translators: 1: site name, 2: security score, 3: change since the previous scan, e.g. " (-6)".
@@ -1562,62 +1570,62 @@ msgstr ""
 msgid "At risk"
 msgstr ""
 
-#: assets/src/admin/components/Summary.js:33
+#: assets/src/admin/components/Summary.js:34
 msgid "No change since the previous scan"
 msgstr ""
 
 #. translators: %d: points the score went up.
-#: assets/src/admin/components/Summary.js:41
+#: assets/src/admin/components/Summary.js:42
 #, js-format
 msgid "Up %d since the previous scan"
 msgstr ""
 
 #. translators: %d: points the score went down.
-#: assets/src/admin/components/Summary.js:46
+#: assets/src/admin/components/Summary.js:47
 #, js-format
 msgid "Down %d since the previous scan"
 msgstr ""
 
 #. translators: %d: security score.
-#: assets/src/admin/components/Summary.js:78
+#: assets/src/admin/components/Summary.js:79
 #, js-format
 msgid "Score %d out of 100"
 msgstr ""
 
-#: assets/src/admin/components/Summary.js:110
+#: assets/src/admin/components/Summary.js:111
 msgid "of 100"
 msgstr ""
 
 #. translators: %s: score band, e.g. "Needs attention".
-#: assets/src/admin/components/Summary.js:117
+#: assets/src/admin/components/Summary.js:118
 #, js-format
 msgid "Security score: %s"
 msgstr ""
 
-#: assets/src/admin/components/Summary.js:123
+#: assets/src/admin/components/Summary.js:124
 msgid "The score is an indicator, not a guarantee that the site is secure."
 msgstr ""
 
-#: assets/src/admin/components/Summary.js:136
+#: assets/src/admin/components/Summary.js:137
 msgid "Findings"
 msgstr ""
 
 #. translators: %d: number of checks that passed.
-#: assets/src/admin/components/Summary.js:154
+#: assets/src/admin/components/Summary.js:155
 #, js-format
 msgid "%d check passed"
 msgid_plural "%d checks passed"
 msgstr[0] ""
 msgstr[1] ""
 
-#: assets/src/admin/components/Summary.js:171
+#: assets/src/admin/components/Summary.js:172
 msgid "Recent scans"
 msgstr ""
 
-#: assets/src/admin/components/Summary.js:177
+#: assets/src/admin/components/Summary.js:178
 msgid "Date"
 msgstr ""
 
-#: assets/src/admin/components/Summary.js:180
+#: assets/src/admin/components/Summary.js:181
 msgid "Score"
 msgstr ""

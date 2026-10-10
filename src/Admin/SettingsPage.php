@@ -184,7 +184,7 @@ class SettingsPage {
 						<th scope="row"><label for="sitewarden-skip-files"><?php esc_html_e( 'Files to skip', 'sitewarden' ); ?></label></th>
 						<td>
 							<textarea id="sitewarden-skip-files" class="large-text code" rows="5" name="<?php echo esc_attr( $name ); ?>[skip_files]"><?php echo esc_textarea( implode( "\n", $settings['skip_files'] ) ); ?></textarea>
-							<p class="description"><?php esc_html_e( 'One file or folder per line, relative to the WordPress folder. File checks never report them. "Ignore this file" on the dashboard adds lines here.', 'sitewarden' ); ?></p>
+							<p class="description"><?php esc_html_e( 'One file or folder per line, relative to the WordPress folder. File checks never report them. "Skip this file" on the dashboard adds lines here.', 'sitewarden' ); ?></p>
 						</td>
 					</tr>
 				</table>

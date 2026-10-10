@@ -82,6 +82,23 @@ class Plugin {
 	}
 
 	/**
+	 * Refuses network activation on multisite: the scanner and its settings work per site.
+	 * Activating it on single sites of a network works.
+	 *
+	 * @param mixed $network_wide Whether the plugin is being activated for the whole network.
+	 */
+	public static function activate( $network_wide = false ): void {
+		if ( ! $network_wide ) {
+			return;
+		}
+		ServiceFactory::create_errors()->wp_die(
+			esc_html__( 'Sitewarden scans one site at a time and cannot be activated for the whole network. Activate it on each site you want to scan instead.', 'sitewarden' ),
+			esc_html__( 'Plugin not activated', 'sitewarden' ),
+			[ 'back_link' => true ]
+		);
+	}
+
+	/**
 	 * Creates the plugin's objects and hooks them into WordPress.
 	 */
 	public function init(): void {

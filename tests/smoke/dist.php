@@ -301,6 +301,10 @@ function is_wp_error( $thing ): bool {
 	return $thing instanceof WP_Error;
 }
 
+function register_activation_hook( string $file, callable $callback ): void {
+	$GLOBALS['smoke_activate'] = $callback;
+}
+
 function register_deactivation_hook( string $file, callable $callback ): void {
 	$GLOBALS['smoke_deactivate'] = $callback;
 }
@@ -617,6 +621,7 @@ $sitewarden_settings_html = (string) ob_get_clean();
 if ( false === strpos( $sitewarden_settings_html, 'action="options.php"' ) ) {
 	$failures[] = 'The settings screen did not render.';
 }
+( $GLOBALS['smoke_activate'] )( false );
 ( $GLOBALS['smoke_deactivate'] )();
 
 foreach ( $GLOBALS['smoke_enqueued'] as $url ) {
