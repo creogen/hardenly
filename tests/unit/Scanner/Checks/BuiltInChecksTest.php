@@ -19,6 +19,6 @@ class BuiltInChecksTest extends TestCase {
 		}
 
 		self::assertSame( array_unique( $ids ), $ids );
-		self::assertGreaterThanOrEqual( 29, count( $ids ) );
+		self::assertGreaterThanOrEqual( 30, count( $ids ) );
 	}
 }
