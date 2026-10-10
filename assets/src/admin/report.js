@@ -47,6 +47,17 @@ export const groupBySeverity = ( results ) =>
 	} ) ).filter( ( group ) => group.results.length > 0 );
 
 /**
+ * Results that are not problems but worth reading: notes, and checks that could not run.
+ *
+ * @param {Object[]} results Report results.
+ * @return {Object[]} Notes first, then skipped checks.
+ */
+export const notes = ( results ) => [
+	...results.filter( ( result ) => result.status === 'info' ),
+	...results.filter( ( result ) => result.status === 'skipped' ),
+];
+
+/**
  * Change in score since the scan before the latest one.
  *
  * @param {Object[]} history Scan summaries, newest first.

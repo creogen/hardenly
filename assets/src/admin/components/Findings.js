@@ -1,6 +1,6 @@
-import { createElement } from '@wordpress/element';
+import { createElement, Fragment } from '@wordpress/element';
 import { __, _n, sprintf } from '@wordpress/i18n';
-import { groupBySeverity } from '../report';
+import { groupBySeverity, notes } from '../report';
 import Icon from './Icon';
 
 const SEVERITY_LABELS = {
@@ -23,6 +23,11 @@ function Finding( { result, groupLabel, open } ) {
 				<span className="sitewarden-finding__title">
 					{ result.message }
 				</span>
+				{ result.status === 'skipped' && (
+					<span className="sitewarden-tag">
+						{ __( 'Not checked', 'sitewarden' ) }
+					</span>
+				) }
 				{ groupLabel && (
 					<span className="sitewarden-tag">{ groupLabel }</span>
 				) }
@@ -65,23 +70,52 @@ function Finding( { result, groupLabel, open } ) {
 
 export default function Findings( { report, groups } ) {
 	const bySeverity = groupBySeverity( report.results );
+	const notesList = notes( report.results );
 	const groupOf = ( result ) =>
 		groups[ report.checks[ result.check_id ]?.group ] ??
 		report.checks[ result.check_id ]?.group;
 
-	if ( bySeverity.length === 0 ) {
-		return (
-			<div className="notice notice-success inline">
-				<p>
-					{ __(
-						'No problems found. Keep WordPress, plugins and themes up to date and scan regularly.',
-						'sitewarden'
-					) }
-				</p>
-			</div>
-		);
-	}
+	return (
+		<>
+			{ bySeverity.length === 0 ? (
+				<div className="notice notice-success inline">
+					<p>
+						{ __(
+							'No problems found. Keep WordPress, plugins and themes up to date and scan regularly.',
+							'sitewarden'
+						) }
+					</p>
+				</div>
+			) : (
+				<Problems bySeverity={ bySeverity } groupOf={ groupOf } />
+			) }
+			{ notesList.length > 0 && (
+				<section
+					className="sitewarden-findings"
+					aria-labelledby="sitewarden-findings-notes"
+				>
+					<h2
+						id="sitewarden-findings-notes"
+						className="sitewarden-findings__title"
+					>
+						<Icon name="info" />
+						{ __( 'Notes', 'sitewarden' ) }
+					</h2>
+					{ notesList.map( ( result, index ) => (
+						<Finding
+							key={ `${ result.check_id }:${ result.key }:${ index }` }
+							result={ result }
+							groupLabel={ groupOf( result ) }
+							open={ false }
+						/>
+					) ) }
+				</section>
+			) }
+		</>
+	);
+}
 
+function Problems( { bySeverity, groupOf } ) {
 	return bySeverity.map( ( { severity, results } ) => (
 		<section
 			key={ severity }
