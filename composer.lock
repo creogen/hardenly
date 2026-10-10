@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f99e3782a24329283883cda8fa831387",
+    "content-hash": "2ec5427a6f90afce8e529324a07abc91",
     "packages": [
         {
             "name": "merkushin/wpal",
