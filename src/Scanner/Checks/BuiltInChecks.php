@@ -4,6 +4,9 @@ namespace Sitewarden\Scanner\Checks;
 
 use Sitewarden\Scanner\Check;
 use Sitewarden\Scanner\Checks\Code\SuspiciousCodeCheck;
+use Sitewarden\Scanner\Checks\Online\CoreChecksumsCheck;
+use Sitewarden\Scanner\Checks\Online\PluginChecksumsCheck;
+use Sitewarden\Scanner\Checks\Online\VulnerabilityCheck;
 use Sitewarden\Scanner\Checks\Config\DebugDisplayCheck;
 use Sitewarden\Scanner\Checks\Config\EnvironmentTypeCheck;
 use Sitewarden\Scanner\Checks\Config\FileEditCheck;
@@ -37,6 +40,7 @@ use Sitewarden\Site\Constants;
 use Sitewarden\Site\Filesystem;
 use Sitewarden\Site\Loopback;
 use Sitewarden\Users\LastLogin;
+use Sitewarden\Vulnerability\ProviderRegistry;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -45,9 +49,12 @@ defined( 'ABSPATH' ) || exit;
  */
 class BuiltInChecks {
 	/**
+	 * @param LastLogin        $last_login Login records.
+	 * @param ProviderRegistry $providers  Vulnerability providers.
+	 *
 	 * @return Check[]
 	 */
-	public static function all( LastLogin $last_login ): array {
+	public static function all( LastLogin $last_login, ProviderRegistry $providers ): array {
 		$constants  = new Constants();
 		$filesystem = new Filesystem();
 		$loopback   = new Loopback();
@@ -83,6 +90,9 @@ class BuiltInChecks {
 			new UploadsPhpCheck( $filesystem ),
 			new RecentlyModifiedCheck( $filesystem ),
 			new SuspiciousCodeCheck( $filesystem ),
+			new CoreChecksumsCheck( null, $filesystem ),
+			new PluginChecksumsCheck( null, $filesystem, $constants ),
+			new VulnerabilityCheck( $providers ),
 		];
 	}
 }

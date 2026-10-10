@@ -25,6 +25,9 @@ use Sitewarden\Storage\ReportStore;
 use Sitewarden\Storage\RunStore;
 use Sitewarden\Storage\Settings;
 use Sitewarden\Users\LastLogin;
+use Sitewarden\Vulnerability\PatchstackProvider;
+use Sitewarden\Vulnerability\ProviderRegistry;
+use Sitewarden\Vulnerability\WpscanProvider;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -86,10 +89,11 @@ class Plugin {
 		$last_login->start();
 
 		$settings      = new Settings();
+		$providers     = new ProviderRegistry( [ new WpscanProvider(), new PatchstackProvider() ] );
 		$reports       = new ReportStore();
 		$summary       = new Summary( $this->score() );
 		$scanner       = new Scanner(
-			new CheckRegistry( BuiltInChecks::all( $last_login ) ),
+			new CheckRegistry( BuiltInChecks::all( $last_login, $providers ) ),
 			new RunStore(),
 			$reports,
 			$settings,
@@ -97,7 +101,7 @@ class Plugin {
 			$summary
 		);
 		$schedule      = new Schedule( $scanner, $settings );
-		$settings_page = new SettingsPage( $settings, $schedule );
+		$settings_page = new SettingsPage( $settings, $schedule, $providers );
 		$scans         = new ScanController( $scanner, new ReportPayload( $reports, $settings ) );
 		$refresher     = new ReportRefresher( $reports, $settings, $summary );
 		$findings      = new FindingsController( $scans, $reports, $settings, $refresher );
@@ -106,6 +110,7 @@ class Plugin {
 
 		$this->hooks->add_action( 'admin_menu', [ $this->menu, 'register' ] );
 		$this->hooks->add_action( 'admin_init', [ $settings_page, 'register' ] );
+		$this->hooks->add_action( 'admin_post_' . SettingsPage::TEST_ACTION, [ $settings_page, 'handle_test' ] );
 		$this->hooks->add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
 		$this->hooks->add_action( 'rest_api_init', [ $scans, 'register_routes' ] );
 		$this->hooks->add_action( 'rest_api_init', [ $findings, 'register_routes' ] );
