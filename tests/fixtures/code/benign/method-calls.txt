@@ -1,0 +1,5 @@
+<?php
+$pdo->exec( 'DELETE FROM t WHERE id = ' . (int) $_GET['id'] );
+$this->exec( $_POST['query'] );
+my_exec( $_GET['x'] );
+Foo::system( $_GET['y'] );

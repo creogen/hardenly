@@ -1,0 +1,3 @@
+expect: preg_replace_e
+<?php
+preg_replace( '/.*/e', $code, '' );

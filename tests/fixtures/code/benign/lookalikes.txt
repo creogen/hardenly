@@ -1,0 +1,5 @@
+<?php
+function system_info() { return php_uname(); }
+$evaluated = evaluate( $x );
+$text = 'Use eval() carefully';
+$c = chr( 65 ) . chr( 66 );

@@ -1,0 +1,4 @@
+expect: eval_decode
+<?php
+$x = 'abc';
+eval ( gzinflate( base64_decode( $x ) ) );
