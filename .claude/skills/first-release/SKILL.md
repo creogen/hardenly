@@ -6,7 +6,7 @@ description: Prepare the plugin for its first submission to the WordPress.org pl
 Walk through `docs/FIRST-RELEASE.md` with the user, sections 1 to 5. Do the checks yourself and report results;
 don't submit anything or create accounts.
 
-1. Read `docs/FIRST-RELEASE.md`, `readme.txt`, the plugin header in `sitewarden.php` and `AGENTS.md`.
+1. Read `docs/FIRST-RELEASE.md`, `readme.txt`, the plugin header in `hardenly.php` and `AGENTS.md`.
 2. Section 1: check the name and slug for restricted terms and trademarks. Check whether the slug is taken by fetching
    `https://api.wordpress.org/plugins/info/1.2/?action=plugin_information&slug=<slug>` (an error means it's free).
 3. Section 2: run `make check`. Review `src/` for the security items in `AGENTS.md` (capabilities, nonces,

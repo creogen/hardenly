@@ -1,12 +1,12 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Config;
+namespace Hardenly\Scanner\Checks\Config;
 
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Constants;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Constants;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -46,7 +46,7 @@ class SaltsCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Security keys', 'sitewarden' );
+		return __( 'Security keys', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -65,17 +65,17 @@ class SaltsCheck implements Check {
 		}
 
 		if ( [] === $weak ) {
-			return [ Result::pass( self::ID, __( 'Security keys are set and unique.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'Security keys are set and unique.', 'hardenly' ) ) ];
 		}
 
 		return [
 			Result::fail(
 				self::ID,
 				Result::SEVERITY_HIGH,
-				__( 'Security keys are missing, weak or repeated', 'sitewarden' ),
-				__( 'Replace the keys in wp-config.php with new ones from https://api.wordpress.org/secret-key/1.1/salt/. Everyone will be logged out once.', 'sitewarden' ),
+				__( 'Security keys are missing, weak or repeated', 'hardenly' ),
+				__( 'Replace the keys in wp-config.php with new ones from https://api.wordpress.org/secret-key/1.1/salt/. Everyone will be logged out once.', 'hardenly' ),
 				$weak,
-				__( 'The keys protect login cookies. With known or empty keys, cookies are easier to forge.', 'sitewarden' )
+				__( 'The keys protect login cookies. With known or empty keys, cookies are easier to forge.', 'hardenly' )
 			),
 		];
 	}

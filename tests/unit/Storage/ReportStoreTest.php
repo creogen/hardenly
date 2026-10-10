@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Storage;
+namespace Hardenly\Tests\Storage;
 
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Storage\ReportStore;
-use Sitewarden\Tests\OptionsFake;
+use Hardenly\Storage\ReportStore;
+use Hardenly\Tests\OptionsFake;
 
 class ReportStoreTest extends TestCase {
 	use OptionsFake;

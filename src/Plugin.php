@@ -1,33 +1,33 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden;
+namespace Hardenly;
 
 use Merkushin\Wpal\Service\Assets;
 use Merkushin\Wpal\Service\Hooks;
 use Merkushin\Wpal\Service\Plugins;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Admin\DashboardPage;
-use Sitewarden\Admin\Menu;
-use Sitewarden\Admin\SettingsPage;
-use Sitewarden\Cron\Schedule;
-use Sitewarden\Report\EmailReport;
-use Sitewarden\Report\ReportRefresher;
-use Sitewarden\Report\Summary;
-use Sitewarden\Rest\FindingsController;
-use Sitewarden\Rest\ReportPayload;
-use Sitewarden\Rest\ScanController;
-use Sitewarden\Scanner\Checks\BuiltInChecks;
-use Sitewarden\Scanner\CheckRegistry;
-use Sitewarden\Scanner\Scanner;
-use Sitewarden\Scanner\Score;
-use Sitewarden\Storage\Lock;
-use Sitewarden\Storage\ReportStore;
-use Sitewarden\Storage\RunStore;
-use Sitewarden\Storage\Settings;
-use Sitewarden\Users\LastLogin;
-use Sitewarden\Vulnerability\PatchstackProvider;
-use Sitewarden\Vulnerability\ProviderRegistry;
-use Sitewarden\Vulnerability\WpscanProvider;
+use Hardenly\Admin\DashboardPage;
+use Hardenly\Admin\Menu;
+use Hardenly\Admin\SettingsPage;
+use Hardenly\Cron\Schedule;
+use Hardenly\Report\EmailReport;
+use Hardenly\Report\ReportRefresher;
+use Hardenly\Report\Summary;
+use Hardenly\Rest\FindingsController;
+use Hardenly\Rest\ReportPayload;
+use Hardenly\Rest\ScanController;
+use Hardenly\Scanner\Checks\BuiltInChecks;
+use Hardenly\Scanner\CheckRegistry;
+use Hardenly\Scanner\Scanner;
+use Hardenly\Scanner\Score;
+use Hardenly\Storage\Lock;
+use Hardenly\Storage\ReportStore;
+use Hardenly\Storage\RunStore;
+use Hardenly\Storage\Settings;
+use Hardenly\Users\LastLogin;
+use Hardenly\Vulnerability\PatchstackProvider;
+use Hardenly\Vulnerability\ProviderRegistry;
+use Hardenly\Vulnerability\WpscanProvider;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -43,7 +43,7 @@ class Plugin {
 	 */
 	public const VERSION = '1.0.0';
 
-	public const TEXT_DOMAIN = 'sitewarden';
+	public const TEXT_DOMAIN = 'hardenly';
 
 	/**
 	 * Main plugin file path.
@@ -92,8 +92,8 @@ class Plugin {
 			return;
 		}
 		ServiceFactory::create_errors()->wp_die(
-			esc_html__( 'Sitewarden scans one site at a time and cannot be activated for the whole network. Activate it on each site you want to scan instead.', 'sitewarden' ),
-			esc_html__( 'Plugin not activated', 'sitewarden' ),
+			esc_html__( 'Hardenly scans one site at a time and cannot be activated for the whole network. Activate it on each site you want to scan instead.', 'hardenly' ),
+			esc_html__( 'Plugin not activated', 'hardenly' ),
 			[ 'back_link' => true ]
 		);
 	}
@@ -114,7 +114,7 @@ class Plugin {
 			new RunStore(),
 			$reports,
 			$settings,
-			new Lock( 'sitewarden_lock' ),
+			new Lock( 'hardenly_lock' ),
 			$summary
 		);
 		$schedule      = new Schedule( $scanner, $settings );
@@ -136,7 +136,7 @@ class Plugin {
 		$this->hooks->add_action( 'add_option_' . Settings::OPTION, [ $schedule, 'sync' ] );
 		$this->hooks->add_action( 'update_option_' . Settings::OPTION, [ $schedule, 'sync' ] );
 		$this->hooks->add_action( 'update_option_' . Settings::OPTION, [ $refresher, 'refresh' ] );
-		$this->hooks->add_action( 'sitewarden_scan_completed', [ $email, 'maybe_send' ] );
+		$this->hooks->add_action( 'hardenly_scan_completed', [ $email, 'maybe_send' ] );
 		$this->hooks->add_action( 'wp_login', [ $last_login, 'record' ], 10, 2 );
 	}
 
@@ -159,7 +159,7 @@ class Plugin {
 		 * @param array $weights `severity` => penalty per problem by severity, `group_cap` => the most
 		 *                       one check group can take off the score. See Score::DEFAULT_WEIGHTS.
 		 */
-		$weights = $this->hooks->apply_filters( 'sitewarden_score_weights', Score::DEFAULT_WEIGHTS );
+		$weights = $this->hooks->apply_filters( 'hardenly_score_weights', Score::DEFAULT_WEIGHTS );
 		return new Score( is_array( $weights ) ? $weights : Score::DEFAULT_WEIGHTS );
 	}
 

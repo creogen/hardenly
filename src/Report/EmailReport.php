@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Report;
+namespace Hardenly\Report;
 
 use Merkushin\Wpal\Service\Formatting;
 use Merkushin\Wpal\Service\Mail;
@@ -8,9 +8,9 @@ use Merkushin\Wpal\Service\Options;
 use Merkushin\Wpal\Service\SiteIdentity;
 use Merkushin\Wpal\Service\Urls;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Storage\ReportStore;
-use Sitewarden\Storage\Settings;
+use Hardenly\Scanner\Result;
+use Hardenly\Storage\ReportStore;
+use Hardenly\Storage\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -72,7 +72,7 @@ class EmailReport {
 	}
 
 	/**
-	 * Handles `sitewarden_scan_completed`: sends the summary when the settings call for it.
+	 * Handles `hardenly_scan_completed`: sends the summary when the settings call for it.
 	 *
 	 * @param mixed $report The finished report.
 	 */
@@ -124,7 +124,7 @@ class EmailReport {
 	public function subject( array $report, ?array $previous ): string {
 		return sprintf(
 			/* translators: 1: site name, 2: security score, 3: change since the previous scan, e.g. " (-6)". */
-			__( '[%1$s] Sitewarden security score: %2$d%3$s', 'sitewarden' ),
+			__( '[%1$s] Hardenly security score: %2$d%3$s', 'hardenly' ),
 			(string) $this->formatting->wp_specialchars_decode( (string) $this->site->get_bloginfo( 'name' ), ENT_QUOTES ),
 			(int) ( $report['score'] ?? 0 ),
 			self::change( $report, $previous )
@@ -139,11 +139,11 @@ class EmailReport {
 		$counts = (array) ( $report['counts'] ?? [] );
 		$lines  = [
 			/* translators: 1: security score, 2: change since the previous scan, e.g. " (-6)". */
-			sprintf( __( 'Security score: %1$d of 100%2$s', 'sitewarden' ), (int) ( $report['score'] ?? 0 ), self::change( $report, $previous ) ),
+			sprintf( __( 'Security score: %1$d of 100%2$s', 'hardenly' ), (int) ( $report['score'] ?? 0 ), self::change( $report, $previous ) ),
 			'',
 			sprintf(
 				/* translators: 1: critical, 2: high, 3: medium, 4: low problem counts. */
-				__( 'Problems: %1$d critical, %2$d high, %3$d medium, %4$d low', 'sitewarden' ),
+				__( 'Problems: %1$d critical, %2$d high, %3$d medium, %4$d low', 'hardenly' ),
 				(int) ( $counts['critical'] ?? 0 ),
 				(int) ( $counts['high'] ?? 0 ),
 				(int) ( $counts['medium'] ?? 0 ),
@@ -154,17 +154,17 @@ class EmailReport {
 		$problems = self::top_problems( $report );
 		if ( [] !== $problems ) {
 			$lines[] = '';
-			$lines[] = __( 'Main problems:', 'sitewarden' );
+			$lines[] = __( 'Main problems:', 'hardenly' );
 			foreach ( $problems as $problem ) {
 				$lines[] = sprintf( '- [%s] %s', strtoupper( (string) $problem['severity'] ), (string) $this->formatting->wp_strip_all_tags( (string) $problem['message'] ) );
 			}
 		}
 
 		$lines[] = '';
-		/* translators: %s: link to the Sitewarden dashboard. */
-		$lines[] = sprintf( __( 'Details and how to fix them: %s', 'sitewarden' ), (string) $this->urls->admin_url( 'admin.php?page=sitewarden' ) );
+		/* translators: %s: link to the Hardenly dashboard. */
+		$lines[] = sprintf( __( 'Details and how to fix them: %s', 'hardenly' ), (string) $this->urls->admin_url( 'admin.php?page=hardenly' ) );
 		$lines[] = '';
-		$lines[] = __( 'The score is an indicator, not a guarantee that the site is secure. You get this email because email reports are on in Sitewarden > Settings.', 'sitewarden' );
+		$lines[] = __( 'The score is an indicator, not a guarantee that the site is secure. You get this email because email reports are on in Hardenly > Settings.', 'hardenly' );
 
 		return implode( "\n", $lines );
 	}

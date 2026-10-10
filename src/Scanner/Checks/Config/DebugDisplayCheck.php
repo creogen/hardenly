@@ -1,14 +1,14 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Config;
+namespace Hardenly\Scanner\Checks\Config;
 
 use Merkushin\Wpal\Service\Environment;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Constants;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Constants;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -38,7 +38,7 @@ class DebugDisplayCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Debug output', 'sitewarden' );
+		return __( 'Debug output', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -49,7 +49,7 @@ class DebugDisplayCheck implements Check {
 		// WP_DEBUG_DISPLAY defaults to true: errors show whenever WP_DEBUG is on.
 		$displays = $this->constants->is_true( 'WP_DEBUG' ) && false !== $this->constants->get( 'WP_DEBUG_DISPLAY', true );
 		if ( ! $displays ) {
-			return [ Result::pass( self::ID, __( 'PHP errors are not shown to visitors.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'PHP errors are not shown to visitors.', 'hardenly' ) ) ];
 		}
 
 		$production = 'production' === $this->environment->wp_get_environment_type();
@@ -57,10 +57,10 @@ class DebugDisplayCheck implements Check {
 			Result::fail(
 				self::ID,
 				$production ? Result::SEVERITY_HIGH : Result::SEVERITY_LOW,
-				__( 'PHP errors are shown to visitors', 'sitewarden' ),
-				__( 'In wp-config.php, set WP_DEBUG to false, or keep it on and set WP_DEBUG_DISPLAY to false and WP_DEBUG_LOG to a path outside the web root.', 'sitewarden' ),
+				__( 'PHP errors are shown to visitors', 'hardenly' ),
+				__( 'In wp-config.php, set WP_DEBUG to false, or keep it on and set WP_DEBUG_DISPLAY to false and WP_DEBUG_LOG to a path outside the web root.', 'hardenly' ),
 				[],
-				__( 'Error messages reveal file paths, plugin names and other details that help attackers.', 'sitewarden' )
+				__( 'Error messages reveal file paths, plugin names and other details that help attackers.', 'hardenly' )
 			),
 		];
 	}

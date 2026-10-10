@@ -1,9 +1,9 @@
 {
-	"name": "merkushin/sitewarden",
+	"name": "merkushin/hardenly",
 	"description": "Security scanner for your WordPress website.",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
-	"homepage": "https://github.com/creogen/sitewarden",
+	"homepage": "https://github.com/creogen/hardenly",
 	"authors": [
 		{
 			"name": "Dmitry Merkushin",
@@ -25,12 +25,12 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Sitewarden\\": "src/"
+			"Hardenly\\": "src/"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Sitewarden\\Tests\\": "tests/unit/"
+			"Hardenly\\Tests\\": "tests/unit/"
 		}
 	},
 	"config": {
@@ -46,7 +46,7 @@
 	},
 	"extra": {
 		"wp-scoper": {
-			"namespace_prefix": "Sitewarden\\Vendor",
+			"namespace_prefix": "Hardenly\\Vendor",
 			"packages": [
 				"merkushin/wpal"
 			],

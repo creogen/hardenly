@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner;
+namespace Hardenly\Scanner;
 
 use Merkushin\Wpal\Service\Hooks;
 use Merkushin\Wpal\ServiceFactory;
@@ -8,7 +8,7 @@ use Merkushin\Wpal\ServiceFactory;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The checks a scan runs: the built-in ones plus those added through `sitewarden_checks`.
+ * The checks a scan runs: the built-in ones plus those added through `hardenly_checks`.
  */
 class CheckRegistry {
 	private const ID_PATTERN = '/^[a-z0-9_.-]{1,100}$/';
@@ -53,9 +53,9 @@ class CheckRegistry {
 		 * Filters the checks a scan runs.
 		 *
 		 * @param Check[] $checks Built-in checks. Add, remove or replace entries; each must implement
-		 *                        Sitewarden\Scanner\Check and have a unique id.
+		 *                        Hardenly\Scanner\Check and have a unique id.
 		 */
-		$filtered = $this->hooks->apply_filters( 'sitewarden_checks', $this->default_checks );
+		$filtered = $this->hooks->apply_filters( 'hardenly_checks', $this->default_checks );
 
 		$checks = [];
 		foreach ( is_array( $filtered ) ? $filtered : $this->default_checks as $check ) {

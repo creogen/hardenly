@@ -1,14 +1,14 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks;
+namespace Hardenly\Tests\Scanner\Checks;
 
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Constants;
-use Sitewarden\Site\Loopback;
-use Sitewarden\Storage\Settings;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Constants;
+use Hardenly\Site\Loopback;
+use Hardenly\Storage\Settings;
 
 /**
  * Helpers for testing checks: run a check to the end and get its single result.
@@ -124,7 +124,7 @@ abstract class CheckTestCase extends TestCase {
 	 * @param array<string, string> $files Contents by relative path.
 	 */
 	protected function make_dir( array $files ): string {
-		$root = sys_get_temp_dir() . '/sitewarden-test-' . bin2hex( random_bytes( 6 ) );
+		$root = sys_get_temp_dir() . '/hardenly-test-' . bin2hex( random_bytes( 6 ) );
 		mkdir( $root );
 		foreach ( $files as $path => $contents ) {
 			if ( ! is_dir( dirname( $root . '/' . $path ) ) ) {

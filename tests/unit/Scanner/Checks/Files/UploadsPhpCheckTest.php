@@ -1,12 +1,12 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks\Files;
+namespace Hardenly\Tests\Scanner\Checks\Files;
 
 use Merkushin\Wpal\Service\Filesystem as FilesystemService;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Checks\Files\UploadsPhpCheck;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Scanner\Checks\Files\UploadsPhpCheck;
+use Hardenly\Scanner\Result;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class UploadsPhpCheckTest extends CheckTestCase {
 	/**

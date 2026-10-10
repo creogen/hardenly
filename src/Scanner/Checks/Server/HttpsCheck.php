@@ -1,13 +1,13 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Server;
+namespace Hardenly\Scanner\Checks\Server;
 
 use Merkushin\Wpal\Service\Urls;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -31,7 +31,7 @@ class HttpsCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'HTTPS', 'sitewarden' );
+		return __( 'HTTPS', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -47,17 +47,17 @@ class HttpsCheck implements Check {
 		}
 
 		if ( [] === $insecure ) {
-			return [ Result::pass( self::ID, __( 'The site uses HTTPS.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'The site uses HTTPS.', 'hardenly' ) ) ];
 		}
 
 		return [
 			Result::fail(
 				self::ID,
 				Result::SEVERITY_HIGH,
-				__( 'The site does not use HTTPS', 'sitewarden' ),
-				__( 'Get a certificate from your host (most offer free ones), then change both addresses in Settings > General to https://. Tools > Site Health can help.', 'sitewarden' ),
+				__( 'The site does not use HTTPS', 'hardenly' ),
+				__( 'Get a certificate from your host (most offer free ones), then change both addresses in Settings > General to https://. Tools > Site Health can help.', 'hardenly' ),
 				array_values( array_unique( $insecure ) ),
-				__( 'Without HTTPS, passwords and cookies travel unencrypted and can be read on public networks.', 'sitewarden' )
+				__( 'Without HTTPS, passwords and cookies travel unencrypted and can be read on public networks.', 'hardenly' )
 			),
 		];
 	}

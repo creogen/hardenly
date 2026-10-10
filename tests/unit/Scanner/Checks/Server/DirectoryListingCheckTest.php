@@ -1,12 +1,12 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks\Server;
+namespace Hardenly\Tests\Scanner\Checks\Server;
 
 use Merkushin\Wpal\Service\Filesystem;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Checks\Server\DirectoryListingCheck;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Scanner\Checks\Server\DirectoryListingCheck;
+use Hardenly\Scanner\Result;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class DirectoryListingCheckTest extends CheckTestCase {
 	private const UPLOADS = 'https://example.com/wp-content/uploads/';

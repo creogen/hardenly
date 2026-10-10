@@ -1,13 +1,13 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Users;
+namespace Hardenly\Scanner\Checks\Users;
 
 use Merkushin\Wpal\Service\Users;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -36,7 +36,7 @@ class AdminCountCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Number of administrators', 'sitewarden' );
+		return __( 'Number of administrators', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -48,7 +48,7 @@ class AdminCountCheck implements Check {
 		$count  = (int) ( $counts['avail_roles']['administrator'] ?? 0 );
 
 		if ( $count <= self::MAX_ADMINS ) {
-			return [ Result::pass( self::ID, __( 'Few users are administrators.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'Few users are administrators.', 'hardenly' ) ) ];
 		}
 
 		return [
@@ -56,10 +56,10 @@ class AdminCountCheck implements Check {
 				self::ID,
 				Result::SEVERITY_LOW,
 				/* translators: %d: number of administrators. */
-				sprintf( _n( '%d user is an administrator', '%d users are administrators', $count, 'sitewarden' ), $count ),
-				__( 'Give each person the lowest role they need, such as Editor, and remove accounts nobody uses.', 'sitewarden' ),
+				sprintf( _n( '%d user is an administrator', '%d users are administrators', $count, 'hardenly' ), $count ),
+				__( 'Give each person the lowest role they need, such as Editor, and remove accounts nobody uses.', 'hardenly' ),
 				[],
-				__( 'Every administrator account is a way in. The fewer there are, the fewer passwords can be stolen or guessed.', 'sitewarden' )
+				__( 'Every administrator account is a way in. The fewer there are, the fewer passwords can be stolen or guessed.', 'hardenly' )
 			),
 		];
 	}

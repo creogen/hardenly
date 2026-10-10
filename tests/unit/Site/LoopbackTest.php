@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Site;
+namespace Hardenly\Tests\Site;
 
 use Merkushin\Wpal\Service\Errors;
 use Merkushin\Wpal\Service\Hooks;
@@ -8,7 +8,7 @@ use Merkushin\Wpal\Service\Http;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Site\Loopback;
+use Hardenly\Site\Loopback;
 
 class LoopbackTest extends TestCase {
 	/**

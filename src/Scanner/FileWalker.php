@@ -1,8 +1,8 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner;
+namespace Hardenly\Scanner;
 
-use Sitewarden\Site\Filesystem;
+use Hardenly\Site\Filesystem;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -1,13 +1,13 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Files;
+namespace Hardenly\Scanner\Checks\Files;
 
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Constants;
-use Sitewarden\Site\Filesystem;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Constants;
+use Hardenly\Site\Filesystem;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -55,7 +55,7 @@ class BackupFilesCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Backup files', 'sitewarden' );
+		return __( 'Backup files', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -84,7 +84,7 @@ class BackupFilesCheck implements Check {
 		}
 
 		if ( [] === $sensitive && [] === $archives ) {
-			return [ Result::pass( self::ID, __( 'No backups or archives in public folders.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'No backups or archives in public folders.', 'hardenly' ) ) ];
 		}
 
 		$found = array_merge( $sensitive, $archives );
@@ -93,10 +93,10 @@ class BackupFilesCheck implements Check {
 				self::ID,
 				[] !== $sensitive ? Result::SEVERITY_HIGH : Result::SEVERITY_MEDIUM,
 				/* translators: %d: number of files. */
-				sprintf( _n( '%d backup or archive file is in a public folder', '%d backup or archive files are in public folders', count( $found ), 'sitewarden' ), count( $found ) ),
-				__( 'Move backups out of the web folders, to your computer or a backup service, and delete them from the server.', 'sitewarden' ),
+				sprintf( _n( '%d backup or archive file is in a public folder', '%d backup or archive files are in public folders', count( $found ), 'hardenly' ), count( $found ) ),
+				__( 'Move backups out of the web folders, to your computer or a backup service, and delete them from the server.', 'hardenly' ),
 				$found,
-				__( 'Anyone who guesses the file name can download it. Database dumps and copies of wp-config.php contain passwords.', 'sitewarden' )
+				__( 'Anyone who guesses the file name can download it. Database dumps and copies of wp-config.php contain passwords.', 'hardenly' )
 			),
 		];
 	}

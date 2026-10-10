@@ -1,13 +1,13 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks\Online;
+namespace Hardenly\Tests\Scanner\Checks\Online;
 
 use Merkushin\Wpal\Service\Plugins;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Integrity\WordPressOrgChecksums;
-use Sitewarden\Scanner\Checks\Online\PluginChecksumsCheck;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Integrity\WordPressOrgChecksums;
+use Hardenly\Scanner\Checks\Online\PluginChecksumsCheck;
+use Hardenly\Scanner\Result;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class PluginChecksumsCheckTest extends CheckTestCase {
 	private const ENABLED = [ 'checksums_enabled' => true ];

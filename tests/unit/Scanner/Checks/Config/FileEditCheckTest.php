@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks\Config;
+namespace Hardenly\Tests\Scanner\Checks\Config;
 
-use Sitewarden\Scanner\Checks\Config\FileEditCheck;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Scanner\Checks\Config\FileEditCheck;
+use Hardenly\Scanner\Result;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class FileEditCheckTest extends CheckTestCase {
 	public function testRun_EditingAllowed_FailsMedium(): void {

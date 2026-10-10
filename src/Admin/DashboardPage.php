@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Admin;
+namespace Hardenly\Admin;
 
 use Merkushin\Wpal\Service\Capabilities;
 use Merkushin\Wpal\ServiceFactory;
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  * The dashboard screen. The admin script (assets/src/admin) renders it into the root element.
  */
 class DashboardPage {
-	public const ROOT_ID = 'sitewarden-dashboard';
+	public const ROOT_ID = 'hardenly-dashboard';
 
 	/**
 	 * @var Capabilities
@@ -29,10 +29,10 @@ class DashboardPage {
 		?>
 		<div class="wrap">
 			<div id="<?php echo esc_attr( self::ROOT_ID ); ?>">
-				<h1><?php esc_html_e( 'Sitewarden', 'sitewarden' ); ?></h1>
-				<p><?php esc_html_e( 'Loading…', 'sitewarden' ); ?></p>
+				<h1><?php esc_html_e( 'Hardenly', 'hardenly' ); ?></h1>
+				<p><?php esc_html_e( 'Loading…', 'hardenly' ); ?></p>
 				<noscript>
-					<div class="notice notice-error"><p><?php esc_html_e( 'The Sitewarden dashboard needs JavaScript.', 'sitewarden' ); ?></p></div>
+					<div class="notice notice-error"><p><?php esc_html_e( 'The Hardenly dashboard needs JavaScript.', 'hardenly' ); ?></p></div>
 				</noscript>
 			</div>
 		</div>

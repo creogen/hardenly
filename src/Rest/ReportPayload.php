@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Rest;
+namespace Hardenly\Rest;
 
-use Sitewarden\Scanner\Group;
-use Sitewarden\Storage\ReportStore;
-use Sitewarden\Storage\Settings;
+use Hardenly\Scanner\Group;
+use Hardenly\Storage\ReportStore;
+use Hardenly\Storage\Settings;
 
 defined( 'ABSPATH' ) || exit;
 

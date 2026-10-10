@@ -3,7 +3,7 @@ name: release
 description: Prepare a new version of the plugin that is already on WordPress.org - bump the version, update the changelog and check the build. Use when the user asks to release, bump the version or ship a new version.
 ---
 
-1. Find the current version in the plugin header (`sitewarden.php`) and the changes since the last tag:
+1. Find the current version in the plugin header (`hardenly.php`) and the changes since the last tag:
    `git describe --tags --abbrev=0`, then `git log <tag>..HEAD --oneline`.
 2. Propose the next version (semantic versioning: fixes bump the patch, new features the minor) and confirm it
    with the user unless they gave one.

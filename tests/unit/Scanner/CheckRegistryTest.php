@@ -1,13 +1,13 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner;
+namespace Hardenly\Tests\Scanner;
 
 use Merkushin\Wpal\Service\Hooks;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Scanner\CheckRegistry;
-use Sitewarden\Scanner\Group;
+use Hardenly\Scanner\CheckRegistry;
+use Hardenly\Scanner\Group;
 
 class CheckRegistryTest extends TestCase {
 	/**
@@ -21,11 +21,11 @@ class CheckRegistryTest extends TestCase {
 	}
 
 	/**
-	 * @param mixed $filtered What the sitewarden_checks filter returns.
+	 * @param mixed $filtered What the hardenly_checks filter returns.
 	 */
 	private function filter_returns( $filtered ): void {
 		$this->hooks->method( 'apply_filters' )
-			->with( 'sitewarden_checks', self::anything() )
+			->with( 'hardenly_checks', self::anything() )
 			->willReturn( $filtered );
 	}
 

@@ -1,11 +1,11 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Cron;
+namespace Hardenly\Cron;
 
 use Merkushin\Wpal\Service\Cron;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Scanner;
-use Sitewarden\Storage\Settings;
+use Hardenly\Scanner\Scanner;
+use Hardenly\Storage\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Automatic scans: a daily or weekly WP-Cron event, kept in line with the "Automatic scan" setting.
  */
 class Schedule {
-	public const HOOK = 'sitewarden_scheduled_scan';
+	public const HOOK = 'hardenly_scheduled_scan';
 
 	/**
 	 * First scan after turning the schedule on, in seconds: soon, but not during the save.

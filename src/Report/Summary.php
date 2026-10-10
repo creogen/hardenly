@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Report;
+namespace Hardenly\Report;
 
 use InvalidArgumentException;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Scanner\Score;
+use Hardenly\Scanner\Result;
+use Hardenly\Scanner\Score;
 
 defined( 'ABSPATH' ) || exit;
 

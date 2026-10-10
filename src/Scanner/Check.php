@@ -1,11 +1,11 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner;
+namespace Hardenly\Scanner;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * One security check. Register checks through the `sitewarden_checks` filter.
+ * One security check. Register checks through the `hardenly_checks` filter.
  *
  * A check that may take longer than one batch (a walk over files) calls
  * Context::should_yield() as it works and, when it returns true, saves where it stopped with

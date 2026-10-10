@@ -1,14 +1,14 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Versions;
+namespace Hardenly\Scanner\Checks\Versions;
 
 use Merkushin\Wpal\Service\SiteIdentity;
 use Merkushin\Wpal\Service\Transient;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -38,7 +38,7 @@ class CoreVersionCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'WordPress version', 'sitewarden' );
+		return __( 'WordPress version', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -48,7 +48,7 @@ class CoreVersionCheck implements Check {
 	public function run( Context $context ): array {
 		$updates = $this->transients->get_site_transient( 'update_core' );
 		if ( ! is_object( $updates ) || ! isset( $updates->updates ) || ! is_array( $updates->updates ) ) {
-			return [ Result::skipped( self::ID, __( 'WordPress has not checked for updates yet.', 'sitewarden' ) ) ];
+			return [ Result::skipped( self::ID, __( 'WordPress has not checked for updates yet.', 'hardenly' ) ) ];
 		}
 
 		$installed = (string) $this->site->get_bloginfo( 'version' );
@@ -63,7 +63,7 @@ class CoreVersionCheck implements Check {
 
 		if ( null === $newest ) {
 			/* translators: %s: WordPress version. */
-			return [ Result::pass( self::ID, sprintf( __( 'WordPress %s is up to date.', 'sitewarden' ), $installed ) ) ];
+			return [ Result::pass( self::ID, sprintf( __( 'WordPress %s is up to date.', 'hardenly' ), $installed ) ) ];
 		}
 
 		// A newer release in the same branch (6.8.1 → 6.8.3) usually carries security fixes.
@@ -73,12 +73,12 @@ class CoreVersionCheck implements Check {
 				self::ID,
 				$same_branch ? Result::SEVERITY_HIGH : Result::SEVERITY_MEDIUM,
 				/* translators: 1: installed version, 2: available version. */
-				sprintf( __( 'WordPress %1$s is out of date: %2$s is available', 'sitewarden' ), $installed, $newest ),
-				__( 'Back up the site, then update WordPress in Dashboard > Updates.', 'sitewarden' ),
+				sprintf( __( 'WordPress %1$s is out of date: %2$s is available', 'hardenly' ), $installed, $newest ),
+				__( 'Back up the site, then update WordPress in Dashboard > Updates.', 'hardenly' ),
 				[],
 				$same_branch
-					? __( 'Minor releases mostly fix bugs and security holes. Attackers look for sites that have not installed them.', 'sitewarden' )
-					: __( 'Older major versions get security fixes only for a while. Staying current keeps the site covered.', 'sitewarden' )
+					? __( 'Minor releases mostly fix bugs and security holes. Attackers look for sites that have not installed them.', 'hardenly' )
+					: __( 'Older major versions get security fixes only for a while. Staying current keeps the site covered.', 'hardenly' )
 			),
 		];
 	}

@@ -1,9 +1,9 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner;
+namespace Hardenly\Tests\Scanner;
 
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
 
 /**
  * A check whose run() is a closure, for scanner tests.

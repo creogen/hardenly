@@ -1,12 +1,12 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Files;
+namespace Hardenly\Scanner\Checks\Files;
 
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Filesystem;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Filesystem;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -42,7 +42,7 @@ class LeftoverFilesCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Leftover install files', 'sitewarden' );
+		return __( 'Leftover install files', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -60,17 +60,17 @@ class LeftoverFilesCheck implements Check {
 		);
 
 		if ( [] === $found ) {
-			return [ Result::pass( self::ID, __( 'No leftover install files.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'No leftover install files.', 'hardenly' ) ) ];
 		}
 
 		return [
 			Result::fail(
 				self::ID,
 				Result::SEVERITY_LOW,
-				__( 'Install files that reveal the WordPress version are public', 'sitewarden' ),
-				__( 'Block them in your server configuration, or delete them after each WordPress update (updates bring them back).', 'sitewarden' ),
+				__( 'Install files that reveal the WordPress version are public', 'hardenly' ),
+				__( 'Block them in your server configuration, or delete them after each WordPress update (updates bring them back).', 'hardenly' ),
 				$found,
-				__( 'These files tell visitors which WordPress version runs the site, which helps attackers pick known holes.', 'sitewarden' )
+				__( 'These files tell visitors which WordPress version runs the site, which helps attackers pick known holes.', 'hardenly' )
 			),
 		];
 	}

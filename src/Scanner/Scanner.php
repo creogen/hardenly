@@ -1,16 +1,16 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner;
+namespace Hardenly\Scanner;
 
 use Merkushin\Wpal\Service\Cron;
 use Merkushin\Wpal\Service\Environment;
 use Merkushin\Wpal\Service\Hooks;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Report\Summary;
-use Sitewarden\Storage\Lock;
-use Sitewarden\Storage\ReportStore;
-use Sitewarden\Storage\RunStore;
-use Sitewarden\Storage\Settings;
+use Hardenly\Report\Summary;
+use Hardenly\Storage\Lock;
+use Hardenly\Storage\ReportStore;
+use Hardenly\Storage\RunStore;
+use Hardenly\Storage\Settings;
 use Throwable;
 
 defined( 'ABSPATH' ) || exit;
@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  * time, guarded by a lock.
  */
 class Scanner {
-	public const TICK_HOOK = 'sitewarden_scan_tick';
+	public const TICK_HOOK = 'hardenly_scan_tick';
 
 	public const STATE_IDLE    = 'idle';
 	public const STATE_QUEUED  = 'queued';
@@ -338,7 +338,7 @@ class Scanner {
 				Result::skipped(
 					$check->id(),
 					/* translators: %s: error message. */
-					sprintf( __( 'This check could not run: %s', 'sitewarden' ), $e->getMessage() )
+					sprintf( __( 'This check could not run: %s', 'hardenly' ), $e->getMessage() )
 				)->to_array(),
 			];
 		}
@@ -423,7 +423,7 @@ class Scanner {
 		 *
 		 * @param array $report The report: score, counts, results (with `id` and `ignored`) and check metadata.
 		 */
-		$this->hooks->do_action( 'sitewarden_scan_completed', $report );
+		$this->hooks->do_action( 'hardenly_scan_completed', $report );
 	}
 
 	/**

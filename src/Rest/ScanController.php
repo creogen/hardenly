@@ -1,11 +1,11 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Rest;
+namespace Hardenly\Rest;
 
 use Merkushin\Wpal\Service\Capabilities;
 use Merkushin\Wpal\Service\RestApi;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Scanner;
+use Hardenly\Scanner\Scanner;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * All routes need `manage_options`. The dashboard sends the REST nonce through api-fetch.
  */
 class ScanController {
-	public const NAMESPACE = 'sitewarden/v1';
+	public const NAMESPACE = 'hardenly/v1';
 
 	/**
 	 * Seconds of work per tick requested by the dashboard: short, so progress updates often.
@@ -113,8 +113,8 @@ class ScanController {
 	public function start() {
 		if ( ! $this->scanner->start( 'manual' ) ) {
 			return new WP_Error(
-				'sitewarden_scan_running',
-				__( 'A scan is already running.', 'sitewarden' ),
+				'hardenly_scan_running',
+				__( 'A scan is already running.', 'hardenly' ),
 				[ 'status' => 409 ]
 			);
 		}

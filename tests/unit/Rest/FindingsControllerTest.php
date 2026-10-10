@@ -1,21 +1,21 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Rest;
+namespace Hardenly\Tests\Rest;
 
 use Merkushin\Wpal\Service\RestApi;
 use Merkushin\Wpal\Service\Sanitization;
 use Merkushin\Wpal\Service\Users;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Report\ReportRefresher;
-use Sitewarden\Report\Summary;
-use Sitewarden\Rest\FindingsController;
-use Sitewarden\Rest\ScanController;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Scanner\Score;
-use Sitewarden\Storage\ReportStore;
-use Sitewarden\Storage\Settings;
-use Sitewarden\Tests\OptionsFake;
+use Hardenly\Report\ReportRefresher;
+use Hardenly\Report\Summary;
+use Hardenly\Rest\FindingsController;
+use Hardenly\Rest\ScanController;
+use Hardenly\Scanner\Result;
+use Hardenly\Scanner\Score;
+use Hardenly\Storage\ReportStore;
+use Hardenly\Storage\Settings;
+use Hardenly\Tests\OptionsFake;
 use WP_Error;
 use WP_REST_Request;
 

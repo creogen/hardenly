@@ -13,7 +13,7 @@ Work through this list from top to bottom. A coding agent can do it with you: as
 
 - [ ] The name doesn't start with or contain someone else's trademark ("WordPress", "Woo",
       "Gutenberg", "Facebook", ...). "for WooCommerce" at the end is fine; "Woo Widgets" is not.
-- [ ] The slug (directory name, text domain, `sitewarden.php`) is free: https://wordpress.org/plugins/sitewarden/
+- [ ] The slug (directory name, text domain, `hardenly.php`) is free: https://wordpress.org/plugins/hardenly/
       should be "not found". WordPress.org derives the slug from `Plugin Name` in the header when you submit,
       so keep the name and the slug matching.
 - [ ] The slug can be changed during review (ask in your reply to the review email), never after approval.
@@ -49,13 +49,13 @@ Work through this list from top to bottom. A coding agent can do it with you: as
 ## 4. Build and check
 
 ```bash
-make dist           # builds sitewarden.zip
+make dist           # builds hardenly.zip
 make smoke          # loads the build and runs its hooks
 make plugin-check   # Plugin Check, the same tool the review team runs
 ```
 
 - [ ] `make plugin-check` reports no errors. Fix warnings too, or be ready to explain them.
-- [ ] Install `sitewarden.zip` on a clean WordPress (`make playground` or any test site) with `WP_DEBUG` on:
+- [ ] Install `hardenly.zip` on a clean WordPress (`make playground` or any test site) with `WP_DEBUG` on:
       activate, use every feature, deactivate and delete. No notices, warnings or leftover data.
 - [ ] CI on GitHub is green, including the Plugin Check step.
 
@@ -78,7 +78,7 @@ empty. They work as they are; replace them when you have your own artwork.
 
 1. Make sure your WordPress.org account email is one you read: all review communication goes there.
    Enable two-factor authentication on the account; it's required to commit.
-2. Upload `sitewarden.zip` at https://wordpress.org/plugins/developers/add/.
+2. Upload `hardenly.zip` at https://wordpress.org/plugins/developers/add/.
 3. Watch your email. If the review team asks for changes, fix them, run section 4 again, reply to the
    email and upload the new zip from the link in the email. Reply to every point they raise.
 

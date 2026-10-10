@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks\Server;
+namespace Hardenly\Tests\Scanner\Checks\Server;
 
-use Sitewarden\Scanner\Checks\Server\WpCronCheck;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Scanner\Checks\Server\WpCronCheck;
+use Hardenly\Scanner\Result;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class WpCronCheckTest extends CheckTestCase {
 	public function testRun_ServerCron_Passes(): void {

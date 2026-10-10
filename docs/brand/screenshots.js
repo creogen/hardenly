@@ -11,19 +11,19 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 	const page = await browser.newPage();
 	await page.setViewport({ width: 1280, height: 860, deviceScaleFactor: 2 });
 
-	await page.goto(`${SITE}/wp-admin/admin.php?page=sitewarden`, { waitUntil: 'networkidle0' });
+	await page.goto(`${SITE}/wp-admin/admin.php?page=hardenly`, { waitUntil: 'networkidle0' });
 	if (await page.$('#user_login')) {
 		// Playground's default test account on this local site.
 		await page.type('#user_login', 'admin');
 		await page.type('#user_pass', 'password');
 		await Promise.all([page.waitForNavigation({ waitUntil: 'networkidle0' }), page.click('#wp-submit')]);
 	}
-	await page.waitForSelector('.sitewarden button');
+	await page.waitForSelector('.hardenly button');
 
 	const runScan = async (capture) => {
-		const button = (await page.$$('.sitewarden button')).find(Boolean);
+		const button = (await page.$$('.hardenly button')).find(Boolean);
 		await button.click();
-		await page.waitForSelector('.sitewarden-progress', { timeout: 15000 });
+		await page.waitForSelector('.hardenly-progress', { timeout: 15000 });
 		if (capture) {
 			// Let the bar move a little.
 			await page.waitForFunction(() => {
@@ -34,22 +34,22 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 			await page.screenshot({ path: path.join(out, 'screenshot-2.png') });
 			console.log('wrote screenshot-2.png');
 		}
-		await page.waitForSelector('.sitewarden-progress', { hidden: true, timeout: 120000 });
-		await page.waitForSelector('.sitewarden-score', { timeout: 30000 });
+		await page.waitForSelector('.hardenly-progress', { hidden: true, timeout: 120000 });
+		await page.waitForSelector('.hardenly-score', { timeout: 30000 });
 		await sleep(500);
 	};
 
 	// The first scan gives the second one results to show, dimmed, while it runs.
 	await runScan(false);
 	await runScan(true);
-	await page.waitForSelector('.sitewarden-history', { timeout: 15000 });
+	await page.waitForSelector('.hardenly-history', { timeout: 15000 });
 	await page.evaluate(() => window.scrollTo(0, 0));
 	await page.screenshot({ path: path.join(out, 'screenshot-1.png') });
 	console.log('wrote screenshot-1.png');
 
 	// Settings down to Online services, which has its own screenshot.
 	await page.setViewport({ width: 1280, height: 2400, deviceScaleFactor: 2 });
-	await page.goto(`${SITE}/wp-admin/admin.php?page=sitewarden-settings`, { waitUntil: 'networkidle0' });
+	await page.goto(`${SITE}/wp-admin/admin.php?page=hardenly-settings`, { waitUntil: 'networkidle0' });
 	const end = await page.evaluate(() => {
 		const heading = [...document.querySelectorAll('h2')].find((h) => h.textContent.trim() === 'Online services');
 		return Math.round(heading.getBoundingClientRect().top - 16);

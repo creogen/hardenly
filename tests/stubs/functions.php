@@ -3,7 +3,7 @@
  * Stand-ins for the WordPress functions and constants the plugin uses directly (translation,
  * escaping), so unit tests run without WordPress. Everything else goes through WPAL mocks.
  *
- * @package Sitewarden
+ * @package Hardenly
  */
 
 declare( strict_types=1 );

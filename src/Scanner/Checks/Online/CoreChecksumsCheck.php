@@ -1,17 +1,17 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Online;
+namespace Hardenly\Scanner\Checks\Online;
 
 use Merkushin\Wpal\Service\Localization;
 use Merkushin\Wpal\Service\SiteIdentity;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Integrity\ChecksumComparer;
-use Sitewarden\Integrity\WordPressOrgChecksums;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Filesystem;
+use Hardenly\Integrity\ChecksumComparer;
+use Hardenly\Integrity\WordPressOrgChecksums;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Filesystem;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -69,7 +69,7 @@ class CoreChecksumsCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'WordPress core files', 'sitewarden' );
+		return __( 'WordPress core files', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -84,7 +84,7 @@ class CoreChecksumsCheck implements Check {
 		$version   = (string) $this->site->get_bloginfo( 'version' );
 		$checksums = $this->source->core( $version, (string) $this->localization->get_locale() );
 		if ( null === $checksums ) {
-			return [ Result::skipped( self::ID, __( 'WordPress.org has no checksums for this WordPress version, or could not be reached.', 'sitewarden' ) ) ];
+			return [ Result::skipped( self::ID, __( 'WordPress.org has no checksums for this WordPress version, or could not be reached.', 'hardenly' ) ) ];
 		}
 
 		// Bundled themes and plugins in wp-content are updated separately; leave them out.
@@ -118,10 +118,10 @@ class CoreChecksumsCheck implements Check {
 				Result::STATUS_FAIL,
 				Result::SEVERITY_HIGH,
 				/* translators: %d: number of files. */
-				sprintf( _n( '%d WordPress core file differs from the official version', '%d WordPress core files differ from the official version', $progress['modified_total'], 'sitewarden' ), $progress['modified_total'] ),
-				__( 'Reinstall WordPress from Dashboard > Updates ("Re-install version"). It replaces core files and keeps your content, plugins and themes. Then change your passwords if you did not edit these files yourself.', 'sitewarden' ),
+				sprintf( _n( '%d WordPress core file differs from the official version', '%d WordPress core files differ from the official version', $progress['modified_total'], 'hardenly' ), $progress['modified_total'] ),
+				__( 'Reinstall WordPress from Dashboard > Updates ("Re-install version"). It replaces core files and keeps your content, plugins and themes. Then change your passwords if you did not edit these files yourself.', 'hardenly' ),
 				$progress['modified'],
-				__( 'Core files should never change outside updates. Changed core files are a common place to hide malicious code.', 'sitewarden' ),
+				__( 'Core files should never change outside updates. Changed core files are a common place to hide malicious code.', 'hardenly' ),
 				'modified',
 				$progress['modified_total']
 			);
@@ -132,10 +132,10 @@ class CoreChecksumsCheck implements Check {
 				Result::STATUS_WARNING,
 				Result::SEVERITY_HIGH,
 				/* translators: %d: number of files. */
-				sprintf( _n( '%d unknown PHP file in wp-admin or wp-includes', '%d unknown PHP files in wp-admin or wp-includes', $progress['added_total'], 'sitewarden' ), $progress['added_total'] ),
-				__( 'These files are not part of WordPress. Check where they came from and remove them if nothing on your site needs them; reinstalling WordPress does not remove them.', 'sitewarden' ),
+				sprintf( _n( '%d unknown PHP file in wp-admin or wp-includes', '%d unknown PHP files in wp-admin or wp-includes', $progress['added_total'], 'hardenly' ), $progress['added_total'] ),
+				__( 'These files are not part of WordPress. Check where they came from and remove them if nothing on your site needs them; reinstalling WordPress does not remove them.', 'hardenly' ),
 				$progress['added'],
-				__( 'Nothing but WordPress itself should add PHP files to these folders.', 'sitewarden' ),
+				__( 'Nothing but WordPress itself should add PHP files to these folders.', 'hardenly' ),
 				'added',
 				$progress['added_total']
 			);
@@ -146,8 +146,8 @@ class CoreChecksumsCheck implements Check {
 				Result::STATUS_INFO,
 				Result::SEVERITY_INFO,
 				/* translators: %d: number of files. */
-				sprintf( _n( '%d WordPress core file is missing', '%d WordPress core files are missing', $progress['missing_total'], 'sitewarden' ), $progress['missing_total'] ),
-				__( 'Some sites delete files such as readme.html on purpose. If you did not, reinstall WordPress from Dashboard > Updates.', 'sitewarden' ),
+				sprintf( _n( '%d WordPress core file is missing', '%d WordPress core files are missing', $progress['missing_total'], 'hardenly' ), $progress['missing_total'] ),
+				__( 'Some sites delete files such as readme.html on purpose. If you did not, reinstall WordPress from Dashboard > Updates.', 'hardenly' ),
 				$progress['missing'],
 				'',
 				'missing',
@@ -155,6 +155,6 @@ class CoreChecksumsCheck implements Check {
 			);
 		}
 
-		return [] === $results ? [ Result::pass( self::ID, __( 'WordPress core files match the official version.', 'sitewarden' ) ) ] : $results;
+		return [] === $results ? [ Result::pass( self::ID, __( 'WordPress core files match the official version.', 'hardenly' ) ) ] : $results;
 	}
 }

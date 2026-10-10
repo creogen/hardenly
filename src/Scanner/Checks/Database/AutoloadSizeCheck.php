@@ -1,13 +1,13 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Database;
+namespace Hardenly\Scanner\Checks\Database;
 
 use Merkushin\Wpal\Service\Options;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -36,7 +36,7 @@ class AutoloadSizeCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Autoloaded options', 'sitewarden' );
+		return __( 'Autoloaded options', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -51,7 +51,7 @@ class AutoloadSizeCheck implements Check {
 		}
 
 		if ( $size <= self::LIMIT_BYTES ) {
-			return [ Result::pass( self::ID, __( 'Autoloaded options are a reasonable size.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'Autoloaded options are a reasonable size.', 'hardenly' ) ) ];
 		}
 
 		return [
@@ -59,10 +59,10 @@ class AutoloadSizeCheck implements Check {
 				self::ID,
 				Result::SEVERITY_LOW,
 				/* translators: %s: size in kilobytes. */
-				sprintf( __( 'Autoloaded options take %s KB', 'sitewarden' ), number_format( $size / 1024 ) ),
-				__( 'Look for options left by plugins you no longer use, and ask the authors of active plugins about large ones. Tools > Site Health shows the same problem.', 'sitewarden' ),
+				sprintf( __( 'Autoloaded options take %s KB', 'hardenly' ), number_format( $size / 1024 ) ),
+				__( 'Look for options left by plugins you no longer use, and ask the authors of active plugins about large ones. Tools > Site Health shows the same problem.', 'hardenly' ),
 				[],
-				__( 'WordPress loads these options on every request. A large set slows the site and makes it easier to overload.', 'sitewarden' )
+				__( 'WordPress loads these options on every request. A large set slows the site and makes it easier to overload.', 'hardenly' )
 			),
 		];
 	}

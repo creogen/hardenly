@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner;
+namespace Hardenly\Tests\Scanner;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Scanner\Result;
+use Hardenly\Scanner\Result;
 
 class ResultTest extends TestCase {
 	public function testConstruct_UnknownStatus_Throws(): void {

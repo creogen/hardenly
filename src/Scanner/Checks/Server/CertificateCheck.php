@@ -1,14 +1,14 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Server;
+namespace Hardenly\Scanner\Checks\Server;
 
 use Merkushin\Wpal\Service\Urls;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\TlsProbe;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\TlsProbe;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -48,7 +48,7 @@ class CertificateCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Certificate expiry', 'sitewarden' );
+		return __( 'Certificate expiry', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -58,28 +58,28 @@ class CertificateCheck implements Check {
 	public function run( Context $context ): array {
 		$url = (string) $this->urls->home_url();
 		if ( 0 !== strpos( $url, 'https://' ) ) {
-			return [ Result::skipped( self::ID, __( 'The site does not use HTTPS.', 'sitewarden' ) ) ];
+			return [ Result::skipped( self::ID, __( 'The site does not use HTTPS.', 'hardenly' ) ) ];
 		}
 
 		$parts   = (array) $this->urls->wp_parse_url( $url );
 		$expires = $this->probe->expires_at( (string) ( $parts['host'] ?? '' ), (int) ( $parts['port'] ?? 443 ) );
 		if ( null === $expires ) {
-			return [ Result::skipped( self::ID, __( 'The certificate could not be read from this server.', 'sitewarden' ) ) ];
+			return [ Result::skipped( self::ID, __( 'The certificate could not be read from this server.', 'hardenly' ) ) ];
 		}
 
 		$days = (int) floor( ( $expires - (int) ( $this->clock )() ) / DAY_IN_SECONDS );
 		if ( $days >= 30 ) {
 			/* translators: %d: number of days. */
-			return [ Result::pass( self::ID, sprintf( __( 'The certificate is valid for %d more days.', 'sitewarden' ), $days ) ) ];
+			return [ Result::pass( self::ID, sprintf( __( 'The certificate is valid for %d more days.', 'hardenly' ), $days ) ) ];
 		}
 
 		if ( $days < 0 ) {
 			$severity = Result::SEVERITY_CRITICAL;
-			$message  = __( 'The HTTPS certificate has expired', 'sitewarden' );
+			$message  = __( 'The HTTPS certificate has expired', 'hardenly' );
 		} else {
 			$severity = $days < 14 ? Result::SEVERITY_HIGH : Result::SEVERITY_MEDIUM;
 			/* translators: %d: number of days. */
-			$message = sprintf( _n( 'The HTTPS certificate expires in %d day', 'The HTTPS certificate expires in %d days', $days, 'sitewarden' ), $days );
+			$message = sprintf( _n( 'The HTTPS certificate expires in %d day', 'The HTTPS certificate expires in %d days', $days, 'hardenly' ), $days );
 		}
 
 		return [
@@ -87,9 +87,9 @@ class CertificateCheck implements Check {
 				self::ID,
 				$severity,
 				$message,
-				__( 'Renew the certificate, or ask your host why automatic renewal did not run.', 'sitewarden' ),
+				__( 'Renew the certificate, or ask your host why automatic renewal did not run.', 'hardenly' ),
 				[],
-				__( 'With an expired certificate, browsers warn visitors away and some connections fail.', 'sitewarden' )
+				__( 'With an expired certificate, browsers warn visitors away and some connections fail.', 'hardenly' )
 			),
 		];
 	}

@@ -1,14 +1,14 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Users;
+namespace Hardenly\Scanner\Checks\Users;
 
 use Merkushin\Wpal\Service\Users;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Users\LastLogin;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Users\LastLogin;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -53,7 +53,7 @@ class InactiveAdminsCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Inactive administrators', 'sitewarden' );
+		return __( 'Inactive administrators', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -70,7 +70,7 @@ class InactiveAdminsCheck implements Check {
 				Result::skipped(
 					self::ID,
 					/* translators: %d: number of days. */
-					sprintf( __( 'Sitewarden records logins from the day it was installed. This check runs once it has %d days of records.', 'sitewarden' ), self::DAYS )
+					sprintf( __( 'Hardenly records logins from the day it was installed. This check runs once it has %d days of records.', 'hardenly' ), self::DAYS )
 				),
 			];
 		}
@@ -83,7 +83,7 @@ class InactiveAdminsCheck implements Check {
 		}
 
 		if ( [] === $inactive ) {
-			return [ Result::pass( self::ID, __( 'All administrators have logged in recently.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'All administrators have logged in recently.', 'hardenly' ) ) ];
 		}
 
 		return [
@@ -92,13 +92,13 @@ class InactiveAdminsCheck implements Check {
 				Result::SEVERITY_LOW,
 				sprintf(
 					/* translators: 1: number of administrators, 2: number of days. */
-					_n( '%1$d administrator has not logged in for %2$d days', '%1$d administrators have not logged in for %2$d days', count( $inactive ), 'sitewarden' ),
+					_n( '%1$d administrator has not logged in for %2$d days', '%1$d administrators have not logged in for %2$d days', count( $inactive ), 'hardenly' ),
 					count( $inactive ),
 					self::DAYS
 				),
-				__( 'Remove administrator accounts nobody uses, or lower their role.', 'sitewarden' ),
+				__( 'Remove administrator accounts nobody uses, or lower their role.', 'hardenly' ),
 				$inactive,
-				__( 'Forgotten accounts often have old passwords, and nobody notices when someone else uses them.', 'sitewarden' )
+				__( 'Forgotten accounts often have old passwords, and nobody notices when someone else uses them.', 'hardenly' )
 			),
 		];
 	}

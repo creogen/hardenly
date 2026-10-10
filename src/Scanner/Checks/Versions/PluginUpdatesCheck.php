@@ -1,15 +1,15 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Versions;
+namespace Hardenly\Scanner\Checks\Versions;
 
 use Merkushin\Wpal\Service\Plugins;
 use Merkushin\Wpal\Service\Transient;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\AdminIncludes;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\AdminIncludes;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -39,7 +39,7 @@ class PluginUpdatesCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Plugin updates', 'sitewarden' );
+		return __( 'Plugin updates', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -49,7 +49,7 @@ class PluginUpdatesCheck implements Check {
 	public function run( Context $context ): array {
 		$updates = $this->transients->get_site_transient( 'update_plugins' );
 		if ( ! is_object( $updates ) ) {
-			return [ Result::skipped( self::ID, __( 'WordPress has not checked for plugin updates yet.', 'sitewarden' ) ) ];
+			return [ Result::skipped( self::ID, __( 'WordPress has not checked for plugin updates yet.', 'hardenly' ) ) ];
 		}
 
 		AdminIncludes::plugins();
@@ -63,7 +63,7 @@ class PluginUpdatesCheck implements Check {
 		}
 
 		if ( [] === $outdated ) {
-			return [ Result::pass( self::ID, __( 'All plugins are up to date.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'All plugins are up to date.', 'hardenly' ) ) ];
 		}
 
 		return [
@@ -71,8 +71,8 @@ class PluginUpdatesCheck implements Check {
 				self::ID,
 				Result::SEVERITY_HIGH,
 				/* translators: %d: number of plugins. */
-				sprintf( _n( '%d plugin is out of date', '%d plugins are out of date', count( $outdated ), 'sitewarden' ), count( $outdated ) ),
-				__( 'Update them on the Plugins screen. Most attacks target security holes that updates have already closed.', 'sitewarden' ),
+				sprintf( _n( '%d plugin is out of date', '%d plugins are out of date', count( $outdated ), 'hardenly' ), count( $outdated ) ),
+				__( 'Update them on the Plugins screen. Most attacks target security holes that updates have already closed.', 'hardenly' ),
 				$outdated
 			),
 		];

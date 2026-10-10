@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks\Files;
+namespace Hardenly\Tests\Scanner\Checks\Files;
 
-use Sitewarden\Scanner\Checks\Files\LeftoverFilesCheck;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Scanner\Checks\Files\LeftoverFilesCheck;
+use Hardenly\Scanner\Result;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class LeftoverFilesCheckTest extends CheckTestCase {
 	public function testRun_NoLeftovers_Passes(): void {

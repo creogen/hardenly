@@ -1,14 +1,14 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Cron;
+namespace Hardenly\Tests\Cron;
 
 use Merkushin\Wpal\Service\Cron;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Cron\Schedule;
-use Sitewarden\Scanner\Scanner;
-use Sitewarden\Storage\Settings;
+use Hardenly\Cron\Schedule;
+use Hardenly\Scanner\Scanner;
+use Hardenly\Storage\Settings;
 
 class ScheduleTest extends TestCase {
 	/**

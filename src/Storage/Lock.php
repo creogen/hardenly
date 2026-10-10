@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Storage;
+namespace Hardenly\Storage;
 
 defined( 'ABSPATH' ) || exit;
 

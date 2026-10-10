@@ -1,12 +1,12 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Users;
+namespace Hardenly\Tests\Users;
 
 use Merkushin\Wpal\Service\Options;
 use Merkushin\Wpal\Service\Users;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Users\LastLogin;
+use Hardenly\Users\LastLogin;
 
 class LastLoginTest extends TestCase {
 	public function testStart_FirstTime_RecordsTheStart(): void {

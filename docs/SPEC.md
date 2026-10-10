@@ -1,23 +1,23 @@
-# Sitewarden: Specification
+# Hardenly: Specification
 
 Read-only WordPress security scanner for the WordPress.org directory. Built on `merkushin/wpplugin`
-(`composer create-project merkushin/wpplugin sitewarden`). Follow `AGENTS.md` from the template; this file
+(`composer create-project merkushin/wpplugin hardenly`). Follow `AGENTS.md` from the template; this file
 only adds product decisions.
 
 ## 1. Identifiers
 
 | Item | Value |
 | --- | --- |
-| Name | Sitewarden |
-| Slug / text domain / main file | `sitewarden` / `sitewarden` / `sitewarden.php` |
-| PHP namespace | `Sitewarden\` (PSR-4, `src/`) |
-| Prefix | `sitewarden_` (options, transients, hooks, nonces, cron); `sitewarden-` for script handles |
+| Name | Hardenly |
+| Slug / text domain / main file | `hardenly` / `hardenly` / `hardenly.php` |
+| PHP namespace | `Hardenly\` (PSR-4, `src/`) |
+| Prefix | `hardenly_` (options, transients, hooks, nonces, cron); `hardenly-` for script handles |
 | Min PHP | 7.4 |
 | Min WP | 6.2; keep header, `readme.txt` and `phpcs.xml.dist` in sync |
 | License | GPL-2.0-or-later |
 
-The slug `sitewarden` was free on wordpress.org when the project started (checked 2026-10-10). Fallback:
-`sitewarden-security-scanner`.
+The slug `hardenly` was free on wordpress.org when the project started (checked 2026-10-10). Fallback:
+`hardenly-security-scanner`.
 
 ## 2. Goals and non-goals
 
@@ -36,7 +36,7 @@ The slug `sitewarden` was free on wordpress.org when the project started (checke
 
 ## 3. Scan modules
 
-Each check implements `Sitewarden\Scanner\Check`: `id()`, `title()`, `group()`, `run( Context ): Result[]`.
+Each check implements `Hardenly\Scanner\Check`: `id()`, `title()`, `group()`, `run( Context ): Result[]`.
 A `Result` has: `check_id`, `status` (`pass|warning|fail|info|skipped`), `severity` (`info|low|medium|high|critical`),
 `message` (shown as the finding's title), `remediation`, optional `description` (why it matters), `details` (e.g. file
 paths, capped at 500, each cut to 500 characters) and `key` (tells apart several results of one check).
@@ -71,7 +71,7 @@ Built-in checks (M2), in `src/Scanner/Checks/<Group>/`:
 | `config.environment` | `EnvironmentTypeCheck` | Not `production`: note |
 | `users.admin_username` | `AdminUsernameCheck` | User "admin": medium if administrator, else low |
 | `users.admin_count` | `AdminCountCheck` | More than 3 administrators: low |
-| `users.inactive_admins` | `InactiveAdminsCheck` | Administrators without a login in 90 days: low. Logins are recorded by `Users\LastLogin` (user meta `sitewarden_last_login`); skipped until 90 days of records exist |
+| `users.inactive_admins` | `InactiveAdminsCheck` | Administrators without a login in 90 days: low. Logins are recorded by `Users\LastLogin` (user meta `hardenly_last_login`); skipped until 90 days of records exist |
 | `users.enumeration` | `UserEnumerationCheck` | `/?author=N` redirect or public `/wp/v2/users` (loopback): low |
 | `versions.core` | `CoreVersionCheck` | Update in the same branch: high; newer branch: medium |
 | `versions.plugins` / `versions.themes` | `PluginUpdatesCheck` / `ThemeUpdatesCheck` | Updates available: high |
@@ -132,9 +132,9 @@ Document exactly what is sent in `readme.txt` (WordPress.org guideline 7).
 Implementation (M5):
 - Settings: `checksums_enabled`, `vuln_provider`, `vuln_api_key` (never printed back; the form shows the last four
   characters, an empty field keeps it, switching provider drops it), `vuln_consent` (per provider, required).
-  "Test connection" posts to `admin-post.php` (`sitewarden_test_provider`, nonce + `manage_options`).
+  "Test connection" posts to `admin-post.php` (`hardenly_test_provider`, nonce + `manage_options`).
 - `online.core_checksums` (`CoreChecksumsCheck`): core files vs `get_core_checksums()` (cached a day in the
-  `sitewarden_core_checksums` transient; falls back to `en_US`), leaving out `wp-content/`. Changed files: high fail;
+  `hardenly_core_checksums` transient; falls back to `en_US`), leaving out `wp-content/`. Changed files: high fail;
   unknown PHP files in `wp-admin`/`wp-includes`: high warning; missing files: note.
 - `online.plugin_checksums` (`PluginChecksumsCheck`): plugin files vs
   `downloads.wordpress.org/plugin-checksums/{slug}/{version}.json` (md5 may be a string or a list). Changed and
@@ -142,7 +142,7 @@ Implementation (M5):
   Both use `Integrity\ChecksumComparer` (resumable: verify listed files, then walk for added PHP files).
 - `online.vulnerabilities` (`VulnerabilityCheck`): core, plugins with a folder, themes; one result per vulnerable
   component (key `plugin/slug`), severity from CVSS (unknown = high), remediation "update to X" or "no fix yet".
-  Results cached a day per provider, component and version (`sitewarden_vulnerability_cache` option). A rejected
+  Results cached a day per provider, component and version (`hardenly_vulnerability_cache` option). A rejected
   key, rate limit or outage stops the lookups: findings so far are kept plus a "not checked" result.
 - Providers (`Vulnerability\VulnerabilityProvider`): `WpscanProvider` (API v3, `Authorization: Token token=…`,
   per-slug endpoints matched to the installed version locally, v4 `affected_versions` ranges supported; free plan
@@ -152,7 +152,7 @@ Implementation (M5):
 ## 4. Architecture
 
 ```
-sitewarden.php                bootstrap only
+hardenly.php                bootstrap only
 src/Plugin.php                wires hooks, VERSION constant
 src/Admin/Menu.php            top-level menu + capability gate
 src/Admin/DashboardPage.php   score, findings table, "Run scan" button
@@ -161,7 +161,7 @@ src/Rest/ScanController.php   scan start/status/tick/stop and report endpoints
 src/Scanner/Scanner.php       orchestrates checks, batching, progress
 src/Scanner/Check.php         interface
 src/Scanner/Context.php       settings, time budget, memory guard, cursor
-src/Scanner/CheckRegistry.php built-in checks + `sitewarden_checks`, validated, in group order
+src/Scanner/CheckRegistry.php built-in checks + `hardenly_checks`, validated, in group order
 src/Scanner/Group.php         group ids, labels and run order
 src/Scanner/Result.php        value object
 src/Scanner/Checks/...        one class per check (grouped by folder)
@@ -178,9 +178,9 @@ src/Cron/Schedule.php         scheduled scan
 
 ### 4.1 Scan lifecycle
 1. Admin clicks "Run scan" (or the schedule fires) and the scanner creates a **run** with state `queued`.
-2. A WP-Cron single event (`sitewarden_scan_tick`) processes work in batches under a time budget (default 10 s)
+2. A WP-Cron single event (`hardenly_scan_tick`) processes work in batches under a time budget (default 10 s)
    and memory guard, then reschedules itself until done. While the dashboard is open it calls
-   `POST sitewarden/v1/scan/tick` (5 s batches), so a scan also progresses where WP-Cron is slow or disabled.
+   `POST hardenly/v1/scan/tick` (5 s batches), so a scan also progresses where WP-Cron is slow or disabled.
 3. Fast checks (config, users, versions, headers) run first; the file walk is cursor-based and resumable.
 4. On completion the scanner stores the report, computes the score, and sends the email if enabled.
 5. Only one run at a time, and only one batch at a time (atomic lock with expiry). A run without progress for
@@ -189,17 +189,17 @@ src/Cron/Schedule.php         scheduled scan
 Action Scheduler is **not** bundled. WP-Cron is enough and keeps the plugin small.
 
 ### 4.2 Storage
-- `sitewarden_settings`: all settings in one option (`Storage\Settings`): `disabled_groups`, `modified_days`,
+- `hardenly_settings`: all settings in one option (`Storage\Settings`): `disabled_groups`, `modified_days`,
   `skip_files`, `ignored` (finding id => message, date, user), `schedule` (off/daily/weekly), `email_enabled`,
   `email_only_changes`, `email_to`. Every write goes through `Settings::sanitize()`; the Settings screen posts to
   `options.php` and is mapped by `Settings::sanitize_form()`.
 - Ignored findings: a finding id is the check id, plus `:key` for checks with several results. `Report\Summary`
   leaves ignored findings out of score and counts; `Report\ReportRefresher` recomputes the latest report and its
-  history entry whenever the settings change (`update_option_sitewarden_settings`).
-- `sitewarden_latest_report`: full latest report (findings capped, e.g. 500 per check).
-- `sitewarden_report_history`: last 10 summaries (date, score, counts).
-- `sitewarden_run_state`: option for the active (or last failed/stopped) run.
-- `sitewarden_lock`: option row used as the batch lock, written with direct queries (see `Lock`).
+  history entry whenever the settings change (`update_option_hardenly_settings`).
+- `hardenly_latest_report`: full latest report (findings capped, e.g. 500 per check).
+- `hardenly_report_history`: last 10 summaries (date, score, counts).
+- `hardenly_run_state`: option for the active (or last failed/stopped) run.
+- `hardenly_lock`: option row used as the batch lock, written with direct queries (see `Lock`).
 - No custom tables in v1. Everything removed in `uninstall.php`, including cron events.
 
 ### 4.3 Score
@@ -208,7 +208,7 @@ Action Scheduler is **not** bundled. WP-Cron is enough and keeps the plugin smal
 class and are covered by unit tests. Show the score as an indicator, not a guarantee.
 
 ### 4.4 Schedule and email (optional, off by default)
-Automatic scans: off/daily/weekly, a WP-Cron event `sitewarden_scheduled_scan` (`Cron\Schedule`) kept in sync with
+Automatic scans: off/daily/weekly, a WP-Cron event `hardenly_scheduled_scan` (`Cron\Schedule`) kept in sync with
 the setting on every settings save; first run an hour after turning it on. Both cron hooks are cleared on
 deactivation and uninstall.
 
@@ -227,7 +227,7 @@ summaries keep their high/critical finding ids for this).
 
 ## 5. Admin UI
 Design: https://claude.ai/artifact/C6fX7ZS2Vm7emLwMhvdMHa (native WP admin look, four screens).
-- Top-level menu "Sitewarden" with two submenu pages, **Dashboard** and **Settings** (no in-page tabs).
+- Top-level menu "Hardenly" with two submenu pages, **Dashboard** and **Settings** (no in-page tabs).
 - Dashboard, first run: what the scan does (read-only, offline, background) and a "Run first scan" button.
 - Dashboard, scanning: progress bar, files checked, current folder, status per check group, "Stop scan".
   Previous results stay visible, dimmed, until the new report replaces them.
@@ -238,17 +238,17 @@ Design: https://claude.ai/artifact/C6fX7ZS2Vm7emLwMhvdMHa (native WP admin look,
 - Settings sections: What to scan (check groups, modified-files threshold, files to skip), Schedule and email,
   Online services (off by default, each option says exactly what is sent, masked API key, consent checkbox),
   Ignored findings (with Restore). "Skip this file" adds the path to "Files to skip".
-- Progress via REST polling (`@wordpress/api-fetch`). Assets only on Sitewarden screens. Entries:
+- Progress via REST polling (`@wordpress/api-fetch`). Assets only on Hardenly screens. Entries:
   `assets/src/admin/`. i18n via `@wordpress/i18n`.
 - Accessible: no colour-only status (icon + text), real buttons and labels.
 
 ### 5.1 Extension points
 v1 is free with nothing locked (WordPress.org forbids trialware). A few public hooks let add-ons, including a
 possible future paid add-on, extend the plugin without changing it:
-- Filter `sitewarden_checks` (`Check[]`): add, remove or replace checks.
-- Filter `sitewarden_vulnerability_providers` (`VulnerabilityProvider[]`, keyed by id): add providers.
-- Action `sitewarden_scan_completed` (`array $report`): fires after a report is stored, before the email.
-- Filter `sitewarden_score_weights` (`array`): adjust severity weights and group caps.
+- Filter `hardenly_checks` (`Check[]`): add, remove or replace checks.
+- Filter `hardenly_vulnerability_providers` (`VulnerabilityProvider[]`, keyed by id): add providers.
+- Action `hardenly_scan_completed` (`array $report`): fires after a report is stored, before the email.
+- Filter `hardenly_score_weights` (`array`): adjust severity weights and group caps.
 
 Hooks are documented in `readme.txt` (FAQ) and covered by tests. Anything registered through them is validated
 (must implement the interface) so a broken add-on cannot break a scan.
@@ -275,7 +275,7 @@ Hooks are documented in `readme.txt` (FAQ) and covered by tests. Anything regist
 
 ## 8. Decisions (2026-10-10)
 1. Minimum WordPress version: 6.2.
-2. Menu: top-level "Sitewarden" with Dashboard and Settings submenus (two pages). Under Tools only if it ever
+2. Menu: top-level "Hardenly" with Dashboard and Settings submenus (two pages). Under Tools only if it ever
    shrinks to one page.
 3. "Recently modified files": simple mtime threshold, default 7 days, configurable.
 4. Both WPScan and Patchstack adapters ship in v1.

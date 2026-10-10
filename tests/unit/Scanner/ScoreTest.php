@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner;
+namespace Hardenly\Tests\Scanner;
 
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Scanner\Score;
+use Hardenly\Scanner\Result;
+use Hardenly\Scanner\Score;
 
 class ScoreTest extends TestCase {
 	private const GROUPS = [

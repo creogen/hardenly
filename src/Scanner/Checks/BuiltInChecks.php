@@ -1,51 +1,51 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks;
+namespace Hardenly\Scanner\Checks;
 
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Checks\Code\SuspiciousCodeCheck;
-use Sitewarden\Scanner\Checks\Online\CoreChecksumsCheck;
-use Sitewarden\Scanner\Checks\Online\PluginChecksumsCheck;
-use Sitewarden\Scanner\Checks\Online\VulnerabilityCheck;
-use Sitewarden\Scanner\Checks\Config\DebugDisplayCheck;
-use Sitewarden\Scanner\Checks\Config\EnvironmentTypeCheck;
-use Sitewarden\Scanner\Checks\Config\FileEditCheck;
-use Sitewarden\Scanner\Checks\Config\ForceSslAdminCheck;
-use Sitewarden\Scanner\Checks\Config\SaltsCheck;
-use Sitewarden\Scanner\Checks\Database\AutoloadSizeCheck;
-use Sitewarden\Scanner\Checks\Database\TablePrefixCheck;
-use Sitewarden\Scanner\Checks\Files\BackupFilesCheck;
-use Sitewarden\Scanner\Checks\Files\DebugLogCheck;
-use Sitewarden\Scanner\Checks\Files\ExposedFilesCheck;
-use Sitewarden\Scanner\Checks\Files\LeftoverFilesCheck;
-use Sitewarden\Scanner\Checks\Files\PermissionsCheck;
-use Sitewarden\Scanner\Checks\Files\RecentlyModifiedCheck;
-use Sitewarden\Scanner\Checks\Files\UploadsPhpCheck;
-use Sitewarden\Scanner\Checks\Server\CertificateCheck;
-use Sitewarden\Scanner\Checks\Server\DirectoryListingCheck;
-use Sitewarden\Scanner\Checks\Server\HttpsCheck;
-use Sitewarden\Scanner\Checks\Server\SecurityHeadersCheck;
-use Sitewarden\Scanner\Checks\Server\WpCronCheck;
-use Sitewarden\Scanner\Checks\Server\XmlRpcCheck;
-use Sitewarden\Scanner\Checks\Users\AdminCountCheck;
-use Sitewarden\Scanner\Checks\Users\AdminUsernameCheck;
-use Sitewarden\Scanner\Checks\Users\InactiveAdminsCheck;
-use Sitewarden\Scanner\Checks\Users\UserEnumerationCheck;
-use Sitewarden\Scanner\Checks\Versions\CoreVersionCheck;
-use Sitewarden\Scanner\Checks\Versions\InactiveExtensionsCheck;
-use Sitewarden\Scanner\Checks\Versions\PhpVersionCheck;
-use Sitewarden\Scanner\Checks\Versions\PluginUpdatesCheck;
-use Sitewarden\Scanner\Checks\Versions\ThemeUpdatesCheck;
-use Sitewarden\Site\Constants;
-use Sitewarden\Site\Filesystem;
-use Sitewarden\Site\Loopback;
-use Sitewarden\Users\LastLogin;
-use Sitewarden\Vulnerability\ProviderRegistry;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Checks\Code\SuspiciousCodeCheck;
+use Hardenly\Scanner\Checks\Online\CoreChecksumsCheck;
+use Hardenly\Scanner\Checks\Online\PluginChecksumsCheck;
+use Hardenly\Scanner\Checks\Online\VulnerabilityCheck;
+use Hardenly\Scanner\Checks\Config\DebugDisplayCheck;
+use Hardenly\Scanner\Checks\Config\EnvironmentTypeCheck;
+use Hardenly\Scanner\Checks\Config\FileEditCheck;
+use Hardenly\Scanner\Checks\Config\ForceSslAdminCheck;
+use Hardenly\Scanner\Checks\Config\SaltsCheck;
+use Hardenly\Scanner\Checks\Database\AutoloadSizeCheck;
+use Hardenly\Scanner\Checks\Database\TablePrefixCheck;
+use Hardenly\Scanner\Checks\Files\BackupFilesCheck;
+use Hardenly\Scanner\Checks\Files\DebugLogCheck;
+use Hardenly\Scanner\Checks\Files\ExposedFilesCheck;
+use Hardenly\Scanner\Checks\Files\LeftoverFilesCheck;
+use Hardenly\Scanner\Checks\Files\PermissionsCheck;
+use Hardenly\Scanner\Checks\Files\RecentlyModifiedCheck;
+use Hardenly\Scanner\Checks\Files\UploadsPhpCheck;
+use Hardenly\Scanner\Checks\Server\CertificateCheck;
+use Hardenly\Scanner\Checks\Server\DirectoryListingCheck;
+use Hardenly\Scanner\Checks\Server\HttpsCheck;
+use Hardenly\Scanner\Checks\Server\SecurityHeadersCheck;
+use Hardenly\Scanner\Checks\Server\WpCronCheck;
+use Hardenly\Scanner\Checks\Server\XmlRpcCheck;
+use Hardenly\Scanner\Checks\Users\AdminCountCheck;
+use Hardenly\Scanner\Checks\Users\AdminUsernameCheck;
+use Hardenly\Scanner\Checks\Users\InactiveAdminsCheck;
+use Hardenly\Scanner\Checks\Users\UserEnumerationCheck;
+use Hardenly\Scanner\Checks\Versions\CoreVersionCheck;
+use Hardenly\Scanner\Checks\Versions\InactiveExtensionsCheck;
+use Hardenly\Scanner\Checks\Versions\PhpVersionCheck;
+use Hardenly\Scanner\Checks\Versions\PluginUpdatesCheck;
+use Hardenly\Scanner\Checks\Versions\ThemeUpdatesCheck;
+use Hardenly\Site\Constants;
+use Hardenly\Site\Filesystem;
+use Hardenly\Site\Loopback;
+use Hardenly\Users\LastLogin;
+use Hardenly\Vulnerability\ProviderRegistry;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The checks that ship with Sitewarden. The registry orders them by group.
+ * The checks that ship with Hardenly. The registry orders them by group.
  */
 class BuiltInChecks {
 	/**

@@ -49,7 +49,7 @@ const PATHS = {
 export default function Icon( { name, size = 16 } ) {
 	return (
 		<svg
-			className="sitewarden-icon"
+			className="hardenly-icon"
 			width={ size }
 			height={ size }
 			viewBox="0 0 24 24"

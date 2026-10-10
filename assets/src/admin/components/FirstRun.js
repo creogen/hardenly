@@ -5,36 +5,36 @@ import Icon from './Icon';
 export default function FirstRun( { onStart, busy } ) {
 	return (
 		<section
-			className="sitewarden-card sitewarden-first-run"
-			aria-labelledby="sitewarden-first-run-title"
+			className="hardenly-card hardenly-first-run"
+			aria-labelledby="hardenly-first-run-title"
 		>
-			<span className="sitewarden-first-run__icon">
+			<span className="hardenly-first-run__icon">
 				<Icon name="shield" size={ 96 } />
 			</span>
-			<div className="sitewarden-first-run__body">
-				<h2 id="sitewarden-first-run-title">
+			<div className="hardenly-first-run__body">
+				<h2 id="hardenly-first-run-title">
 					{ __(
 						'Check your site for security problems',
-						'sitewarden'
+						'hardenly'
 					) }
 				</h2>
 				<p>
 					{ __(
-						'Sitewarden looks at your WordPress settings, users, plugins, themes and files, and tells you what to fix and how. It only reads; it never changes or deletes anything on your site.',
-						'sitewarden'
+						'Hardenly looks at your WordPress settings, users, plugins, themes and files, and tells you what to fix and how. It only reads; it never changes or deletes anything on your site.',
+						'hardenly'
 					) }
 				</p>
 				<ul>
 					<li>
 						{ __(
 							'Works offline: nothing is sent outside your site unless you turn it on in Settings.',
-							'sitewarden'
+							'hardenly'
 						) }
 					</li>
 					<li>
 						{ __(
 							'Runs in small steps in the background, so it is safe on shared hosting.',
-							'sitewarden'
+							'hardenly'
 						) }
 					</li>
 				</ul>
@@ -45,7 +45,7 @@ export default function FirstRun( { onStart, busy } ) {
 						onClick={ onStart }
 						disabled={ busy }
 					>
-						{ __( 'Run first scan', 'sitewarden' ) }
+						{ __( 'Run first scan', 'hardenly' ) }
 					</button>
 				</p>
 			</div>

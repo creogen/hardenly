@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests;
+namespace Hardenly\Tests;
 
 use Merkushin\Wpal\Service\Assets;
 use Merkushin\Wpal\Service\Errors;
@@ -9,16 +9,16 @@ use Merkushin\Wpal\Service\Plugins;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Admin\Menu;
-use Sitewarden\Admin\SettingsPage;
-use Sitewarden\Cron\Schedule;
-use Sitewarden\Report\EmailReport;
-use Sitewarden\Report\ReportRefresher;
-use Sitewarden\Rest\FindingsController;
-use Sitewarden\Plugin;
-use Sitewarden\Rest\ScanController;
-use Sitewarden\Scanner\Scanner;
-use Sitewarden\Users\LastLogin;
+use Hardenly\Admin\Menu;
+use Hardenly\Admin\SettingsPage;
+use Hardenly\Cron\Schedule;
+use Hardenly\Report\EmailReport;
+use Hardenly\Report\ReportRefresher;
+use Hardenly\Rest\FindingsController;
+use Hardenly\Plugin;
+use Hardenly\Rest\ScanController;
+use Hardenly\Scanner\Scanner;
+use Hardenly\Users\LastLogin;
 
 /**
  * Each WordPress function the plugin calls goes through a WPAL service; the tests swap the
@@ -27,14 +27,14 @@ use Sitewarden\Users\LastLogin;
 class PluginTest extends TestCase {
 	use OptionsFake;
 
-	private const PLUGIN_URL = 'https://example.com/wp-content/plugins/sitewarden/';
+	private const PLUGIN_URL = 'https://example.com/wp-content/plugins/hardenly/';
 
 	/**
 	 * A plugin directory with a build of assets: admin has a stylesheet and uses wp-i18n.
 	 */
-	private const PLUGIN_FILE = __DIR__ . '/../fixtures/plugin/sitewarden.php';
+	private const PLUGIN_FILE = __DIR__ . '/../fixtures/plugin/hardenly.php';
 
-	private const SCREEN = 'toplevel_page_sitewarden';
+	private const SCREEN = 'toplevel_page_hardenly';
 
 	/**
 	 * @var Hooks&MockObject
@@ -104,17 +104,17 @@ class PluginTest extends TestCase {
 		);
 		self::assertSame(
 			[
-				'admin_menu'                          => [ Menu::class . '::register' ],
-				'admin_init'                          => [ SettingsPage::class . '::register' ],
-				'admin_post_sitewarden_test_provider' => [ SettingsPage::class . '::handle_test' ],
-				'admin_enqueue_scripts'               => [ Plugin::class . '::enqueue_admin_assets' ],
-				'rest_api_init'                       => [ ScanController::class . '::register_routes', FindingsController::class . '::register_routes' ],
-				Scanner::TICK_HOOK                    => [ Scanner::class . '::handle_tick_event' ],
-				Schedule::HOOK                        => [ Schedule::class . '::run' ],
-				'add_option_sitewarden_settings'      => [ Schedule::class . '::sync' ],
-				'update_option_sitewarden_settings'   => [ Schedule::class . '::sync', ReportRefresher::class . '::refresh' ],
-				'sitewarden_scan_completed'           => [ EmailReport::class . '::maybe_send' ],
-				'wp_login'                            => [ LastLogin::class . '::record' ],
+				'admin_menu'                        => [ Menu::class . '::register' ],
+				'admin_init'                        => [ SettingsPage::class . '::register' ],
+				'admin_post_hardenly_test_provider' => [ SettingsPage::class . '::handle_test' ],
+				'admin_enqueue_scripts'             => [ Plugin::class . '::enqueue_admin_assets' ],
+				'rest_api_init'                     => [ ScanController::class . '::register_routes', FindingsController::class . '::register_routes' ],
+				Scanner::TICK_HOOK                  => [ Scanner::class . '::handle_tick_event' ],
+				Schedule::HOOK                      => [ Schedule::class . '::run' ],
+				'add_option_hardenly_settings'      => [ Schedule::class . '::sync' ],
+				'update_option_hardenly_settings'   => [ Schedule::class . '::sync', ReportRefresher::class . '::refresh' ],
+				'hardenly_scan_completed'           => [ EmailReport::class . '::maybe_send' ],
+				'wp_login'                          => [ LastLogin::class . '::record' ],
 			],
 			$classes
 		);
@@ -152,7 +152,7 @@ class PluginTest extends TestCase {
 	public function testEnqueueAdminAssets_WithStylesheet_EnqueuesStyleWithBuildVersion(): void {
 		$this->assets->expects( self::once() )
 			->method( 'wp_enqueue_style' )
-			->with( 'sitewarden-admin', self::PLUGIN_URL . 'assets/build/admin.css', [], 'admin-hash' );
+			->with( 'hardenly-admin', self::PLUGIN_URL . 'assets/build/admin.css', [], 'admin-hash' );
 
 		$this->plugin_in_admin()->enqueue_admin_assets( self::SCREEN );
 	}
@@ -160,7 +160,7 @@ class PluginTest extends TestCase {
 	public function testEnqueueAdminAssets_WithStylesheet_UsesRtlStylesheetForRtlLanguages(): void {
 		$this->assets->expects( self::once() )
 			->method( 'wp_style_add_data' )
-			->with( 'sitewarden-admin', 'rtl', 'replace' );
+			->with( 'hardenly-admin', 'rtl', 'replace' );
 
 		$this->plugin_in_admin()->enqueue_admin_assets( self::SCREEN );
 	}
@@ -169,7 +169,7 @@ class PluginTest extends TestCase {
 		$this->assets->expects( self::once() )
 			->method( 'wp_enqueue_script' )
 			->with(
-				'sitewarden-admin',
+				'hardenly-admin',
 				self::PLUGIN_URL . 'assets/build/admin.js',
 				[ 'wp-i18n' ],
 				'admin-hash',
@@ -182,7 +182,7 @@ class PluginTest extends TestCase {
 	public function testEnqueueAdminAssets_ScriptUsesI18n_LoadsScriptTranslations(): void {
 		$this->assets->expects( self::once() )
 			->method( 'wp_set_script_translations' )
-			->with( 'sitewarden-admin', 'sitewarden' );
+			->with( 'hardenly-admin', 'hardenly' );
 
 		$this->plugin_in_admin()->enqueue_admin_assets( self::SCREEN );
 	}
@@ -191,6 +191,6 @@ class PluginTest extends TestCase {
 		$this->assets->expects( self::never() )->method( 'wp_enqueue_style' );
 		$this->assets->expects( self::never() )->method( 'wp_enqueue_script' );
 
-		$this->plugin_in_admin( __DIR__ . '/sitewarden.php' )->enqueue_admin_assets( self::SCREEN );
+		$this->plugin_in_admin( __DIR__ . '/hardenly.php' )->enqueue_admin_assets( self::SCREEN );
 	}
 }

@@ -1,11 +1,11 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Database;
+namespace Hardenly\Scanner\Checks\Database;
 
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -32,7 +32,7 @@ class TablePrefixCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Database table prefix', 'sitewarden' );
+		return __( 'Database table prefix', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -44,17 +44,17 @@ class TablePrefixCheck implements Check {
 		$prefix = $this->prefix ?? (string) $wpdb->base_prefix;
 
 		if ( 'wp_' !== $prefix ) {
-			return [ Result::pass( self::ID, __( 'Database tables use a custom prefix.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'Database tables use a custom prefix.', 'hardenly' ) ) ];
 		}
 
 		return [
 			Result::fail(
 				self::ID,
 				Result::SEVERITY_LOW,
-				__( 'Database tables use the default "wp_" prefix', 'sitewarden' ),
-				__( 'Use a custom prefix ($table_prefix in wp-config.php) on new sites. Changing it on an existing site means renaming tables and some data, so do it only with a backup and a guide, or skip it: on its own the default prefix is a minor risk.', 'sitewarden' ),
+				__( 'Database tables use the default "wp_" prefix', 'hardenly' ),
+				__( 'Use a custom prefix ($table_prefix in wp-config.php) on new sites. Changing it on an existing site means renaming tables and some data, so do it only with a backup and a guide, or skip it: on its own the default prefix is a minor risk.', 'hardenly' ),
 				[],
-				__( 'Automated SQL injection attacks often assume the default table names.', 'sitewarden' )
+				__( 'Automated SQL injection attacks often assume the default table names.', 'hardenly' )
 			),
 		];
 	}

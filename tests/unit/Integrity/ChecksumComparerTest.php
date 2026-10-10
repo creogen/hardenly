@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Integrity;
+namespace Hardenly\Tests\Integrity;
 
-use Sitewarden\Integrity\ChecksumComparer;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Integrity\ChecksumComparer;
+use Hardenly\Scanner\Context;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class ChecksumComparerTest extends CheckTestCase {
 	/**

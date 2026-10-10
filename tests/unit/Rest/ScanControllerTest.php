@@ -1,17 +1,17 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Rest;
+namespace Hardenly\Tests\Rest;
 
 use Merkushin\Wpal\Service\Capabilities;
 use Merkushin\Wpal\Service\RestApi;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Rest\ScanController;
-use Sitewarden\Scanner\Scanner;
-use Sitewarden\Rest\ReportPayload;
-use Sitewarden\Storage\ReportStore;
-use Sitewarden\Storage\Settings;
+use Hardenly\Rest\ScanController;
+use Hardenly\Scanner\Scanner;
+use Hardenly\Rest\ReportPayload;
+use Hardenly\Storage\ReportStore;
+use Hardenly\Storage\Settings;
 use WP_Error;
 
 class ScanControllerTest extends TestCase {

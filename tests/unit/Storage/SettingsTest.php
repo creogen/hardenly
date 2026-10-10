@@ -1,12 +1,12 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Storage;
+namespace Hardenly\Tests\Storage;
 
 use Merkushin\Wpal\Service\Sanitization;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Storage\Settings;
-use Sitewarden\Tests\OptionsFake;
+use Hardenly\Storage\Settings;
+use Hardenly\Tests\OptionsFake;
 
 class SettingsTest extends TestCase {
 	use OptionsFake;

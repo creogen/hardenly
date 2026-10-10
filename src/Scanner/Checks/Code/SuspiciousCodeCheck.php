@@ -1,13 +1,13 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Code;
+namespace Hardenly\Scanner\Checks\Code;
 
-use Sitewarden\Scanner\Checks\Files\FileWalkCheck;
-use Sitewarden\Scanner\Code\PatternMatcher;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Filesystem;
+use Hardenly\Scanner\Checks\Files\FileWalkCheck;
+use Hardenly\Scanner\Code\PatternMatcher;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Filesystem;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -52,7 +52,7 @@ class SuspiciousCodeCheck extends FileWalkCheck {
 	}
 
 	public function title(): string {
-		return __( 'Suspicious code', 'sitewarden' );
+		return __( 'Suspicious code', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -98,7 +98,7 @@ class SuspiciousCodeCheck extends FileWalkCheck {
 
 	protected function results( array $matches, int $total ): array {
 		if ( 0 === $total ) {
-			return [ Result::pass( self::ID, __( 'No suspicious code patterns found.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'No suspicious code patterns found.', 'hardenly' ) ) ];
 		}
 
 		$severity = Result::SEVERITY_MEDIUM;
@@ -117,10 +117,10 @@ class SuspiciousCodeCheck extends FileWalkCheck {
 				Result::STATUS_WARNING,
 				$severity,
 				/* translators: %d: number of files. */
-				sprintf( _n( 'Suspicious code in %d file', 'Suspicious code in %d files', $total, 'sitewarden' ), $total ),
-				__( 'Compare each file with a fresh copy from its plugin or theme author (or WordPress.org). If the code is not in the original, replace the file, change all passwords and look for other changes. If it is expected, add the file to "Files to skip".', 'sitewarden' ),
+				sprintf( _n( 'Suspicious code in %d file', 'Suspicious code in %d files', $total, 'hardenly' ), $total ),
+				__( 'Compare each file with a fresh copy from its plugin or theme author (or WordPress.org). If the code is not in the original, replace the file, change all passwords and look for other changes. If it is expected, add the file to "Files to skip".', 'hardenly' ),
 				$details,
-				__( 'These files contain patterns often used to hide or inject code, such as code that decodes and runs itself. Some legitimate plugins use them too, so review before acting.', 'sitewarden' ),
+				__( 'These files contain patterns often used to hide or inject code, such as code that decodes and runs itself. Some legitimate plugins use them too, so review before acting.', 'hardenly' ),
 				'',
 				$total
 			),

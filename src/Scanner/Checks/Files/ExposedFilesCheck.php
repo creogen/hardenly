@@ -1,15 +1,15 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Files;
+namespace Hardenly\Scanner\Checks\Files;
 
 use Merkushin\Wpal\Service\Urls;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Filesystem;
-use Sitewarden\Site\Loopback;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Filesystem;
+use Hardenly\Site\Loopback;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -66,7 +66,7 @@ class ExposedFilesCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( '.git and .env files', 'sitewarden' );
+		return __( '.git and .env files', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -93,10 +93,10 @@ class ExposedFilesCheck implements Check {
 				Result::fail(
 					self::ID,
 					Result::SEVERITY_CRITICAL,
-					__( 'Anyone can download version control or environment files', 'sitewarden' ),
-					__( 'Block access to these files in your server configuration right away, then move them out of the web folder. Change any passwords or keys they contain.', 'sitewarden' ),
+					__( 'Anyone can download version control or environment files', 'hardenly' ),
+					__( 'Block access to these files in your server configuration right away, then move them out of the web folder. Change any passwords or keys they contain.', 'hardenly' ),
 					$public,
-					__( 'These files can expose the site\'s code history, database passwords and API keys.', 'sitewarden' )
+					__( 'These files can expose the site\'s code history, database passwords and API keys.', 'hardenly' )
 				),
 			];
 		}
@@ -105,13 +105,13 @@ class ExposedFilesCheck implements Check {
 				Result::fail(
 					self::ID,
 					Result::SEVERITY_LOW,
-					__( 'Version control or environment files are in the WordPress folder', 'sitewarden' ),
-					__( 'Visitors cannot read them now, but a server change could expose them. Move them out of the web folder if you can.', 'sitewarden' ),
+					__( 'Version control or environment files are in the WordPress folder', 'hardenly' ),
+					__( 'Visitors cannot read them now, but a server change could expose them. Move them out of the web folder if you can.', 'hardenly' ),
 					$present
 				),
 			];
 		}
 
-		return [ Result::pass( self::ID, __( 'No version control or environment files in the WordPress folder.', 'sitewarden' ) ) ];
+		return [ Result::pass( self::ID, __( 'No version control or environment files in the WordPress folder.', 'hardenly' ) ) ];
 	}
 }

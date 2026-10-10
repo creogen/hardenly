@@ -1,4 +1,4 @@
-# Sitewarden
+# Hardenly
 
 Security scanner for your WordPress website.
 
@@ -16,8 +16,8 @@ npm start        # rebuild JavaScript and CSS on change
 
 | Where | What |
 | --- | --- |
-| `sitewarden.php` | Plugin header and bootstrap |
-| `src/` | PHP code, PSR-4 namespace `Sitewarden\` |
+| `hardenly.php` | Plugin header and bootstrap |
+| `src/` | PHP code, PSR-4 namespace `Hardenly\` |
 | `tests/unit/` | PHPUnit tests; WordPress calls are mocked through WPAL |
 | `assets/src/admin/` | Admin JavaScript and CSS entry point, built to `assets/build/` |
 | `languages/` | Translation template, `make i18n` |
@@ -32,7 +32,7 @@ code can be unit-tested without WordPress. [AGENTS.md](AGENTS.md) has the conven
 ## Release
 
 ```bash
-make dist          # builds sitewarden.zip
+make dist          # builds hardenly.zip
 make smoke         # loads the built plugin and runs its hooks
 make plugin-check  # WordPress.org's Plugin Check on the build
 ```

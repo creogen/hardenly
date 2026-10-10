@@ -1,18 +1,18 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Online;
+namespace Hardenly\Scanner\Checks\Online;
 
 use Merkushin\Wpal\Service\Plugins;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Integrity\ChecksumComparer;
-use Sitewarden\Integrity\WordPressOrgChecksums;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\AdminIncludes;
-use Sitewarden\Site\Constants;
-use Sitewarden\Site\Filesystem;
+use Hardenly\Integrity\ChecksumComparer;
+use Hardenly\Integrity\WordPressOrgChecksums;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\AdminIncludes;
+use Hardenly\Site\Constants;
+use Hardenly\Site\Filesystem;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -60,7 +60,7 @@ class PluginChecksumsCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Plugin files', 'sitewarden' );
+		return __( 'Plugin files', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -148,14 +148,14 @@ class PluginChecksumsCheck implements Check {
 				array_map(
 					static function ( string $path ): string {
 						/* translators: %s: file path. */
-						return sprintf( __( '%s (changed)', 'sitewarden' ), $path );
+						return sprintf( __( '%s (changed)', 'hardenly' ), $path );
 					},
 					$found['modified']
 				),
 				array_map(
 					static function ( string $path ): string {
 						/* translators: %s: file path. */
-						return sprintf( __( '%s (not in the plugin)', 'sitewarden' ), $path );
+						return sprintf( __( '%s (not in the plugin)', 'hardenly' ), $path );
 					},
 					$found['added']
 				)
@@ -165,10 +165,10 @@ class PluginChecksumsCheck implements Check {
 				Result::STATUS_WARNING,
 				Result::SEVERITY_HIGH,
 				/* translators: %d: number of files. */
-				sprintf( _n( '%d plugin file differs from WordPress.org', '%d plugin files differ from WordPress.org', $total, 'sitewarden' ), $total ),
-				__( 'If you did not edit these plugins yourself, reinstall them: deactivate, delete and install them again from Plugins > Add New (settings are usually kept, but back up first). Remove files that are not part of the plugin.', 'sitewarden' ),
+				sprintf( _n( '%d plugin file differs from WordPress.org', '%d plugin files differ from WordPress.org', $total, 'hardenly' ), $total ),
+				__( 'If you did not edit these plugins yourself, reinstall them: deactivate, delete and install them again from Plugins > Add New (settings are usually kept, but back up first). Remove files that are not part of the plugin.', 'hardenly' ),
 				array_slice( $details, 0, ChecksumComparer::MAX_PATHS ),
-				__( 'Files that differ from the official plugin can be hand edits, or code someone added to the site.', 'sitewarden' ),
+				__( 'Files that differ from the official plugin can be hand edits, or code someone added to the site.', 'hardenly' ),
 				'changed',
 				$total
 			);
@@ -179,8 +179,8 @@ class PluginChecksumsCheck implements Check {
 				Result::STATUS_INFO,
 				Result::SEVERITY_INFO,
 				/* translators: %d: number of plugins. */
-				sprintf( _n( '%d plugin could not be compared with WordPress.org', '%d plugins could not be compared with WordPress.org', count( $unchecked ), 'sitewarden' ), count( $unchecked ) ),
-				__( 'These plugins are not hosted on WordPress.org (or this version is not), so there are no official checksums for them.', 'sitewarden' ),
+				sprintf( _n( '%d plugin could not be compared with WordPress.org', '%d plugins could not be compared with WordPress.org', count( $unchecked ), 'hardenly' ), count( $unchecked ) ),
+				__( 'These plugins are not hosted on WordPress.org (or this version is not), so there are no official checksums for them.', 'hardenly' ),
 				$unchecked,
 				'',
 				'unchecked'
@@ -188,7 +188,7 @@ class PluginChecksumsCheck implements Check {
 		}
 
 		if ( 0 === $total ) {
-			array_unshift( $results, Result::pass( self::ID, __( 'Plugin files from WordPress.org match the official versions.', 'sitewarden' ) ) );
+			array_unshift( $results, Result::pass( self::ID, __( 'Plugin files from WordPress.org match the official versions.', 'hardenly' ) ) );
 		}
 		return $results;
 	}

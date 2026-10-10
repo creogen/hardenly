@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Report;
+namespace Hardenly\Tests\Report;
 
 use Merkushin\Wpal\Service\Formatting;
 use Merkushin\Wpal\Service\Mail;
@@ -10,10 +10,10 @@ use Merkushin\Wpal\Service\Urls;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Report\EmailReport;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Storage\ReportStore;
-use Sitewarden\Storage\Settings;
+use Hardenly\Report\EmailReport;
+use Hardenly\Scanner\Result;
+use Hardenly\Storage\ReportStore;
+use Hardenly\Storage\Settings;
 
 class EmailReportTest extends TestCase {
 	private const SETTINGS = [
@@ -32,7 +32,7 @@ class EmailReportTest extends TestCase {
 		$options    = $this->createMock( Options::class );
 		$options->method( 'get_option' )->with( 'admin_email' )->willReturn( 'admin@example.com' );
 		$urls = $this->createMock( Urls::class );
-		$urls->method( 'admin_url' )->willReturn( 'https://example.com/wp-admin/admin.php?page=sitewarden' );
+		$urls->method( 'admin_url' )->willReturn( 'https://example.com/wp-admin/admin.php?page=hardenly' );
 		$site = $this->createMock( SiteIdentity::class );
 		$site->method( 'get_bloginfo' )->willReturn( 'My &amp; Site' );
 		$formatting = $this->createMock( Formatting::class );
@@ -171,7 +171,7 @@ class EmailReportTest extends TestCase {
 			->method( 'wp_mail' )
 			->with(
 				'admin@example.com',
-				'[My & Site] Sitewarden security score: 72 (-6)',
+				'[My & Site] Hardenly security score: 72 (-6)',
 				self::callback(
 					static function ( string $body ): bool {
 						return false !== strpos( $body, 'Security score: 72 of 100 (-6)' )
@@ -179,7 +179,7 @@ class EmailReportTest extends TestCase {
 							&& false !== strpos( $body, '- [LOW] XML-RPC is enabled' )
 							&& false === strpos( $body, 'Keys are fine' )
 							&& false === strpos( $body, 'shell.php' )
-							&& false !== strpos( $body, 'admin.php?page=sitewarden' );
+							&& false !== strpos( $body, 'admin.php?page=hardenly' );
 					}
 				)
 			);

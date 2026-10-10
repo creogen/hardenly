@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Users;
+namespace Hardenly\Users;
 
 use Merkushin\Wpal\Service\Options;
 use Merkushin\Wpal\Service\Users;
@@ -15,8 +15,8 @@ defined( 'ABSPATH' ) || exit;
  * start date tells the check whether there is enough history yet.
  */
 class LastLogin {
-	public const META_KEY     = 'sitewarden_last_login';
-	public const SINCE_OPTION = 'sitewarden_tracking_since';
+	public const META_KEY     = 'hardenly_last_login';
+	public const SINCE_OPTION = 'hardenly_tracking_since';
 
 	/**
 	 * @var Users

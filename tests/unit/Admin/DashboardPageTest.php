@@ -1,11 +1,11 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Admin;
+namespace Hardenly\Tests\Admin;
 
 use Merkushin\Wpal\Service\Capabilities;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Admin\DashboardPage;
+use Hardenly\Admin\DashboardPage;
 
 class DashboardPageTest extends TestCase {
 	private function render( bool $can_manage ): string {
@@ -19,7 +19,7 @@ class DashboardPageTest extends TestCase {
 	}
 
 	public function testRender_Administrator_OutputsTheAppRoot(): void {
-		self::assertStringContainsString( 'id="sitewarden-dashboard"', $this->render( true ) );
+		self::assertStringContainsString( 'id="hardenly-dashboard"', $this->render( true ) );
 	}
 
 	public function testRender_OtherUser_OutputsNothing(): void {
