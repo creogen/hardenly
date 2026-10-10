@@ -4,11 +4,11 @@ import { detailPath, groupBySeverity, ignoredProblems, notes } from '../report';
 import Icon from './Icon';
 
 const SEVERITY_LABELS = {
-	critical: __( 'Critical', 'sitewarden' ),
-	high: __( 'High', 'sitewarden' ),
-	medium: __( 'Medium', 'sitewarden' ),
-	low: __( 'Low', 'sitewarden' ),
-	info: __( 'Info', 'sitewarden' ),
+	critical: __( 'Critical', 'hardenly' ),
+	high: __( 'High', 'hardenly' ),
+	medium: __( 'Medium', 'hardenly' ),
+	low: __( 'Low', 'hardenly' ),
+	info: __( 'Info', 'hardenly' ),
 };
 
 /** Severities whose findings start expanded. */
@@ -19,8 +19,8 @@ function Detail( { result, detail, skipFiles, actions, busy } ) {
 	let action = null;
 	if ( path && skipFiles.includes( path ) ) {
 		action = (
-			<span className="sitewarden-muted">
-				{ __( 'Skipped from the next scan', 'sitewarden' ) }
+			<span className="hardenly-muted">
+				{ __( 'Skipped from the next scan', 'hardenly' ) }
 			</span>
 		);
 	} else if ( path ) {
@@ -32,11 +32,11 @@ function Detail( { result, detail, skipFiles, actions, busy } ) {
 				disabled={ busy }
 				aria-label={ sprintf(
 					/* translators: %s: file path. */
-					__( 'Skip %s in future scans', 'sitewarden' ),
+					__( 'Skip %s in future scans', 'hardenly' ),
 					path
 				) }
 			>
-				{ __( 'Skip this file', 'sitewarden' ) }
+				{ __( 'Skip this file', 'hardenly' ) }
 			</button>
 		);
 	}
@@ -59,24 +59,24 @@ function Finding( {
 	const hidden = result.details_total - result.details.length;
 
 	return (
-		<details className="sitewarden-card sitewarden-finding" open={ open }>
+		<details className="hardenly-card hardenly-finding" open={ open }>
 			<summary>
-				<span className="sitewarden-finding__title">
+				<span className="hardenly-finding__title">
 					{ result.message }
 				</span>
 				{ result.status === 'skipped' && (
-					<span className="sitewarden-tag">
-						{ __( 'Not checked', 'sitewarden' ) }
+					<span className="hardenly-tag">
+						{ __( 'Not checked', 'hardenly' ) }
 					</span>
 				) }
 				{ groupLabel && (
-					<span className="sitewarden-tag">{ groupLabel }</span>
+					<span className="hardenly-tag">{ groupLabel }</span>
 				) }
 			</summary>
-			<div className="sitewarden-finding__body">
+			<div className="hardenly-finding__body">
 				{ result.description && <p>{ result.description }</p> }
 				{ result.details.length > 0 && (
-					<ul className="sitewarden-finding__details">
+					<ul className="hardenly-finding__details">
 						{ result.details.map( ( detail, index ) => (
 							<Detail
 								key={ index }
@@ -88,14 +88,14 @@ function Finding( {
 							/>
 						) ) }
 						{ hidden > 0 && (
-							<li className="sitewarden-muted">
+							<li className="hardenly-muted">
 								{ sprintf(
 									/* translators: %d: number of items not shown. */
 									_n(
 										'and %d more',
 										'and %d more',
 										hidden,
-										'sitewarden'
+										'hardenly'
 									),
 									hidden
 								) }
@@ -104,13 +104,13 @@ function Finding( {
 					</ul>
 				) }
 				{ result.remediation && (
-					<div className="sitewarden-finding__fix">
-						<strong>{ __( 'How to fix:', 'sitewarden' ) }</strong>{ ' ' }
+					<div className="hardenly-finding__fix">
+						<strong>{ __( 'How to fix:', 'hardenly' ) }</strong>{ ' ' }
 						{ result.remediation }
 					</div>
 				) }
 				{ actions && (
-					<div className="sitewarden-finding__actions">
+					<div className="hardenly-finding__actions">
 						{ result.ignored ? (
 							<button
 								type="button"
@@ -118,7 +118,7 @@ function Finding( {
 								onClick={ () => actions.restore( result.id ) }
 								disabled={ busy }
 							>
-								{ __( 'Show again', 'sitewarden' ) }
+								{ __( 'Show again', 'hardenly' ) }
 							</button>
 						) : (
 							<button
@@ -127,7 +127,7 @@ function Finding( {
 								onClick={ () => actions.ignore( result.id ) }
 								disabled={ busy }
 							>
-								{ __( 'Ignore this finding', 'sitewarden' ) }
+								{ __( 'Ignore this finding', 'hardenly' ) }
 							</button>
 						) }
 					</div>
@@ -140,12 +140,12 @@ function Finding( {
 function Section( { id, title, icon, className = '', children } ) {
 	return (
 		<section
-			className="sitewarden-findings"
-			aria-labelledby={ `sitewarden-findings-${ id }` }
+			className="hardenly-findings"
+			aria-labelledby={ `hardenly-findings-${ id }` }
 		>
 			<h2
-				id={ `sitewarden-findings-${ id }` }
-				className={ `sitewarden-findings__title ${ className }` }
+				id={ `hardenly-findings-${ id }` }
+				className={ `hardenly-findings__title ${ className }` }
 			>
 				<Icon name={ icon } />
 				{ title }
@@ -176,7 +176,7 @@ export default function Findings( {
 					<p>
 						{ __(
 							'No problems found. Keep WordPress, plugins and themes up to date and scan regularly.',
-							'sitewarden'
+							'hardenly'
 						) }
 					</p>
 				</div>
@@ -187,7 +187,7 @@ export default function Findings( {
 					id={ severity }
 					title={ SEVERITY_LABELS[ severity ] }
 					icon={ severity }
-					className={ `sitewarden-severity--${ severity }` }
+					className={ `hardenly-severity--${ severity }` }
 				>
 					{ results.map( ( result, index ) => (
 						<Finding
@@ -205,7 +205,7 @@ export default function Findings( {
 			{ notesList.length > 0 && (
 				<Section
 					id="notes"
-					title={ __( 'Notes', 'sitewarden' ) }
+					title={ __( 'Notes', 'hardenly' ) }
 					icon="info"
 				>
 					{ notesList.map( ( result, index ) => (
@@ -224,15 +224,15 @@ export default function Findings( {
 					id="ignored"
 					title={ sprintf(
 						/* translators: %d: number of ignored findings. */
-						__( 'Ignored (%d)', 'sitewarden' ),
+						__( 'Ignored (%d)', 'hardenly' ),
 						ignored.length
 					) }
 					icon="pass"
 				>
-					<p className="sitewarden-muted">
+					<p className="hardenly-muted">
 						{ __(
 							'Ignored findings do not count in the score, the problem counts or the email.',
-							'sitewarden'
+							'hardenly'
 						) }
 					</p>
 					{ ignored.map( ( result, index ) => (

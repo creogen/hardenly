@@ -1,27 +1,27 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner;
+namespace Hardenly\Tests\Scanner;
 
 use Merkushin\Wpal\Service\Cron;
 use Merkushin\Wpal\Service\Environment;
 use Merkushin\Wpal\Service\Hooks;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Report\Summary;
+use Hardenly\Report\Summary;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\CheckRegistry;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Scanner\Scanner;
-use Sitewarden\Scanner\Score;
-use Sitewarden\Storage\Lock;
-use Sitewarden\Storage\ReportStore;
-use Sitewarden\Storage\RunStore;
-use Sitewarden\Storage\Settings;
-use Sitewarden\Tests\OptionsFake;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\CheckRegistry;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Scanner\Scanner;
+use Hardenly\Scanner\Score;
+use Hardenly\Storage\Lock;
+use Hardenly\Storage\ReportStore;
+use Hardenly\Storage\RunStore;
+use Hardenly\Storage\Settings;
+use Hardenly\Tests\OptionsFake;
 
 class ScannerTest extends TestCase {
 	use OptionsFake;
@@ -54,7 +54,7 @@ class ScannerTest extends TestCase {
 	private $actions = [];
 
 	/**
-	 * Checks the sitewarden_checks filter returns.
+	 * Checks the hardenly_checks filter returns.
 	 *
 	 * @var Check[]
 	 */
@@ -199,7 +199,7 @@ class ScannerTest extends TestCase {
 
 		$scanner->tick();
 
-		self::assertSame( 'sitewarden_scan_completed', $this->actions[0][0] );
+		self::assertSame( 'hardenly_scan_completed', $this->actions[0][0] );
 		self::assertSame( $this->report(), $this->actions[0][1][0] );
 	}
 

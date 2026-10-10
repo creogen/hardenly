@@ -19,7 +19,7 @@ const POLL_DELAY = 1000;
 
 const errorMessage = ( error ) =>
 	error?.message ||
-	__( 'Something went wrong. Reload the page and try again.', 'sitewarden' );
+	__( 'Something went wrong. Reload the page and try again.', 'hardenly' );
 
 function Notice( { status } ) {
 	if ( status.state === 'failed' ) {
@@ -28,7 +28,7 @@ function Notice( { status } ) {
 				<p>
 					{ __(
 						'The last scan stopped making progress and was cancelled. If this keeps happening, WP-Cron may be disabled on this site; keep this page open while the scan runs.',
-						'sitewarden'
+						'hardenly'
 					) }
 				</p>
 			</div>
@@ -37,7 +37,7 @@ function Notice( { status } ) {
 	if ( status.state === 'stopped' ) {
 		return (
 			<div className="notice notice-warning inline">
-				<p>{ __( 'The last scan was stopped.', 'sitewarden' ) }</p>
+				<p>{ __( 'The last scan was stopped.', 'hardenly' ) }</p>
 			</div>
 		);
 	}
@@ -128,7 +128,7 @@ export default function App() {
 		);
 	}
 	if ( ! data || ! status ) {
-		return <p>{ __( 'Loading…', 'sitewarden' ) }</p>;
+		return <p>{ __( 'Loading…', 'hardenly' ) }</p>;
 	}
 
 	const {
@@ -140,9 +140,9 @@ export default function App() {
 	} = data;
 
 	return (
-		<div className="sitewarden">
-			<div className="sitewarden-header">
-				<h1>{ __( 'Sitewarden', 'sitewarden' ) }</h1>
+		<div className="hardenly">
+			<div className="hardenly-header">
+				<h1>{ __( 'Hardenly', 'hardenly' ) }</h1>
 				{ report && ! active && (
 					<button
 						type="button"
@@ -151,14 +151,14 @@ export default function App() {
 						disabled={ busy }
 					>
 						<Icon name="refresh" />
-						{ __( 'Run scan', 'sitewarden' ) }
+						{ __( 'Run scan', 'hardenly' ) }
 					</button>
 				) }
 				{ report && (
-					<span className="sitewarden-muted">
+					<span className="hardenly-muted">
 						{ sprintf(
 							/* translators: %s: date and time of the last scan. */
-							__( 'Last scan: %s', 'sitewarden' ),
+							__( 'Last scan: %s', 'hardenly' ),
 							dateI18n(
 								getSettings().formats.datetime,
 								report.finished_at * 1000
@@ -180,15 +180,15 @@ export default function App() {
 						<strong>
 							{ __(
 								'Vulnerability lookup is not configured.',
-								'sitewarden'
+								'hardenly'
 							) }
 						</strong>{ ' ' }
 						{ __(
 							'Version checks work offline. To match installed plugins and themes against known vulnerabilities, connect WPScan or Patchstack.',
-							'sitewarden'
+							'hardenly'
 						) }{ ' ' }
-						<a href="admin.php?page=sitewarden-settings">
-							{ __( 'Set up in Settings', 'sitewarden' ) }
+						<a href="admin.php?page=hardenly-settings">
+							{ __( 'Set up in Settings', 'hardenly' ) }
 						</a>
 					</p>
 				</div>
@@ -203,8 +203,8 @@ export default function App() {
 
 			{ report && (
 				<div
-					className={ `sitewarden-results${
-						active ? ' sitewarden-stale' : ''
+					className={ `hardenly-results${
+						active ? ' hardenly-stale' : ''
 					}` }
 				>
 					<Summary report={ report } history={ history } />

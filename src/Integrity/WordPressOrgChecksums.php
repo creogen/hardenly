@@ -1,13 +1,13 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Integrity;
+namespace Hardenly\Integrity;
 
 use Merkushin\Wpal\Service\Errors;
 use Merkushin\Wpal\Service\Http;
 use Merkushin\Wpal\Service\Transient;
 use Merkushin\Wpal\Service\Updates;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Site\AdminIncludes;
+use Hardenly\Site\AdminIncludes;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * version, and nothing else.
  */
 class WordPressOrgChecksums {
-	public const CORE_TRANSIENT = 'sitewarden_core_checksums';
+	public const CORE_TRANSIENT = 'hardenly_core_checksums';
 
 	private const PLUGIN_URL = 'https://downloads.wordpress.org/plugin-checksums/%s/%s.json';
 

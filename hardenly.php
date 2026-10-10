@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name:       Sitewarden
- * Plugin URI:        https://github.com/creogen/sitewarden
+ * Plugin Name:       Hardenly
+ * Plugin URI:        https://github.com/creogen/hardenly
  * Description:       Security scanner for your WordPress website.
  * Version:           1.0.0
  * Requires at least: 6.2
@@ -9,12 +9,12 @@
  * Author:            Dmitry Merkushin
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       sitewarden
+ * Text Domain:       hardenly
  *
- * @package Sitewarden
+ * @package Hardenly
  */
 
-namespace Sitewarden;
+namespace Hardenly;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -1,15 +1,15 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Report;
+namespace Hardenly\Tests\Report;
 
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Report\ReportRefresher;
-use Sitewarden\Report\Summary;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Scanner\Score;
-use Sitewarden\Storage\ReportStore;
-use Sitewarden\Storage\Settings;
-use Sitewarden\Tests\OptionsFake;
+use Hardenly\Report\ReportRefresher;
+use Hardenly\Report\Summary;
+use Hardenly\Scanner\Result;
+use Hardenly\Scanner\Score;
+use Hardenly\Storage\ReportStore;
+use Hardenly\Storage\Settings;
+use Hardenly\Tests\OptionsFake;
 
 class ReportRefresherTest extends TestCase {
 	use OptionsFake;

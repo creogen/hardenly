@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Files;
+namespace Hardenly\Scanner\Checks\Files;
 
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Filesystem;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Filesystem;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -36,7 +36,7 @@ class RecentlyModifiedCheck extends FileWalkCheck {
 	}
 
 	public function title(): string {
-		return __( 'Recently changed files', 'sitewarden' );
+		return __( 'Recently changed files', 'hardenly' );
 	}
 
 	protected function root( Context $context ): ?string {
@@ -53,7 +53,7 @@ class RecentlyModifiedCheck extends FileWalkCheck {
 
 	protected function results( array $matches, int $total ): array {
 		if ( 0 === $total ) {
-			return [ Result::pass( self::ID, __( 'No PHP files changed recently.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'No PHP files changed recently.', 'hardenly' ) ) ];
 		}
 
 		return [
@@ -62,10 +62,10 @@ class RecentlyModifiedCheck extends FileWalkCheck {
 				Result::STATUS_INFO,
 				Result::SEVERITY_INFO,
 				/* translators: %d: number of files. */
-				sprintf( _n( '%d PHP file changed recently', '%d PHP files changed recently', $total, 'sitewarden' ), $total ),
-				__( 'Updates change files, so most of these are expected. Look for files outside the plugins and themes you updated.', 'sitewarden' ),
+				sprintf( _n( '%d PHP file changed recently', '%d PHP files changed recently', $total, 'hardenly' ), $total ),
+				__( 'Updates change files, so most of these are expected. Look for files outside the plugins and themes you updated.', 'hardenly' ),
 				$matches,
-				__( 'An unexpected change to a PHP file can be a sign of a break-in.', 'sitewarden' ),
+				__( 'An unexpected change to a PHP file can be a sign of a break-in.', 'hardenly' ),
 				'',
 				$total
 			),

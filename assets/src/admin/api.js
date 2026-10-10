@@ -3,7 +3,7 @@
  */
 import apiFetch from '@wordpress/api-fetch';
 
-const BASE = '/sitewarden/v1';
+const BASE = '/hardenly/v1';
 
 export const getReport = () => apiFetch( { path: `${ BASE }/report` } );
 

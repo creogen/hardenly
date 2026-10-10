@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<ruleset name="Sitewarden">
-	<description>Coding standards for Sitewarden.</description>
+<ruleset name="Hardenly">
+	<description>Coding standards for Hardenly.</description>
 
-	<file>sitewarden.php</file>
+	<file>hardenly.php</file>
 	<file>uninstall.php</file>
 	<file>src</file>
 	<file>tests</file>
@@ -23,7 +23,7 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
-				<element value="sitewarden"/>
+				<element value="hardenly"/>
 			</property>
 		</properties>
 	</rule>
@@ -31,8 +31,8 @@
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">
-				<element value="sitewarden_"/>
-				<element value="Sitewarden"/>
+				<element value="hardenly_"/>
+				<element value="Hardenly"/>
 			</property>
 		</properties>
 	</rule>

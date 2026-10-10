@@ -1,12 +1,12 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks\Database;
+namespace Hardenly\Tests\Scanner\Checks\Database;
 
 use Merkushin\Wpal\Service\Options;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Checks\Database\AutoloadSizeCheck;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Scanner\Checks\Database\AutoloadSizeCheck;
+use Hardenly\Scanner\Result;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class AutoloadSizeCheckTest extends CheckTestCase {
 	/**

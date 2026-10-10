@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Integrity;
+namespace Hardenly\Integrity;
 
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\FileWalker;
-use Sitewarden\Site\Filesystem;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\FileWalker;
+use Hardenly\Site\Filesystem;
 
 defined( 'ABSPATH' ) || exit;
 

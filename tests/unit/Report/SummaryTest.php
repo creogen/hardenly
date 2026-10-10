@@ -1,11 +1,11 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Report;
+namespace Hardenly\Tests\Report;
 
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Report\Summary;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Scanner\Score;
+use Hardenly\Report\Summary;
+use Hardenly\Scanner\Result;
+use Hardenly\Scanner\Score;
 
 class SummaryTest extends TestCase {
 	/**

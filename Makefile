@@ -1,4 +1,4 @@
-PLUGIN    := sitewarden
+PLUGIN    := hardenly
 BUILD_DIR := build/$(PLUGIN)
 ZIP       := $(PLUGIN).zip
 WP        ?= wp

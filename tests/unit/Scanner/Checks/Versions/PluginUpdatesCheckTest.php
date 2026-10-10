@@ -1,13 +1,13 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks\Versions;
+namespace Hardenly\Tests\Scanner\Checks\Versions;
 
 use Merkushin\Wpal\Service\Plugins;
 use Merkushin\Wpal\Service\Transient;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Checks\Versions\PluginUpdatesCheck;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Scanner\Checks\Versions\PluginUpdatesCheck;
+use Hardenly\Scanner\Result;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class PluginUpdatesCheckTest extends CheckTestCase {
 	/**

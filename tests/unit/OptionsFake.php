@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests;
+namespace Hardenly\Tests;
 
 use Merkushin\Wpal\Service\Options;
 use Merkushin\Wpal\ServiceFactory;

@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner;
+namespace Hardenly\Scanner;
 
 use InvalidArgumentException;
 

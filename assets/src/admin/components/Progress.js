@@ -8,44 +8,44 @@ export default function Progress( { status, onStop, busy } ) {
 	const title = current
 		? sprintf(
 				/* translators: %s: name of the check that is running. */
-				__( 'Checking: %s', 'sitewarden' ),
+				__( 'Checking: %s', 'hardenly' ),
 				current.title
 			)
-		: __( 'Starting the scan…', 'sitewarden' );
+		: __( 'Starting the scan…', 'hardenly' );
 
 	return (
 		<section
-			className="sitewarden-card sitewarden-progress"
-			aria-labelledby="sitewarden-progress-title"
+			className="hardenly-card hardenly-progress"
+			aria-labelledby="hardenly-progress-title"
 		>
-			<h2 id="sitewarden-progress-title">{ title }</h2>
+			<h2 id="hardenly-progress-title">{ title }</h2>
 			<div
-				className="sitewarden-progress__bar"
+				className="hardenly-progress__bar"
 				role="progressbar"
-				aria-label={ __( 'Scan progress', 'sitewarden' ) }
+				aria-label={ __( 'Scan progress', 'hardenly' ) }
 				aria-valuemin="0"
 				aria-valuemax="100"
 				aria-valuenow={ percent }
 			>
 				<div
-					className="sitewarden-progress__fill"
+					className="hardenly-progress__fill"
 					style={ { width: `${ percent }%` } }
 				/>
 			</div>
-			<p className="sitewarden-muted">
+			<p className="hardenly-muted">
 				{ sprintf(
 					/* translators: 1: percent done, 2: checks done, 3: total checks. */
-					__( '%1$d%% · %2$d of %3$d checks done', 'sitewarden' ),
+					__( '%1$d%% · %2$d of %3$d checks done', 'hardenly' ),
 					percent,
 					done,
 					total
 				) }
 			</p>
-			<div className="sitewarden-progress__footer">
-				<p className="sitewarden-muted">
+			<div className="hardenly-progress__footer">
+				<p className="hardenly-muted">
 					{ __(
 						'The scan runs in the background in small steps. You can leave this page; results appear here when it finishes.',
-						'sitewarden'
+						'hardenly'
 					) }
 				</p>
 				<button
@@ -54,7 +54,7 @@ export default function Progress( { status, onStop, busy } ) {
 					onClick={ onStop }
 					disabled={ busy }
 				>
-					{ __( 'Stop scan', 'sitewarden' ) }
+					{ __( 'Stop scan', 'hardenly' ) }
 				</button>
 			</div>
 		</section>

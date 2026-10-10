@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks\Config;
+namespace Hardenly\Tests\Scanner\Checks\Config;
 
-use Sitewarden\Scanner\Checks\Config\SaltsCheck;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Scanner\Checks\Config\SaltsCheck;
+use Hardenly\Scanner\Result;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class SaltsCheckTest extends CheckTestCase {
 	/**

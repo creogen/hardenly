@@ -1,16 +1,16 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Files;
+namespace Hardenly\Scanner\Checks\Files;
 
 use Merkushin\Wpal\Service\Urls;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Constants;
-use Sitewarden\Site\Filesystem;
-use Sitewarden\Site\Loopback;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Constants;
+use Hardenly\Site\Filesystem;
+use Hardenly\Site\Loopback;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -52,7 +52,7 @@ class DebugLogCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Debug log', 'sitewarden' );
+		return __( 'Debug log', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -62,7 +62,7 @@ class DebugLogCheck implements Check {
 	public function run( Context $context ): array {
 		$content = rtrim( (string) $this->constants->get( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' ), '/\\' );
 		if ( ! $this->filesystem->is_file( $content . '/debug.log' ) ) {
-			return [ Result::pass( self::ID, __( 'There is no debug log in wp-content.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'There is no debug log in wp-content.', 'hardenly' ) ) ];
 		}
 
 		$response = $this->loopback->get( (string) $this->urls->content_url( 'debug.log' ) );
@@ -73,11 +73,11 @@ class DebugLogCheck implements Check {
 				self::ID,
 				$public ? Result::SEVERITY_HIGH : Result::SEVERITY_LOW,
 				$public
-					? __( 'The debug log can be downloaded by anyone', 'sitewarden' )
-					: __( 'The debug log is in the wp-content folder', 'sitewarden' ),
-				__( 'Delete wp-content/debug.log. If you need logging, set WP_DEBUG_LOG in wp-config.php to a path outside the web folders.', 'sitewarden' ),
+					? __( 'The debug log can be downloaded by anyone', 'hardenly' )
+					: __( 'The debug log is in the wp-content folder', 'hardenly' ),
+				__( 'Delete wp-content/debug.log. If you need logging, set WP_DEBUG_LOG in wp-config.php to a path outside the web folders.', 'hardenly' ),
 				[ 'wp-content/debug.log' ],
-				__( 'The log can contain file paths, database errors and other details useful to attackers.', 'sitewarden' )
+				__( 'The log can contain file paths, database errors and other details useful to attackers.', 'hardenly' )
 			),
 		];
 	}

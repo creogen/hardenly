@@ -1,12 +1,12 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks\Users;
+namespace Hardenly\Tests\Scanner\Checks\Users;
 
 use Merkushin\Wpal\Service\Users;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Checks\Users\AdminCountCheck;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Scanner\Checks\Users\AdminCountCheck;
+use Hardenly\Scanner\Result;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class AdminCountCheckTest extends CheckTestCase {
 	private function check( int $admins ): AdminCountCheck {

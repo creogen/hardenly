@@ -1,11 +1,11 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Versions;
+namespace Hardenly\Scanner\Checks\Versions;
 
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,7 +17,7 @@ class PhpVersionCheck implements Check {
 
 	/**
 	 * Last day of security fixes per PHP branch, from https://www.php.net/supported-versions.php.
-	 * Update with each Sitewarden release.
+	 * Update with each Hardenly release.
 	 */
 	public const END_OF_LIFE = [
 		'7.4' => '2022-11-28',
@@ -58,7 +58,7 @@ class PhpVersionCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'PHP version', 'sitewarden' );
+		return __( 'PHP version', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -72,7 +72,7 @@ class PhpVersionCheck implements Check {
 
 		if ( null === $end ) {
 			/* translators: %s: PHP version. */
-			return [ Result::pass( self::ID, sprintf( __( 'PHP %s gets security fixes.', 'sitewarden' ), $this->version ) ) ];
+			return [ Result::pass( self::ID, sprintf( __( 'PHP %s gets security fixes.', 'hardenly' ), $this->version ) ) ];
 		}
 
 		$end_time = (int) strtotime( $end . ' 23:59:59 UTC' );
@@ -84,10 +84,10 @@ class PhpVersionCheck implements Check {
 					self::ID,
 					Result::SEVERITY_HIGH,
 					/* translators: %s: PHP version. */
-					sprintf( __( 'PHP %s no longer gets security fixes', 'sitewarden' ), $this->version ),
-					__( 'Ask your host to move the site to a supported PHP version, or change it in your hosting control panel. Test the site afterwards.', 'sitewarden' ),
+					sprintf( __( 'PHP %s no longer gets security fixes', 'hardenly' ), $this->version ),
+					__( 'Ask your host to move the site to a supported PHP version, or change it in your hosting control panel. Test the site afterwards.', 'hardenly' ),
 					[],
-					__( 'Security holes found in this PHP version are no longer fixed.', 'sitewarden' )
+					__( 'Security holes found in this PHP version are no longer fixed.', 'hardenly' )
 				),
 			];
 		}
@@ -98,13 +98,13 @@ class PhpVersionCheck implements Check {
 					self::ID,
 					Result::SEVERITY_LOW,
 					/* translators: 1: PHP version, 2: date. */
-					sprintf( __( 'PHP %1$s stops getting security fixes on %2$s', 'sitewarden' ), $this->version, $end ),
-					__( 'Plan a move to a newer PHP version with your host.', 'sitewarden' )
+					sprintf( __( 'PHP %1$s stops getting security fixes on %2$s', 'hardenly' ), $this->version, $end ),
+					__( 'Plan a move to a newer PHP version with your host.', 'hardenly' )
 				),
 			];
 		}
 
 		/* translators: %s: PHP version. */
-		return [ Result::pass( self::ID, sprintf( __( 'PHP %s gets security fixes.', 'sitewarden' ), $this->version ) ) ];
+		return [ Result::pass( self::ID, sprintf( __( 'PHP %s gets security fixes.', 'hardenly' ), $this->version ) ) ];
 	}
 }

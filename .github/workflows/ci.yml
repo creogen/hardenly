@@ -104,13 +104,13 @@ jobs:
 
       - uses: actions/upload-artifact@v6
         with:
-          name: sitewarden
-          path: build/sitewarden
+          name: hardenly
+          path: build/hardenly
           if-no-files-found: error
 
       # The checks WordPress.org runs on submissions, against the built plugin.
       - name: Plugin Check
         uses: WordPress/plugin-check-action@v1
         with:
-          build-dir: build/sitewarden
-          slug: sitewarden
+          build-dir: build/hardenly
+          slug: hardenly

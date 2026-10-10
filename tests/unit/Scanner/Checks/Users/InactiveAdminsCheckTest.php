@@ -1,13 +1,13 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks\Users;
+namespace Hardenly\Tests\Scanner\Checks\Users;
 
 use Merkushin\Wpal\Service\Users;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Checks\Users\InactiveAdminsCheck;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
-use Sitewarden\Users\LastLogin;
+use Hardenly\Scanner\Checks\Users\InactiveAdminsCheck;
+use Hardenly\Scanner\Result;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Users\LastLogin;
 
 class InactiveAdminsCheckTest extends CheckTestCase {
 	private const NOW = 1800000000;

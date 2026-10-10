@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Storage;
+namespace Hardenly\Storage;
 
 use Merkushin\Wpal\Service\Options;
 use Merkushin\Wpal\Service\Sanitization;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * form's fields, so the option is valid however it is written.
  */
 class Settings {
-	public const OPTION = 'sitewarden_settings';
+	public const OPTION = 'hardenly_settings';
 
 	public const SCHEDULES = [ 'off', 'daily', 'weekly' ];
 

@@ -1,16 +1,16 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Users;
+namespace Hardenly\Scanner\Checks\Users;
 
 use Merkushin\Wpal\Service\RestApi;
 use Merkushin\Wpal\Service\Urls;
 use Merkushin\Wpal\Service\Users;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Loopback;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Loopback;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -54,7 +54,7 @@ class UserEnumerationCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Username listing', 'sitewarden' );
+		return __( 'Username listing', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -77,32 +77,32 @@ class UserEnumerationCheck implements Check {
 		$author = $this->loopback->get( (string) $this->urls->home_url( '/?author=' . $user_id ) );
 		if ( null !== $author && $this->author_page_reveals( $author, $nicename ) ) {
 			/* translators: %d: user ID. */
-			$ways[] = sprintf( __( 'Author archives: /?author=%d redirects to a URL with the username', 'sitewarden' ), $user_id );
+			$ways[] = sprintf( __( 'Author archives: /?author=%d redirects to a URL with the username', 'hardenly' ), $user_id );
 		}
 
 		$rest = $this->loopback->get( (string) $this->rest->rest_url( 'wp/v2/users' ) );
 		if ( null !== $rest && 200 === $rest['code'] ) {
 			$users = json_decode( $rest['body'], true );
 			if ( is_array( $users ) && isset( $users[0]['slug'] ) ) {
-				$ways[] = __( 'REST API: /wp-json/wp/v2/users lists users', 'sitewarden' );
+				$ways[] = __( 'REST API: /wp-json/wp/v2/users lists users', 'hardenly' );
 			}
 		}
 
 		if ( null === $author && null === $rest ) {
-			return [ Result::skipped( self::ID, __( 'The site could not be reached to test this.', 'sitewarden' ) ) ];
+			return [ Result::skipped( self::ID, __( 'The site could not be reached to test this.', 'hardenly' ) ) ];
 		}
 		if ( [] === $ways ) {
-			return [ Result::pass( self::ID, __( 'Visitors cannot list usernames.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'Visitors cannot list usernames.', 'hardenly' ) ) ];
 		}
 
 		return [
 			Result::fail(
 				self::ID,
 				Result::SEVERITY_LOW,
-				__( 'Visitors can list usernames', 'sitewarden' ),
-				__( 'Block author archives by ID and the users endpoint for logged-out visitors, with a security or SEO plugin or a few lines of code. Strong passwords and two-factor login matter more than hiding usernames.', 'sitewarden' ),
+				__( 'Visitors can list usernames', 'hardenly' ),
+				__( 'Block author archives by ID and the users endpoint for logged-out visitors, with a security or SEO plugin or a few lines of code. Strong passwords and two-factor login matter more than hiding usernames.', 'hardenly' ),
 				$ways,
-				__( 'Knowing usernames makes password-guessing attacks easier.', 'sitewarden' )
+				__( 'Knowing usernames makes password-guessing attacks easier.', 'hardenly' )
 			),
 		];
 	}

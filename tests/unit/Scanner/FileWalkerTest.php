@@ -1,9 +1,9 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner;
+namespace Hardenly\Tests\Scanner;
 
-use Sitewarden\Scanner\FileWalker;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Scanner\FileWalker;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class FileWalkerTest extends CheckTestCase {
 	private const FILES = [
@@ -93,6 +93,6 @@ class FileWalkerTest extends CheckTestCase {
 	}
 
 	public function testWalk_MissingRoot_FinishesAtOnce(): void {
-		self::assertSame( [], $this->walk_all( sys_get_temp_dir() . '/sitewarden-missing-' . uniqid(), 1 ) );
+		self::assertSame( [], $this->walk_all( sys_get_temp_dir() . '/hardenly-missing-' . uniqid(), 1 ) );
 	}
 }

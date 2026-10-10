@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Storage;
+namespace Hardenly\Storage;
 
 use Merkushin\Wpal\Service\Options;
 use Merkushin\Wpal\ServiceFactory;
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  * State of the current (or last failed or stopped) scan run, kept between batches.
  */
 class RunStore {
-	public const OPTION = 'sitewarden_run_state';
+	public const OPTION = 'hardenly_run_state';
 
 	/**
 	 * @var Options

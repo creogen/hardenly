@@ -1,14 +1,14 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks\Versions;
+namespace Hardenly\Tests\Scanner\Checks\Versions;
 
 use Merkushin\Wpal\Service\Plugins;
 use Merkushin\Wpal\Service\Themes;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Checks\Versions\InactiveExtensionsCheck;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
-use Sitewarden\Tests\Scanner\Checks\FakeTheme;
+use Hardenly\Scanner\Checks\Versions\InactiveExtensionsCheck;
+use Hardenly\Scanner\Result;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Tests\Scanner\Checks\FakeTheme;
 
 class InactiveExtensionsCheckTest extends CheckTestCase {
 	/**

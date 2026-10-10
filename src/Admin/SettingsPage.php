@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Admin;
+namespace Hardenly\Admin;
 
 use Merkushin\Wpal\Service\Capabilities;
 use Merkushin\Wpal\Service\Dates;
@@ -12,11 +12,11 @@ use Merkushin\Wpal\Service\Transient;
 use Merkushin\Wpal\Service\Urls;
 use Merkushin\Wpal\Service\Users;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Cron\Schedule;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Storage\Settings;
-use Sitewarden\Vulnerability\ProviderException;
-use Sitewarden\Vulnerability\ProviderRegistry;
+use Hardenly\Cron\Schedule;
+use Hardenly\Scanner\Group;
+use Hardenly\Storage\Settings;
+use Hardenly\Vulnerability\ProviderException;
+use Hardenly\Vulnerability\ProviderRegistry;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -27,18 +27,18 @@ defined( 'ABSPATH' ) || exit;
  * `manage_options` capability, and saves through Settings::sanitize_form().
  */
 class SettingsPage {
-	public const SLUG  = 'sitewarden-settings';
-	public const GROUP = 'sitewarden';
+	public const SLUG  = 'hardenly-settings';
+	public const GROUP = 'hardenly';
 
 	/**
 	 * admin-post.php action of the "Test connection" button.
 	 */
-	public const TEST_ACTION = 'sitewarden_test_provider';
+	public const TEST_ACTION = 'hardenly_test_provider';
 
 	/**
 	 * Holds the last connection test's outcome for a minute, to show after the redirect.
 	 */
-	public const TEST_TRANSIENT = 'sitewarden_provider_test';
+	public const TEST_TRANSIENT = 'hardenly_provider_test';
 
 	/**
 	 * @var Settings
@@ -139,7 +139,7 @@ class SettingsPage {
 		$name     = Settings::OPTION;
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Sitewarden Settings', 'sitewarden' ); ?></h1>
+			<h1><?php esc_html_e( 'Hardenly Settings', 'hardenly' ); ?></h1>
 			<?php $this->settings_api->settings_errors(); ?>
 			<?php $this->render_test_notice(); ?>
 			<form method="post" action="options.php">
@@ -148,13 +148,13 @@ class SettingsPage {
 				<input type="hidden" name="<?php echo esc_attr( $name ); ?>[form]" value="1">
 				<?php $this->nonces->wp_nonce_field( self::GROUP . '-options' ); ?>
 
-				<h2 class="title"><?php esc_html_e( 'What to scan', 'sitewarden' ); ?></h2>
+				<h2 class="title"><?php esc_html_e( 'What to scan', 'hardenly' ); ?></h2>
 				<table class="form-table" role="presentation">
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Checks', 'sitewarden' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Checks', 'hardenly' ); ?></th>
 						<td>
 							<fieldset>
-								<legend class="screen-reader-text"><?php esc_html_e( 'Checks', 'sitewarden' ); ?></legend>
+								<legend class="screen-reader-text"><?php esc_html_e( 'Checks', 'hardenly' ); ?></legend>
 								<?php foreach ( $this->groups() as $group => $label ) : ?>
 									<input type="hidden" name="<?php echo esc_attr( $name ); ?>[all_groups][]" value="<?php echo esc_attr( $group ); ?>">
 									<p>
@@ -169,32 +169,32 @@ class SettingsPage {
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="sitewarden-modified-days"><?php esc_html_e( 'Recently changed files', 'sitewarden' ); ?></label></th>
+						<th scope="row"><label for="hardenly-modified-days"><?php esc_html_e( 'Recently changed files', 'hardenly' ); ?></label></th>
 						<td>
 							<?php
 							printf(
 								/* translators: %s: number input for days. */
-								esc_html__( 'Report PHP files changed in the last %s days', 'sitewarden' ),
-								'<input type="number" id="sitewarden-modified-days" class="small-text" min="1" max="365" name="' . esc_attr( $name ) . '[modified_days]" value="' . esc_attr( (string) $settings['modified_days'] ) . '">'
+								esc_html__( 'Report PHP files changed in the last %s days', 'hardenly' ),
+								'<input type="number" id="hardenly-modified-days" class="small-text" min="1" max="365" name="' . esc_attr( $name ) . '[modified_days]" value="' . esc_attr( (string) $settings['modified_days'] ) . '">'
 							);
 							?>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="sitewarden-skip-files"><?php esc_html_e( 'Files to skip', 'sitewarden' ); ?></label></th>
+						<th scope="row"><label for="hardenly-skip-files"><?php esc_html_e( 'Files to skip', 'hardenly' ); ?></label></th>
 						<td>
-							<textarea id="sitewarden-skip-files" class="large-text code" rows="5" name="<?php echo esc_attr( $name ); ?>[skip_files]"><?php echo esc_textarea( implode( "\n", $settings['skip_files'] ) ); ?></textarea>
-							<p class="description"><?php esc_html_e( 'One file or folder per line, relative to the WordPress folder. File checks never report them. "Skip this file" on the dashboard adds lines here.', 'sitewarden' ); ?></p>
+							<textarea id="hardenly-skip-files" class="large-text code" rows="5" name="<?php echo esc_attr( $name ); ?>[skip_files]"><?php echo esc_textarea( implode( "\n", $settings['skip_files'] ) ); ?></textarea>
+							<p class="description"><?php esc_html_e( 'One file or folder per line, relative to the WordPress folder. File checks never report them. "Skip this file" on the dashboard adds lines here.', 'hardenly' ); ?></p>
 						</td>
 					</tr>
 				</table>
 
-				<h2 class="title"><?php esc_html_e( 'Schedule and email', 'sitewarden' ); ?></h2>
+				<h2 class="title"><?php esc_html_e( 'Schedule and email', 'hardenly' ); ?></h2>
 				<table class="form-table" role="presentation">
 					<tr>
-						<th scope="row"><label for="sitewarden-schedule"><?php esc_html_e( 'Automatic scan', 'sitewarden' ); ?></label></th>
+						<th scope="row"><label for="hardenly-schedule"><?php esc_html_e( 'Automatic scan', 'hardenly' ); ?></label></th>
 						<td>
-							<select id="sitewarden-schedule" name="<?php echo esc_attr( $name ); ?>[schedule]">
+							<select id="hardenly-schedule" name="<?php echo esc_attr( $name ); ?>[schedule]">
 								<?php foreach ( $this->schedules() as $value => $label ) : ?>
 									<option value="<?php echo esc_attr( $value ); ?>" <?php echo $value === $settings['schedule'] ? 'selected' : ''; ?>><?php echo esc_html( $label ); ?></option>
 								<?php endforeach; ?>
@@ -203,46 +203,46 @@ class SettingsPage {
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Email report', 'sitewarden' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Email report', 'hardenly' ); ?></th>
 						<td>
 							<fieldset>
-								<legend class="screen-reader-text"><?php esc_html_e( 'Email report', 'sitewarden' ); ?></legend>
+								<legend class="screen-reader-text"><?php esc_html_e( 'Email report', 'hardenly' ); ?></legend>
 								<p>
 									<label>
 										<input type="checkbox" name="<?php echo esc_attr( $name ); ?>[email_enabled]" value="1" <?php echo $settings['email_enabled'] ? 'checked' : ''; ?>>
-										<?php esc_html_e( 'Email a summary after automatic scans', 'sitewarden' ); ?>
+										<?php esc_html_e( 'Email a summary after automatic scans', 'hardenly' ); ?>
 									</label>
 								</p>
 								<p>
 									<label>
 										<input type="checkbox" name="<?php echo esc_attr( $name ); ?>[email_only_changes]" value="1" <?php echo $settings['email_only_changes'] ? 'checked' : ''; ?>>
-										<?php esc_html_e( 'Only when the score drops or a new high or critical problem appears', 'sitewarden' ); ?>
+										<?php esc_html_e( 'Only when the score drops or a new high or critical problem appears', 'hardenly' ); ?>
 									</label>
 								</p>
 							</fieldset>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="sitewarden-email-to"><?php esc_html_e( 'Send to', 'sitewarden' ); ?></label></th>
+						<th scope="row"><label for="hardenly-email-to"><?php esc_html_e( 'Send to', 'hardenly' ); ?></label></th>
 						<td>
-							<input type="email" id="sitewarden-email-to" class="regular-text" name="<?php echo esc_attr( $name ); ?>[email_to]" value="<?php echo esc_attr( (string) $settings['email_to'] ); ?>" placeholder="<?php echo esc_attr( (string) $this->options->get_option( 'admin_email', '' ) ); ?>">
-							<p class="description"><?php esc_html_e( 'Leave empty to use the site admin email. The email lists scores and problems, never file paths.', 'sitewarden' ); ?></p>
+							<input type="email" id="hardenly-email-to" class="regular-text" name="<?php echo esc_attr( $name ); ?>[email_to]" value="<?php echo esc_attr( (string) $settings['email_to'] ); ?>" placeholder="<?php echo esc_attr( (string) $this->options->get_option( 'admin_email', '' ) ); ?>">
+							<p class="description"><?php esc_html_e( 'Leave empty to use the site admin email. The email lists scores and problems, never file paths.', 'hardenly' ); ?></p>
 						</td>
 					</tr>
 				</table>
 
 				<?php $this->render_online_services( $settings ); ?>
 
-				<h2 class="title"><?php esc_html_e( 'Ignored findings', 'sitewarden' ); ?></h2>
+				<h2 class="title"><?php esc_html_e( 'Ignored findings', 'hardenly' ); ?></h2>
 				<?php if ( [] === $settings['ignored'] ) : ?>
-					<p><?php esc_html_e( 'No findings are ignored. Use "Ignore this finding" on the dashboard to hide a finding you have reviewed.', 'sitewarden' ); ?></p>
+					<p><?php esc_html_e( 'No findings are ignored. Use "Ignore this finding" on the dashboard to hide a finding you have reviewed.', 'hardenly' ); ?></p>
 				<?php else : ?>
 					<table class="widefat striped">
 						<thead>
 							<tr>
-								<th scope="col"><?php esc_html_e( 'Finding', 'sitewarden' ); ?></th>
-								<th scope="col"><?php esc_html_e( 'Ignored', 'sitewarden' ); ?></th>
-								<th scope="col"><?php esc_html_e( 'Show again', 'sitewarden' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Finding', 'hardenly' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Ignored', 'hardenly' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Show again', 'hardenly' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -254,7 +254,7 @@ class SettingsPage {
 										echo esc_html(
 											sprintf(
 												/* translators: 1: date, 2: username. */
-												__( '%1$s by %2$s', 'sitewarden' ),
+												__( '%1$s by %2$s', 'hardenly' ),
 												(string) $this->dates->wp_date( (string) $this->options->get_option( 'date_format', 'Y-m-d' ), (int) $entry['at'] ),
 												$entry['by']
 											)
@@ -267,7 +267,7 @@ class SettingsPage {
 											<span class="screen-reader-text">
 												<?php
 												/* translators: %s: finding. */
-												echo esc_html( sprintf( __( 'Show "%s" again', 'sitewarden' ), $entry['message'] ) );
+												echo esc_html( sprintf( __( 'Show "%s" again', 'hardenly' ), $entry['message'] ) );
 												?>
 											</span>
 										</label>
@@ -279,7 +279,7 @@ class SettingsPage {
 				<?php endif; ?>
 
 				<p class="submit">
-					<button type="submit" class="button button-primary"><?php esc_html_e( 'Save Changes', 'sitewarden' ); ?></button>
+					<button type="submit" class="button button-primary"><?php esc_html_e( 'Save Changes', 'hardenly' ); ?></button>
 				</p>
 			</form>
 
@@ -287,8 +287,8 @@ class SettingsPage {
 				<form method="post" action="<?php echo esc_url( (string) $this->urls->admin_url( 'admin-post.php' ) ); ?>">
 					<input type="hidden" name="action" value="<?php echo esc_attr( self::TEST_ACTION ); ?>">
 					<?php $this->nonces->wp_nonce_field( self::TEST_ACTION ); ?>
-					<button type="submit" class="button"><?php esc_html_e( 'Test the vulnerability lookup connection', 'sitewarden' ); ?></button>
-					<span class="description"><?php esc_html_e( 'Uses the saved key and makes one request to the provider.', 'sitewarden' ); ?></span>
+					<button type="submit" class="button"><?php esc_html_e( 'Test the vulnerability lookup connection', 'hardenly' ); ?></button>
+					<span class="description"><?php esc_html_e( 'Uses the saved key and makes one request to the provider.', 'hardenly' ); ?></span>
 				</form>
 			<?php endif; ?>
 		</div>
@@ -305,31 +305,31 @@ class SettingsPage {
 		$key      = (string) $settings['vuln_api_key'];
 		$selected = (string) $settings['vuln_provider'];
 		?>
-		<h2 class="title"><?php esc_html_e( 'Online services', 'sitewarden' ); ?></h2>
-		<p><?php esc_html_e( 'Off by default. Turning one on sends data from your site to a third party, as described under each option. Nothing else ever leaves your site.', 'sitewarden' ); ?></p>
+		<h2 class="title"><?php esc_html_e( 'Online services', 'hardenly' ); ?></h2>
+		<p><?php esc_html_e( 'Off by default. Turning one on sends data from your site to a third party, as described under each option. Nothing else ever leaves your site.', 'hardenly' ); ?></p>
 		<table class="form-table" role="presentation">
 			<tr>
-				<th scope="row"><?php esc_html_e( 'File integrity', 'sitewarden' ); ?></th>
+				<th scope="row"><?php esc_html_e( 'File integrity', 'hardenly' ); ?></th>
 				<td>
 					<label>
 						<input type="checkbox" name="<?php echo esc_attr( $name ); ?>[checksums_enabled]" value="1" <?php echo $settings['checksums_enabled'] ? 'checked' : ''; ?>>
-						<?php esc_html_e( 'Compare WordPress core and plugin files with WordPress.org', 'sitewarden' ); ?>
+						<?php esc_html_e( 'Compare WordPress core and plugin files with WordPress.org', 'hardenly' ); ?>
 					</label>
 					<p class="description">
-						<?php esc_html_e( 'Sends your WordPress version and language, and the slugs and versions of installed plugins, to api.wordpress.org and downloads.wordpress.org to get the official file checksums.', 'sitewarden' ); ?>
-						<a href="https://wordpress.org/about/privacy/"><?php esc_html_e( 'WordPress.org privacy policy', 'sitewarden' ); ?></a>
+						<?php esc_html_e( 'Sends your WordPress version and language, and the slugs and versions of installed plugins, to api.wordpress.org and downloads.wordpress.org to get the official file checksums.', 'hardenly' ); ?>
+						<a href="https://wordpress.org/about/privacy/"><?php esc_html_e( 'WordPress.org privacy policy', 'hardenly' ); ?></a>
 					</p>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><?php esc_html_e( 'Vulnerability lookup', 'sitewarden' ); ?></th>
+				<th scope="row"><?php esc_html_e( 'Vulnerability lookup', 'hardenly' ); ?></th>
 				<td>
 					<fieldset>
-						<legend class="screen-reader-text"><?php esc_html_e( 'Vulnerability lookup provider', 'sitewarden' ); ?></legend>
+						<legend class="screen-reader-text"><?php esc_html_e( 'Vulnerability lookup provider', 'hardenly' ); ?></legend>
 						<p>
 							<label>
 								<input type="radio" name="<?php echo esc_attr( $name ); ?>[vuln_provider]" value="" <?php echo '' === $selected ? 'checked' : ''; ?>>
-								<?php esc_html_e( 'None', 'sitewarden' ); ?>
+								<?php esc_html_e( 'None', 'hardenly' ); ?>
 							</label>
 						</p>
 						<?php foreach ( $this->providers->all() as $id => $provider ) : ?>
@@ -340,8 +340,8 @@ class SettingsPage {
 								</label>
 								<br><span class="description">
 									<?php echo esc_html( $provider->plan_note() ); ?>
-									<a href="<?php echo esc_url( $provider->signup_url() ); ?>"><?php esc_html_e( 'Get a key', 'sitewarden' ); ?></a>
-									· <a href="<?php echo esc_url( $provider->terms_url() ); ?>"><?php esc_html_e( 'Terms', 'sitewarden' ); ?></a>
+									<a href="<?php echo esc_url( $provider->signup_url() ); ?>"><?php esc_html_e( 'Get a key', 'hardenly' ); ?></a>
+									· <a href="<?php echo esc_url( $provider->terms_url() ); ?>"><?php esc_html_e( 'Terms', 'hardenly' ); ?></a>
 								</span>
 							</p>
 						<?php endforeach; ?>
@@ -349,42 +349,42 @@ class SettingsPage {
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="sitewarden-api-key"><?php esc_html_e( 'API key', 'sitewarden' ); ?></label></th>
+				<th scope="row"><label for="hardenly-api-key"><?php esc_html_e( 'API key', 'hardenly' ); ?></label></th>
 				<td>
-					<input type="password" id="sitewarden-api-key" class="regular-text" autocomplete="off" name="<?php echo esc_attr( $name ); ?>[vuln_api_key]" value="">
+					<input type="password" id="hardenly-api-key" class="regular-text" autocomplete="off" name="<?php echo esc_attr( $name ); ?>[vuln_api_key]" value="">
 					<?php if ( '' !== $key ) : ?>
 						<p class="description">
 							<?php
 							/* translators: %s: last four characters of the saved key. */
-							echo esc_html( sprintf( __( 'A key ending in %s is saved. Leave the field empty to keep it.', 'sitewarden' ), substr( $key, -4 ) ) );
+							echo esc_html( sprintf( __( 'A key ending in %s is saved. Leave the field empty to keep it.', 'hardenly' ), substr( $key, -4 ) ) );
 							?>
 						</p>
 						<p>
 							<label>
 								<input type="checkbox" name="<?php echo esc_attr( $name ); ?>[vuln_remove_key]" value="1">
-								<?php esc_html_e( 'Remove the saved key', 'sitewarden' ); ?>
+								<?php esc_html_e( 'Remove the saved key', 'hardenly' ); ?>
 							</label>
 						</p>
 					<?php else : ?>
-						<p class="description"><?php esc_html_e( 'Your own key from the provider you chose.', 'sitewarden' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Your own key from the provider you chose.', 'hardenly' ); ?></p>
 					<?php endif; ?>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><?php esc_html_e( 'Consent', 'sitewarden' ); ?></th>
+				<th scope="row"><?php esc_html_e( 'Consent', 'hardenly' ); ?></th>
 				<td>
 					<?php
 					$provider = $this->providers->get( $selected );
 					if ( null === $provider ) :
 						?>
-						<p class="description"><?php esc_html_e( 'Choose a provider and save to see what it receives.', 'sitewarden' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Choose a provider and save to see what it receives.', 'hardenly' ); ?></p>
 					<?php else : ?>
 						<label>
 							<input type="checkbox" name="<?php echo esc_attr( $name ); ?>[vuln_consent]" value="1" <?php echo $settings['vuln_consent'] ? 'checked' : ''; ?>>
 							<?php echo esc_html( $provider->data_sent() ); ?>
 						</label>
 						<?php if ( ! $settings['vuln_consent'] ) : ?>
-							<p class="description"><?php esc_html_e( 'Lookups do not run until you agree.', 'sitewarden' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Lookups do not run until you agree.', 'hardenly' ); ?></p>
 						<?php endif; ?>
 					<?php endif; ?>
 				</td>
@@ -414,9 +414,9 @@ class SettingsPage {
 		$settings = $this->settings->get();
 		$provider = $this->providers->get( (string) $settings['vuln_provider'] );
 		if ( null === $provider || '' === $settings['vuln_api_key'] ) {
-			$outcome = [ false, __( 'Choose a provider and save a key first.', 'sitewarden' ) ];
+			$outcome = [ false, __( 'Choose a provider and save a key first.', 'hardenly' ) ];
 		} elseif ( true !== $settings['vuln_consent'] ) {
-			$outcome = [ false, __( 'Agree to send data to the provider and save before testing.', 'sitewarden' ) ];
+			$outcome = [ false, __( 'Agree to send data to the provider and save before testing.', 'hardenly' ) ];
 		} else {
 			try {
 				$outcome = [ true, $provider->test( (string) $settings['vuln_api_key'] ) ];
@@ -458,14 +458,14 @@ class SettingsPage {
 	private function groups(): array {
 		$labels       = Group::labels();
 		$descriptions = [
-			Group::CONFIG   => __( 'Debug output, file editing, HTTPS for the dashboard, security keys.', 'sitewarden' ),
-			Group::USERS    => __( 'An "admin" username, number of administrators, inactive administrators, username listing.', 'sitewarden' ),
-			Group::VERSIONS => __( 'Outdated WordPress, plugins, themes and PHP; unused plugins and themes.', 'sitewarden' ),
-			Group::SERVER   => __( 'HTTPS, certificate expiry, security headers, folder listing, XML-RPC. Requests go only to your own site.', 'sitewarden' ),
-			Group::DATABASE => __( 'Table prefix and size of autoloaded options.', 'sitewarden' ),
-			Group::FILES    => __( 'PHP in uploads, file permissions, backups, debug log, .git and .env, recent changes.', 'sitewarden' ),
-			Group::CODE     => __( 'Hidden or injected code in PHP files. The slowest check; findings need review.', 'sitewarden' ),
-			Group::ONLINE   => __( 'File integrity and vulnerability lookups. Run only when turned on under Online services below.', 'sitewarden' ),
+			Group::CONFIG   => __( 'Debug output, file editing, HTTPS for the dashboard, security keys.', 'hardenly' ),
+			Group::USERS    => __( 'An "admin" username, number of administrators, inactive administrators, username listing.', 'hardenly' ),
+			Group::VERSIONS => __( 'Outdated WordPress, plugins, themes and PHP; unused plugins and themes.', 'hardenly' ),
+			Group::SERVER   => __( 'HTTPS, certificate expiry, security headers, folder listing, XML-RPC. Requests go only to your own site.', 'hardenly' ),
+			Group::DATABASE => __( 'Table prefix and size of autoloaded options.', 'hardenly' ),
+			Group::FILES    => __( 'PHP in uploads, file permissions, backups, debug log, .git and .env, recent changes.', 'hardenly' ),
+			Group::CODE     => __( 'Hidden or injected code in PHP files. The slowest check; findings need review.', 'hardenly' ),
+			Group::ONLINE   => __( 'File integrity and vulnerability lookups. Run only when turned on under Online services below.', 'hardenly' ),
 		];
 
 		$groups = [];
@@ -480,21 +480,21 @@ class SettingsPage {
 	 */
 	private function schedules(): array {
 		return [
-			'off'    => __( 'Off', 'sitewarden' ),
-			'weekly' => __( 'Weekly', 'sitewarden' ),
-			'daily'  => __( 'Daily', 'sitewarden' ),
+			'off'    => __( 'Off', 'hardenly' ),
+			'weekly' => __( 'Weekly', 'hardenly' ),
+			'daily'  => __( 'Daily', 'hardenly' ),
 		];
 	}
 
 	private function next_run_text(): string {
 		$next = $this->schedule->next_run();
 		if ( null === $next ) {
-			return __( 'Scans run only when you start them.', 'sitewarden' );
+			return __( 'Scans run only when you start them.', 'hardenly' );
 		}
 		$format = $this->options->get_option( 'date_format', 'Y-m-d' ) . ' ' . $this->options->get_option( 'time_format', 'H:i' );
 		return sprintf(
 			/* translators: %s: date and time. */
-			__( 'Next scan: %s. WP-Cron starts it with the first visit after that time.', 'sitewarden' ),
+			__( 'Next scan: %s. WP-Cron starts it with the first visit after that time.', 'hardenly' ),
 			(string) $this->dates->wp_date( $format, $next )
 		);
 	}

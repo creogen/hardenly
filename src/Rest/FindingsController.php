@@ -1,14 +1,14 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Rest;
+namespace Hardenly\Rest;
 
 use Merkushin\Wpal\Service\RestApi;
 use Merkushin\Wpal\Service\Users;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Report\ReportRefresher;
-use Sitewarden\Report\Summary;
-use Sitewarden\Storage\ReportStore;
-use Sitewarden\Storage\Settings;
+use Hardenly\Report\ReportRefresher;
+use Hardenly\Report\Summary;
+use Hardenly\Storage\ReportStore;
+use Hardenly\Storage\Settings;
 use WP_Error;
 use WP_REST_Request;
 
@@ -156,7 +156,7 @@ class FindingsController {
 	public function skip_file( WP_REST_Request $request ) {
 		$path = Settings::clean_path( (string) $request->get_param( 'path' ) );
 		if ( '' === $path ) {
-			return new WP_Error( 'sitewarden_invalid_path', __( 'This is not a path inside the WordPress folder.', 'sitewarden' ), [ 'status' => 400 ] );
+			return new WP_Error( 'hardenly_invalid_path', __( 'This is not a path inside the WordPress folder.', 'hardenly' ), [ 'status' => 400 ] );
 		}
 		$this->settings->skip_file( $path );
 		return $this->payload->build();
@@ -176,6 +176,6 @@ class FindingsController {
 	}
 
 	private static function not_found(): WP_Error {
-		return new WP_Error( 'sitewarden_finding_not_found', __( 'This finding is not in the latest report.', 'sitewarden' ), [ 'status' => 404 ] );
+		return new WP_Error( 'hardenly_finding_not_found', __( 'This finding is not in the latest report.', 'hardenly' ), [ 'status' => 404 ] );
 	}
 }

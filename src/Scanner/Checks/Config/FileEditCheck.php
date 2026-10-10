@@ -1,12 +1,12 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Config;
+namespace Hardenly\Scanner\Checks\Config;
 
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Constants;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Constants;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -30,7 +30,7 @@ class FileEditCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'File editing in the dashboard', 'sitewarden' );
+		return __( 'File editing in the dashboard', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -39,17 +39,17 @@ class FileEditCheck implements Check {
 
 	public function run( Context $context ): array {
 		if ( $this->constants->is_true( 'DISALLOW_FILE_EDIT' ) || $this->constants->is_true( 'DISALLOW_FILE_MODS' ) ) {
-			return [ Result::pass( self::ID, __( 'File editing in the dashboard is turned off.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'File editing in the dashboard is turned off.', 'hardenly' ) ) ];
 		}
 
 		return [
 			Result::fail(
 				self::ID,
 				Result::SEVERITY_MEDIUM,
-				__( 'File editing in the dashboard is turned on', 'sitewarden' ),
-				__( "Add define( 'DISALLOW_FILE_EDIT', true ); to wp-config.php.", 'sitewarden' ),
+				__( 'File editing in the dashboard is turned on', 'hardenly' ),
+				__( "Add define( 'DISALLOW_FILE_EDIT', true ); to wp-config.php.", 'hardenly' ),
 				[],
-				__( 'Anyone who gets into an administrator account can change theme and plugin code from the dashboard and take over the site.', 'sitewarden' )
+				__( 'Anyone who gets into an administrator account can change theme and plugin code from the dashboard and take over the site.', 'hardenly' )
 			),
 		];
 	}

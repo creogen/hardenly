@@ -1,13 +1,13 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Users;
+namespace Hardenly\Scanner\Checks\Users;
 
 use Merkushin\Wpal\Service\Users;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -31,7 +31,7 @@ class AdminUsernameCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'The "admin" username', 'sitewarden' );
+		return __( 'The "admin" username', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -41,7 +41,7 @@ class AdminUsernameCheck implements Check {
 	public function run( Context $context ): array {
 		$user = $this->users->get_user_by( 'login', 'admin' );
 		if ( false === $user ) {
-			return [ Result::pass( self::ID, __( 'No user is called "admin".', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'No user is called "admin".', 'hardenly' ) ) ];
 		}
 
 		$roles = $user->roles;
@@ -49,10 +49,10 @@ class AdminUsernameCheck implements Check {
 			Result::fail(
 				self::ID,
 				in_array( 'administrator', $roles, true ) ? Result::SEVERITY_MEDIUM : Result::SEVERITY_LOW,
-				__( 'A user is called "admin"', 'sitewarden' ),
-				__( 'Create a new administrator with a different username, log in as that user, then delete "admin" and give its content to the new user.', 'sitewarden' ),
+				__( 'A user is called "admin"', 'hardenly' ),
+				__( 'Create a new administrator with a different username, log in as that user, then delete "admin" and give its content to the new user.', 'hardenly' ),
 				[],
-				__( 'Password-guessing attacks try "admin" first. Without a known username, they have to guess both.', 'sitewarden' )
+				__( 'Password-guessing attacks try "admin" first. Without a known username, they have to guess both.', 'hardenly' )
 			),
 		];
 	}

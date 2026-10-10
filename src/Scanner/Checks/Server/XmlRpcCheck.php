@@ -1,14 +1,14 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Server;
+namespace Hardenly\Scanner\Checks\Server;
 
 use Merkushin\Wpal\Service\Urls;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Loopback;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Loopback;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -40,7 +40,7 @@ class XmlRpcCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'XML-RPC', 'sitewarden' );
+		return __( 'XML-RPC', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -56,19 +56,19 @@ class XmlRpcCheck implements Check {
 			]
 		);
 		if ( null === $response ) {
-			return [ Result::skipped( self::ID, __( 'xmlrpc.php could not be reached.', 'sitewarden' ) ) ];
+			return [ Result::skipped( self::ID, __( 'xmlrpc.php could not be reached.', 'hardenly' ) ) ];
 		}
 
 		$answers = 200 === $response['code'] && false !== strpos( $response['body'], '<methodResponse>' );
 		if ( ( $answers && false !== strpos( $response['body'], '<fault>' ) ) || in_array( $response['code'], [ 401, 403, 404, 405, 410 ], true ) ) {
-			return [ Result::pass( self::ID, __( 'XML-RPC does not answer visitors.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'XML-RPC does not answer visitors.', 'hardenly' ) ) ];
 		}
 		if ( ! $answers ) {
 			return [
 				Result::skipped(
 					self::ID,
 					/* translators: %d: HTTP status code. */
-					sprintf( __( 'xmlrpc.php gave an unexpected answer (HTTP %d).', 'sitewarden' ), $response['code'] )
+					sprintf( __( 'xmlrpc.php gave an unexpected answer (HTTP %d).', 'hardenly' ), $response['code'] )
 				),
 			];
 		}
@@ -77,10 +77,10 @@ class XmlRpcCheck implements Check {
 			Result::fail(
 				self::ID,
 				Result::SEVERITY_LOW,
-				__( 'XML-RPC is enabled', 'sitewarden' ),
-				__( 'If you do not use the WordPress mobile app, Jetpack or remote publishing, block xmlrpc.php on the server or turn XML-RPC off with a security plugin.', 'sitewarden' ),
+				__( 'XML-RPC is enabled', 'hardenly' ),
+				__( 'If you do not use the WordPress mobile app, Jetpack or remote publishing, block xmlrpc.php on the server or turn XML-RPC off with a security plugin.', 'hardenly' ),
 				[],
-				__( 'XML-RPC lets attackers try many passwords in one request, and is used to amplify attacks on other sites.', 'sitewarden' )
+				__( 'XML-RPC lets attackers try many passwords in one request, and is used to amplify attacks on other sites.', 'hardenly' )
 			),
 		];
 	}

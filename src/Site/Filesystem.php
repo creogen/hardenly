@@ -1,11 +1,11 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Site;
+namespace Hardenly\Site;
 
 defined( 'ABSPATH' ) || exit;
 
 // phpcs:disable WordPress.WP.AlternativeFunctions -- The scanner reads local files to inspect them. WP_Filesystem
-// is meant for writing files and may need credentials; Sitewarden never writes, moves or deletes site files.
+// is meant for writing files and may need credentials; Hardenly never writes, moves or deletes site files.
 
 /**
  * Read-only access to local files. The only place the plugin calls PHP file functions.

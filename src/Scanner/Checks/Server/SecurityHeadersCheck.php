@@ -1,14 +1,14 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Server;
+namespace Hardenly\Scanner\Checks\Server;
 
 use Merkushin\Wpal\Service\Urls;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Loopback;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Loopback;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -38,7 +38,7 @@ class SecurityHeadersCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Security headers', 'sitewarden' );
+		return __( 'Security headers', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -50,26 +50,26 @@ class SecurityHeadersCheck implements Check {
 		// Follows redirects (to https:// or www.), so the headers are those of the page visitors get.
 		$response = $this->loopback->get( $url, [ 'redirection' => 3 ] );
 		if ( null === $response || 200 !== $response['code'] ) {
-			return [ Result::skipped( self::ID, __( 'The home page could not be loaded to read its headers.', 'sitewarden' ) ) ];
+			return [ Result::skipped( self::ID, __( 'The home page could not be loaded to read its headers.', 'hardenly' ) ) ];
 		}
 
 		$headers = $response['headers'];
 		$missing = [];
 		if ( ! isset( $headers['x-frame-options'] ) && false === stripos( $headers['content-security-policy'] ?? '', 'frame-ancestors' ) ) {
-			$missing[] = __( 'X-Frame-Options or Content-Security-Policy frame-ancestors (stops other sites framing yours)', 'sitewarden' );
+			$missing[] = __( 'X-Frame-Options or Content-Security-Policy frame-ancestors (stops other sites framing yours)', 'hardenly' );
 		}
 		if ( 'nosniff' !== strtolower( trim( $headers['x-content-type-options'] ?? '' ) ) ) {
-			$missing[] = __( 'X-Content-Type-Options: nosniff (stops browsers guessing file types)', 'sitewarden' );
+			$missing[] = __( 'X-Content-Type-Options: nosniff (stops browsers guessing file types)', 'hardenly' );
 		}
 		if ( ! isset( $headers['referrer-policy'] ) ) {
-			$missing[] = __( 'Referrer-Policy (limits what other sites learn about your URLs)', 'sitewarden' );
+			$missing[] = __( 'Referrer-Policy (limits what other sites learn about your URLs)', 'hardenly' );
 		}
 		if ( 0 === strpos( $url, 'https://' ) && ! isset( $headers['strict-transport-security'] ) ) {
-			$missing[] = __( 'Strict-Transport-Security (keeps browsers on HTTPS)', 'sitewarden' );
+			$missing[] = __( 'Strict-Transport-Security (keeps browsers on HTTPS)', 'hardenly' );
 		}
 
 		if ( [] === $missing ) {
-			return [ Result::pass( self::ID, __( 'The home page sends the main security headers.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'The home page sends the main security headers.', 'hardenly' ) ) ];
 		}
 
 		return [
@@ -77,10 +77,10 @@ class SecurityHeadersCheck implements Check {
 				self::ID,
 				Result::SEVERITY_LOW,
 				/* translators: %d: number of headers. */
-				sprintf( _n( '%d security header is missing', '%d security headers are missing', count( $missing ), 'sitewarden' ), count( $missing ) ),
-				__( 'Add the headers in your server configuration or with a security plugin. Your host can help. Test the site afterwards, especially embeds.', 'sitewarden' ),
+				sprintf( _n( '%d security header is missing', '%d security headers are missing', count( $missing ), 'hardenly' ), count( $missing ) ),
+				__( 'Add the headers in your server configuration or with a security plugin. Your host can help. Test the site afterwards, especially embeds.', 'hardenly' ),
 				$missing,
-				__( 'These headers tell browsers to block common attacks such as clickjacking.', 'sitewarden' )
+				__( 'These headers tell browsers to block common attacks such as clickjacking.', 'hardenly' )
 			),
 		];
 	}

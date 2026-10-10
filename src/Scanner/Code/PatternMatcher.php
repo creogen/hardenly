@@ -1,8 +1,8 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Code;
+namespace Hardenly\Scanner\Code;
 
-use Sitewarden\Scanner\Result;
+use Hardenly\Scanner\Result;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -75,15 +75,15 @@ class PatternMatcher {
 	 */
 	public static function label( string $rule ): string {
 		$labels = [
-			'eval_decode'      => __( 'decodes and runs hidden code', 'sitewarden' ),
-			'eval_request'     => __( 'runs code sent by visitors', 'sitewarden' ),
-			'exec_request'     => __( 'runs server commands sent by visitors', 'sitewarden' ),
-			'request_function' => __( 'calls a function named by visitors', 'sitewarden' ),
-			'include_request'  => __( 'loads a file named by visitors', 'sitewarden' ),
-			'preg_replace_e'   => __( 'runs code through preg_replace /e', 'sitewarden' ),
-			'encoded_blob'     => __( 'long encoded data next to code that decodes it', 'sitewarden' ),
-			'hex_escapes'      => __( 'text hidden in escape sequences', 'sitewarden' ),
-			'chr_chain'        => __( 'text hidden in chr() calls', 'sitewarden' ),
+			'eval_decode'      => __( 'decodes and runs hidden code', 'hardenly' ),
+			'eval_request'     => __( 'runs code sent by visitors', 'hardenly' ),
+			'exec_request'     => __( 'runs server commands sent by visitors', 'hardenly' ),
+			'request_function' => __( 'calls a function named by visitors', 'hardenly' ),
+			'include_request'  => __( 'loads a file named by visitors', 'hardenly' ),
+			'preg_replace_e'   => __( 'runs code through preg_replace /e', 'hardenly' ),
+			'encoded_blob'     => __( 'long encoded data next to code that decodes it', 'hardenly' ),
+			'hex_escapes'      => __( 'text hidden in escape sequences', 'hardenly' ),
+			'chr_chain'        => __( 'text hidden in chr() calls', 'hardenly' ),
 		];
 		return $labels[ $rule ] ?? $rule;
 	}

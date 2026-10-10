@@ -1,13 +1,13 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Files;
+namespace Hardenly\Scanner\Checks\Files;
 
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\FileWalker;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Filesystem;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\FileWalker;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Filesystem;
 
 defined( 'ABSPATH' ) || exit;
 

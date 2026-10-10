@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks\Code;
+namespace Hardenly\Tests\Scanner\Checks\Code;
 
-use Sitewarden\Scanner\Checks\Code\SuspiciousCodeCheck;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Scanner\Checks\Code\SuspiciousCodeCheck;
+use Hardenly\Scanner\Result;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class SuspiciousCodeCheckTest extends CheckTestCase {
 	public function testRun_CleanFiles_Passes(): void {

@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks;
+namespace Hardenly\Tests\Scanner\Checks;
 
 /**
  * Stand-in for WP_Theme: answers get() for the headers the checks read.

@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner;
+namespace Hardenly\Scanner;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -35,14 +35,14 @@ final class Group {
 	 */
 	public static function labels(): array {
 		return [
-			self::CONFIG   => __( 'Configuration', 'sitewarden' ),
-			self::USERS    => __( 'Users', 'sitewarden' ),
-			self::VERSIONS => __( 'Versions', 'sitewarden' ),
-			self::SERVER   => __( 'Server & HTTP', 'sitewarden' ),
-			self::DATABASE => __( 'Database', 'sitewarden' ),
-			self::FILES    => __( 'Files', 'sitewarden' ),
-			self::CODE     => __( 'Code patterns', 'sitewarden' ),
-			self::ONLINE   => __( 'Online services', 'sitewarden' ),
+			self::CONFIG   => __( 'Configuration', 'hardenly' ),
+			self::USERS    => __( 'Users', 'hardenly' ),
+			self::VERSIONS => __( 'Versions', 'hardenly' ),
+			self::SERVER   => __( 'Server & HTTP', 'hardenly' ),
+			self::DATABASE => __( 'Database', 'hardenly' ),
+			self::FILES    => __( 'Files', 'hardenly' ),
+			self::CODE     => __( 'Code patterns', 'hardenly' ),
+			self::ONLINE   => __( 'Online services', 'hardenly' ),
 		];
 	}
 

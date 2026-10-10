@@ -9,13 +9,13 @@
  * When the plugin calls a new WordPress function, add a stand-in below, and run the new
  * code path from the bottom of this file.
  *
- * @package Sitewarden
+ * @package Hardenly
  */
 
 declare( strict_types=1 );
 
 $build_dir = rtrim( $argv[1] ?? '', '/' );
-$main_file = $build_dir . '/sitewarden.php';
+$main_file = $build_dir . '/hardenly.php';
 if ( ! is_file( $main_file ) ) {
 	fwrite( STDERR, "Usage: php tests/smoke/dist.php <build-dir>\n" );
 	exit( 1 );
@@ -220,7 +220,7 @@ function get_user_meta( int $user_id, string $key = '', bool $single = false ) {
  * @return array<string, array<string, string>>
  */
 function get_plugins( string $plugin_folder = '' ): array {
-	return [ 'sitewarden/sitewarden.php' => [ 'Name' => 'Sitewarden' ] ];
+	return [ 'hardenly/hardenly.php' => [ 'Name' => 'Hardenly' ] ];
 }
 
 function is_plugin_active( string $plugin ): bool {
@@ -504,7 +504,7 @@ $GLOBALS['wpdb'] = new class() {
 };
 
 function plugin_dir_url( string $file ): string {
-	return 'https://example.com/wp-content/plugins/sitewarden/';
+	return 'https://example.com/wp-content/plugins/hardenly/';
 }
 
 function wp_enqueue_style( string $handle, string $src = '' ): void {
@@ -536,10 +536,10 @@ $failures = [];
 if ( [] !== $GLOBALS['smoke_enqueued'] ) {
 	$failures[] = 'Assets were enqueued on a screen that is not the plugin\'s.';
 }
-do_action( 'admin_enqueue_scripts', 'toplevel_page_sitewarden' );
+do_action( 'admin_enqueue_scripts', 'toplevel_page_hardenly' );
 
 foreach ( $GLOBALS['smoke_routes'] as $route ) {
-	if ( 0 !== strpos( $route, 'sitewarden/v1/' ) ) {
+	if ( 0 !== strpos( $route, 'hardenly/v1/' ) ) {
 		$failures[] = "Unexpected REST route $route.";
 	}
 }
@@ -548,10 +548,10 @@ if ( count( $GLOBALS['smoke_routes'] ) < 3 ) {
 }
 
 // A whole scan: start it, then run the scheduled batch.
-$sitewarden_rest = $GLOBALS['smoke_actions']['rest_api_init'][0][0];
+$hardenly_rest = $GLOBALS['smoke_actions']['rest_api_init'][0][0];
 // Turn on the online services, so their code runs in the build (requests fail here).
 update_option(
-	'sitewarden_settings',
+	'hardenly_settings',
 	[
 		'checksums_enabled' => true,
 		'vuln_provider'     => 'wpscan',
@@ -559,54 +559,54 @@ update_option(
 		'vuln_consent'      => true,
 	]
 );
-$sitewarden_rest->start();
+$hardenly_rest->start();
 foreach ( $GLOBALS['smoke_events'] as $event ) {
 	do_action( $event[0], ...$event[1] );
 }
-$sitewarden_report = $sitewarden_rest->get_report();
-if ( ! isset( $sitewarden_report['report']['score'] ) ) {
+$hardenly_report = $hardenly_rest->get_report();
+if ( ! isset( $hardenly_report['report']['score'] ) ) {
 	$failures[] = 'The scan did not store a report.';
-} elseif ( count( $sitewarden_report['report']['checks'] ) < 33 ) {
-	$failures[] = 'The scan ran ' . count( $sitewarden_report['report']['checks'] ) . ' checks, expected all built-in ones.';
+} elseif ( count( $hardenly_report['report']['checks'] ) < 33 ) {
+	$failures[] = 'The scan ran ' . count( $hardenly_report['report']['checks'] ) . ' checks, expected all built-in ones.';
 } else {
-	foreach ( $sitewarden_report['report']['results'] as $sitewarden_result ) {
+	foreach ( $hardenly_report['report']['results'] as $hardenly_result ) {
 		// A check that throws is reported as skipped with this message: in the build, it means a missing class or function.
-		if ( false !== strpos( $sitewarden_result['message'], 'could not run' ) ) {
-			$failures[] = $sitewarden_result['check_id'] . ': ' . $sitewarden_result['message'];
+		if ( false !== strpos( $hardenly_result['message'], 'could not run' ) ) {
+			$failures[] = $hardenly_result['check_id'] . ': ' . $hardenly_result['message'];
 		}
 	}
 }
 
-$sitewarden_online = [];
-foreach ( $sitewarden_report['report']['results'] ?? [] as $sitewarden_result ) {
-	if ( 0 === strpos( $sitewarden_result['check_id'], 'online.' ) ) {
-		$sitewarden_online[ $sitewarden_result['check_id'] ] = $sitewarden_result['status'];
+$hardenly_online = [];
+foreach ( $hardenly_report['report']['results'] ?? [] as $hardenly_result ) {
+	if ( 0 === strpos( $hardenly_result['check_id'], 'online.' ) ) {
+		$hardenly_online[ $hardenly_result['check_id'] ] = $hardenly_result['status'];
 	}
 }
-if ( 'skipped' !== ( $sitewarden_online['online.vulnerabilities'] ?? '' ) || 'skipped' !== ( $sitewarden_online['online.core_checksums'] ?? '' ) ) {
-	$failures[] = 'The online checks did not run as expected: ' . smoke_json( $sitewarden_online );
+if ( 'skipped' !== ( $hardenly_online['online.vulnerabilities'] ?? '' ) || 'skipped' !== ( $hardenly_online['online.core_checksums'] ?? '' ) ) {
+	$failures[] = 'The online checks did not run as expected: ' . smoke_json( $hardenly_online );
 }
 
 // Ignore and show again a problem the scan found, and skip a file.
-$sitewarden_findings = $GLOBALS['smoke_actions']['rest_api_init'][1][0];
-$sitewarden_problem  = null;
-foreach ( $sitewarden_report['report']['results'] ?? [] as $sitewarden_result ) {
-	if ( 'fail' === $sitewarden_result['status'] ) {
-		$sitewarden_problem = $sitewarden_result['id'];
+$hardenly_findings = $GLOBALS['smoke_actions']['rest_api_init'][1][0];
+$hardenly_problem  = null;
+foreach ( $hardenly_report['report']['results'] ?? [] as $hardenly_result ) {
+	if ( 'fail' === $hardenly_result['status'] ) {
+		$hardenly_problem = $hardenly_result['id'];
 		break;
 	}
 }
-if ( null === $sitewarden_problem ) {
+if ( null === $hardenly_problem ) {
 	$failures[] = 'The scan found no problem to ignore.';
 } else {
-	$sitewarden_ignored = $sitewarden_findings->ignore( smoke_request( 'id', $sitewarden_problem ) );
-	if ( ! is_array( $sitewarden_ignored ) || 1 !== $sitewarden_ignored['report']['ignored'] ) {
+	$hardenly_ignored = $hardenly_findings->ignore( smoke_request( 'id', $hardenly_problem ) );
+	if ( ! is_array( $hardenly_ignored ) || 1 !== $hardenly_ignored['report']['ignored'] ) {
 		$failures[] = 'Ignoring a finding did not work.';
 	}
-	$sitewarden_findings->restore( smoke_request( 'id', $sitewarden_problem ) );
+	$hardenly_findings->restore( smoke_request( 'id', $hardenly_problem ) );
 }
-$sitewarden_skipped = $sitewarden_findings->skip_file( smoke_request( 'path', 'wp-content/uploads/x.php' ) );
-if ( ! is_array( $sitewarden_skipped ) || [ 'wp-content/uploads/x.php' ] !== $sitewarden_skipped['skip_files'] ) {
+$hardenly_skipped = $hardenly_findings->skip_file( smoke_request( 'path', 'wp-content/uploads/x.php' ) );
+if ( ! is_array( $hardenly_skipped ) || [ 'wp-content/uploads/x.php' ] !== $hardenly_skipped['skip_files'] ) {
 	$failures[] = 'Skipping a file did not work.';
 }
 
@@ -616,9 +616,9 @@ if ( ! isset( $GLOBALS['smoke_setting']['sanitize_callback'] ) ) {
 	$failures[] = 'The settings are not registered.';
 }
 ob_start();
-( $GLOBALS['smoke_pages']['sitewarden-settings'] )();
-$sitewarden_settings_html = (string) ob_get_clean();
-if ( false === strpos( $sitewarden_settings_html, 'action="options.php"' ) ) {
+( $GLOBALS['smoke_pages']['hardenly-settings'] )();
+$hardenly_settings_html = (string) ob_get_clean();
+if ( false === strpos( $hardenly_settings_html, 'action="options.php"' ) ) {
 	$failures[] = 'The settings screen did not render.';
 }
 ( $GLOBALS['smoke_activate'] )( false );

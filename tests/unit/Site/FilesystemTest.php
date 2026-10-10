@@ -1,9 +1,9 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Site;
+namespace Hardenly\Tests\Site;
 
-use Sitewarden\Site\Filesystem;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Site\Filesystem;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class FilesystemTest extends CheckTestCase {
 	public function testListDir_Always_ReturnsSortedNamesWithoutDots(): void {

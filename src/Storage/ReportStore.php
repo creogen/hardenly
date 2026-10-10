@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Storage;
+namespace Hardenly\Storage;
 
 use Merkushin\Wpal\Service\Options;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Report\Summary;
+use Hardenly\Report\Summary;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -12,8 +12,8 @@ defined( 'ABSPATH' ) || exit;
  * The latest full report and short summaries of the last scans.
  */
 class ReportStore {
-	public const LATEST_OPTION  = 'sitewarden_latest_report';
-	public const HISTORY_OPTION = 'sitewarden_report_history';
+	public const LATEST_OPTION  = 'hardenly_latest_report';
+	public const HISTORY_OPTION = 'hardenly_report_history';
 	public const HISTORY_SIZE   = 10;
 
 	/**

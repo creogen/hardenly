@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Admin;
+namespace Hardenly\Admin;
 
 use Merkushin\Wpal\Service\Plugins;
 use Merkushin\Wpal\ServiceFactory;
@@ -8,12 +8,12 @@ use Merkushin\Wpal\ServiceFactory;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The top-level "Sitewarden" menu with Dashboard and Settings. Only users who can manage
+ * The top-level "Hardenly" menu with Dashboard and Settings. Only users who can manage
  * options see it.
  */
 class Menu {
 	public const CAPABILITY = 'manage_options';
-	public const SLUG       = 'sitewarden';
+	public const SLUG       = 'hardenly';
 
 	/**
 	 * @var DashboardPage
@@ -45,19 +45,19 @@ class Menu {
 
 	public function register(): void {
 		$top = $this->plugins->add_menu_page(
-			__( 'Sitewarden', 'sitewarden' ),
-			__( 'Sitewarden', 'sitewarden' ),
+			__( 'Hardenly', 'hardenly' ),
+			__( 'Hardenly', 'hardenly' ),
 			self::CAPABILITY,
 			self::SLUG,
 			[ $this->dashboard, 'render' ],
 			'dashicons-shield'
 		);
 
-		// Names the first submenu item "Dashboard" instead of repeating "Sitewarden".
+		// Names the first submenu item "Dashboard" instead of repeating "Hardenly".
 		$dashboard = $this->plugins->add_submenu_page(
 			self::SLUG,
-			__( 'Sitewarden', 'sitewarden' ),
-			__( 'Dashboard', 'sitewarden' ),
+			__( 'Hardenly', 'hardenly' ),
+			__( 'Dashboard', 'hardenly' ),
 			self::CAPABILITY,
 			self::SLUG,
 			[ $this->dashboard, 'render' ]
@@ -65,8 +65,8 @@ class Menu {
 
 		$this->plugins->add_submenu_page(
 			self::SLUG,
-			__( 'Sitewarden Settings', 'sitewarden' ),
-			__( 'Settings', 'sitewarden' ),
+			__( 'Hardenly Settings', 'hardenly' ),
+			__( 'Settings', 'hardenly' ),
 			self::CAPABILITY,
 			SettingsPage::SLUG,
 			[ $this->settings, 'render' ]

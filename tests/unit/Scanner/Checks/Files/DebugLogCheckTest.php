@@ -1,12 +1,12 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks\Files;
+namespace Hardenly\Tests\Scanner\Checks\Files;
 
 use Merkushin\Wpal\Service\Urls;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Checks\Files\DebugLogCheck;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Tests\Scanner\Checks\CheckTestCase;
+use Hardenly\Scanner\Checks\Files\DebugLogCheck;
+use Hardenly\Scanner\Result;
+use Hardenly\Tests\Scanner\Checks\CheckTestCase;
 
 class DebugLogCheckTest extends CheckTestCase {
 	private const LOG_URL = 'https://example.com/wp-content/debug.log';

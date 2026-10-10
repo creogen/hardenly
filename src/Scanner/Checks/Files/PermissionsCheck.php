@@ -1,12 +1,12 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Files;
+namespace Hardenly\Scanner\Checks\Files;
 
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
-use Sitewarden\Site\Filesystem;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
+use Hardenly\Site\Filesystem;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -40,7 +40,7 @@ class PermissionsCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'File permissions', 'sitewarden' );
+		return __( 'File permissions', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -49,7 +49,7 @@ class PermissionsCheck implements Check {
 
 	public function run( Context $context ): array {
 		if ( '\\' === DIRECTORY_SEPARATOR ) {
-			return [ Result::skipped( self::ID, __( 'Windows servers do not use these permissions.', 'sitewarden' ) ) ];
+			return [ Result::skipped( self::ID, __( 'Windows servers do not use these permissions.', 'hardenly' ) ) ];
 		}
 
 		$paths = [ $this->abspath, $this->config_path(), $this->abspath . '/.htaccess' ];
@@ -63,17 +63,17 @@ class PermissionsCheck implements Check {
 		}
 
 		if ( [] === $writable ) {
-			return [ Result::pass( self::ID, __( 'Key files cannot be changed by other users on the server.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'Key files cannot be changed by other users on the server.', 'hardenly' ) ) ];
 		}
 
 		return [
 			Result::fail(
 				self::ID,
 				Result::SEVERITY_HIGH,
-				__( 'Key files can be changed by anyone on the server', 'sitewarden' ),
-				__( 'Set folders to 755 and files to 644 (wp-config.php can be 600 or 640), in your hosting file manager or over SFTP. Ask your host if unsure.', 'sitewarden' ),
+				__( 'Key files can be changed by anyone on the server', 'hardenly' ),
+				__( 'Set folders to 755 and files to 644 (wp-config.php can be 600 or 640), in your hosting file manager or over SFTP. Ask your host if unsure.', 'hardenly' ),
 				$writable,
-				__( 'On shared hosting, other accounts or a compromised site next door could change these files.', 'sitewarden' )
+				__( 'On shared hosting, other accounts or a compromised site next door could change these files.', 'hardenly' )
 			),
 		];
 	}
@@ -92,7 +92,7 @@ class PermissionsCheck implements Check {
 
 	private function relative( string $path ): string {
 		if ( $path === $this->abspath ) {
-			return __( 'WordPress folder', 'sitewarden' );
+			return __( 'WordPress folder', 'hardenly' );
 		}
 		return 0 === strpos( $path, $this->abspath . '/' ) ? substr( $path, strlen( $this->abspath ) + 1 ) : '../' . basename( $path );
 	}

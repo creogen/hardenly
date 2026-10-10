@@ -1,9 +1,9 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Report;
+namespace Hardenly\Report;
 
-use Sitewarden\Storage\ReportStore;
-use Sitewarden\Storage\Settings;
+use Hardenly\Storage\ReportStore;
+use Hardenly\Storage\Settings;
 
 defined( 'ABSPATH' ) || exit;
 

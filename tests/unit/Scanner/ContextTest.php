@@ -1,9 +1,9 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner;
+namespace Hardenly\Tests\Scanner;
 
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Scanner\Context;
+use Hardenly\Scanner\Context;
 
 class ContextTest extends TestCase {
 	/**

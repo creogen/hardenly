@@ -1,14 +1,14 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Scanner\Checks\Versions;
+namespace Hardenly\Scanner\Checks\Versions;
 
 use Merkushin\Wpal\Service\Themes;
 use Merkushin\Wpal\Service\Transient;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Check;
-use Sitewarden\Scanner\Context;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Scanner\Result;
+use Hardenly\Scanner\Check;
+use Hardenly\Scanner\Context;
+use Hardenly\Scanner\Group;
+use Hardenly\Scanner\Result;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -38,7 +38,7 @@ class ThemeUpdatesCheck implements Check {
 	}
 
 	public function title(): string {
-		return __( 'Theme updates', 'sitewarden' );
+		return __( 'Theme updates', 'hardenly' );
 	}
 
 	public function group(): string {
@@ -48,7 +48,7 @@ class ThemeUpdatesCheck implements Check {
 	public function run( Context $context ): array {
 		$updates = $this->transients->get_site_transient( 'update_themes' );
 		if ( ! is_object( $updates ) ) {
-			return [ Result::skipped( self::ID, __( 'WordPress has not checked for theme updates yet.', 'sitewarden' ) ) ];
+			return [ Result::skipped( self::ID, __( 'WordPress has not checked for theme updates yet.', 'hardenly' ) ) ];
 		}
 
 		$installed = (array) $this->themes->wp_get_themes();
@@ -62,7 +62,7 @@ class ThemeUpdatesCheck implements Check {
 		}
 
 		if ( [] === $outdated ) {
-			return [ Result::pass( self::ID, __( 'All themes are up to date.', 'sitewarden' ) ) ];
+			return [ Result::pass( self::ID, __( 'All themes are up to date.', 'hardenly' ) ) ];
 		}
 
 		return [
@@ -70,8 +70,8 @@ class ThemeUpdatesCheck implements Check {
 				self::ID,
 				Result::SEVERITY_HIGH,
 				/* translators: %d: number of themes. */
-				sprintf( _n( '%d theme is out of date', '%d themes are out of date', count( $outdated ), 'sitewarden' ), count( $outdated ) ),
-				__( 'Update them in Appearance > Themes. Inactive themes can be attacked too: update or delete them.', 'sitewarden' ),
+				sprintf( _n( '%d theme is out of date', '%d themes are out of date', count( $outdated ), 'hardenly' ), count( $outdated ) ),
+				__( 'Update them in Appearance > Themes. Inactive themes can be attacked too: update or delete them.', 'hardenly' ),
 				$outdated
 			),
 		];

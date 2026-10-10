@@ -1,12 +1,12 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Checks;
+namespace Hardenly\Tests\Scanner\Checks;
 
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Scanner\Checks\BuiltInChecks;
-use Sitewarden\Scanner\Group;
-use Sitewarden\Users\LastLogin;
-use Sitewarden\Vulnerability\ProviderRegistry;
+use Hardenly\Scanner\Checks\BuiltInChecks;
+use Hardenly\Scanner\Group;
+use Hardenly\Users\LastLogin;
+use Hardenly\Vulnerability\ProviderRegistry;
 
 class BuiltInChecksTest extends TestCase {
 	public function testAll_Always_HaveUniqueValidIdsInKnownGroups(): void {

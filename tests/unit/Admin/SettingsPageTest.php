@@ -1,6 +1,6 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Admin;
+namespace Hardenly\Tests\Admin;
 
 use Merkushin\Wpal\Service\Capabilities;
 use Merkushin\Wpal\Service\Dates;
@@ -10,11 +10,11 @@ use Merkushin\Wpal\Service\Settings as SettingsApi;
 use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Admin\SettingsPage;
-use Sitewarden\Cron\Schedule;
-use Sitewarden\Storage\Settings;
-use Sitewarden\Vulnerability\ProviderRegistry;
-use Sitewarden\Vulnerability\VulnerabilityProvider;
+use Hardenly\Admin\SettingsPage;
+use Hardenly\Cron\Schedule;
+use Hardenly\Storage\Settings;
+use Hardenly\Vulnerability\ProviderRegistry;
+use Hardenly\Vulnerability\VulnerabilityProvider;
 use Merkushin\Wpal\Service\Hooks;
 use Merkushin\Wpal\Service\Transient;
 use Merkushin\Wpal\Service\Urls;
@@ -93,8 +93,8 @@ class SettingsPageTest extends TestCase {
 		$this->settings_api->expects( self::once() )
 			->method( 'register_setting' )
 			->with(
-				'sitewarden',
-				'sitewarden_settings',
+				'hardenly',
+				'hardenly_settings',
 				self::callback(
 					static function ( array $args ): bool {
 						return is_callable( $args['sanitize_callback'] ) && false === $args['show_in_rest'];
@@ -106,14 +106,14 @@ class SettingsPageTest extends TestCase {
 	}
 
 	public function testRender_Administrator_OutputsTheFormWithNonce(): void {
-		$this->nonces->expects( self::once() )->method( 'wp_nonce_field' )->with( 'sitewarden-options' );
+		$this->nonces->expects( self::once() )->method( 'wp_nonce_field' )->with( 'hardenly-options' );
 
 		$html = $this->render( $this->page( [ 'disabled_groups' => [ 'code' ] ] ) );
 
 		self::assertStringContainsString( 'action="options.php"', $html );
-		self::assertStringContainsString( 'name="option_page" value="sitewarden"', $html );
-		self::assertMatchesRegularExpression( '~name="sitewarden_settings\[groups\]\[config\]" value="1" checked~', $html );
-		self::assertMatchesRegularExpression( '~name="sitewarden_settings\[groups\]\[code\]" value="1" >~', $html );
+		self::assertStringContainsString( 'name="option_page" value="hardenly"', $html );
+		self::assertMatchesRegularExpression( '~name="hardenly_settings\[groups\]\[config\]" value="1" checked~', $html );
+		self::assertMatchesRegularExpression( '~name="hardenly_settings\[groups\]\[code\]" value="1" >~', $html );
 	}
 
 	public function testRender_StoredValues_AreEscaped(): void {
@@ -134,7 +134,7 @@ class SettingsPageTest extends TestCase {
 
 		self::assertStringNotContainsString( '<script>', $html );
 		self::assertStringNotContainsString( '<img', $html );
-		self::assertStringContainsString( 'name="sitewarden_settings[restore][config.salts]"', $html );
+		self::assertStringContainsString( 'name="hardenly_settings[restore][config.salts]"', $html );
 	}
 
 	public function testRender_SavedKey_ShowsOnlyItsLastCharacters(): void {
@@ -151,15 +151,15 @@ class SettingsPageTest extends TestCase {
 		self::assertStringContainsString( 'A key ending in wxyz is saved.', $html );
 		self::assertStringContainsString( 'I agree to send slugs to Fake DB.', $html );
 		self::assertStringContainsString( 'Lookups do not run until you agree.', $html );
-		self::assertStringContainsString( 'name="action" value="sitewarden_test_provider"', $html );
+		self::assertStringContainsString( 'name="action" value="hardenly_test_provider"', $html );
 	}
 
 	public function testRender_OnlineServices_AreOffByDefault(): void {
 		$html = $this->render( $this->page( [] ) );
 
-		self::assertMatchesRegularExpression( '~name="sitewarden_settings\[checksums_enabled\]" value="1" >~', $html );
-		self::assertMatchesRegularExpression( '~name="sitewarden_settings\[vuln_provider\]" value="" checked>~', $html );
-		self::assertStringNotContainsString( 'sitewarden_test_provider', $html, 'Nothing to test without a key.' );
+		self::assertMatchesRegularExpression( '~name="hardenly_settings\[checksums_enabled\]" value="1" >~', $html );
+		self::assertMatchesRegularExpression( '~name="hardenly_settings\[vuln_provider\]" value="" checked>~', $html );
+		self::assertStringNotContainsString( 'hardenly_test_provider', $html, 'Nothing to test without a key.' );
 	}
 
 	public function testTest_ConsentGiven_StoresTheProviderAnswer(): void {
@@ -184,7 +184,7 @@ class SettingsPageTest extends TestCase {
 			]
 		)->test();
 
-		self::assertSame( 'https://example.com/wp-admin/admin.php?page=sitewarden-settings', $back );
+		self::assertSame( 'https://example.com/wp-admin/admin.php?page=hardenly-settings', $back );
 	}
 
 	public function testTest_NoConsent_SendsNothing(): void {

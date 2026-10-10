@@ -1,10 +1,10 @@
 <?php declare( strict_types=1 );
 
-namespace Sitewarden\Tests\Scanner\Code;
+namespace Hardenly\Tests\Scanner\Code;
 
 use PHPUnit\Framework\TestCase;
-use Sitewarden\Scanner\Code\PatternMatcher;
-use Sitewarden\Scanner\Result;
+use Hardenly\Scanner\Code\PatternMatcher;
+use Hardenly\Scanner\Result;
 
 /**
  * Samples are in tests/fixtures/code, as .txt files so no tool treats them as live code.

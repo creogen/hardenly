@@ -1,4 +1,4 @@
-=== Sitewarden ===
+=== Hardenly ===
 Contributors: merkushin
 Tags: security, security scanner, vulnerability, hardening, site health
 Requires at least: 6.2
@@ -12,7 +12,7 @@ Find security problems on your WordPress site and learn how to fix them. Read-on
 
 == Description ==
 
-Sitewarden checks your WordPress site for security problems, gives it a security score, and tells you what to fix and how. It only reads: it never changes, moves or deletes anything on your site, and it works offline unless you turn on an online service.
+Hardenly checks your WordPress site for security problems, gives it a security score, and tells you what to fix and how. It only reads: it never changes, moves or deletes anything on your site, and it works offline unless you turn on an online service.
 
 **What it checks**
 
@@ -38,52 +38,52 @@ Sitewarden checks your WordPress site for security problems, gives it a security
 
 = Privacy =
 
-By default Sitewarden sends nothing outside your site. If you turn on email reports, a summary (score and problem titles, no file paths) is sent with your site's own email setup to the address you choose. It stores its settings, the latest scan results and each user's last login date in your database. Deleting the plugin removes all of it.
+By default Hardenly sends nothing outside your site. If you turn on email reports, a summary (score and problem titles, no file paths) is sent with your site's own email setup to the address you choose. It stores its settings, the latest scan results and each user's last login date in your database. Deleting the plugin removes all of it.
 
 To see what visitors see, some checks send requests from your site to itself (loopback requests, the same kind Site Health uses): the home page (security headers), `/?author=` and `/wp-json/wp/v2/users` (username listing), `xmlrpc.php`, the uploads folder (folder listing), and `debug.log`, `.git` and `.env` when those files exist. The certificate check opens a connection to your own site's address to read its expiry date. None of these requests go to other sites.
 
-Version checks read the update information WordPress already downloads; Sitewarden makes no requests of its own for them. Optional online services are described under "External services".
+Version checks read the update information WordPress already downloads; Hardenly makes no requests of its own for them. Optional online services are described under "External services".
 
 = External services =
 
-Sitewarden works offline by default. These services are used only after you turn them on in Sitewarden > Settings > Online services:
+Hardenly works offline by default. These services are used only after you turn them on in Hardenly > Settings > Online services:
 
-**WordPress.org checksums** ("Compare WordPress core and plugin files with WordPress.org"). During a scan, Sitewarden downloads the official file checksums to find changed or added files. It sends your WordPress version and language to api.wordpress.org, and the slug and version of each installed plugin to downloads.wordpress.org. No site address, users or file contents are sent. [WordPress.org privacy policy](https://wordpress.org/about/privacy/).
+**WordPress.org checksums** ("Compare WordPress core and plugin files with WordPress.org"). During a scan, Hardenly downloads the official file checksums to find changed or added files. It sends your WordPress version and language to api.wordpress.org, and the slug and version of each installed plugin to downloads.wordpress.org. No site address, users or file contents are sent. [WordPress.org privacy policy](https://wordpress.org/about/privacy/).
 
-**WPScan** (vulnerability lookup, with your own API key). During a scan, Sitewarden asks WPScan about known vulnerabilities. It sends your WordPress version and the slugs of installed plugins and themes (not their versions) to wpscan.com, with your API key. Results are kept for a day. The free WPScan plan is for non-commercial use. [WPScan terms](https://wpscan.com/terms/), [privacy policy](https://automattic.com/privacy/).
+**WPScan** (vulnerability lookup, with your own API key). During a scan, Hardenly asks WPScan about known vulnerabilities. It sends your WordPress version and the slugs of installed plugins and themes (not their versions) to wpscan.com, with your API key. Results are kept for a day. The free WPScan plan is for non-commercial use. [WPScan terms](https://wpscan.com/terms/), [privacy policy](https://automattic.com/privacy/).
 
-**Patchstack** (vulnerability lookup, with your own API key). During a scan, Sitewarden sends your WordPress version and the slugs and versions of installed plugins and themes to patchstack.com, with your API key. Results are kept for a day. [Patchstack terms](https://patchstack.com/terms-and-conditions/), [privacy policy](https://patchstack.com/privacy-policy/).
+**Patchstack** (vulnerability lookup, with your own API key). During a scan, Hardenly sends your WordPress version and the slugs and versions of installed plugins and themes to patchstack.com, with your API key. Results are kept for a day. [Patchstack terms](https://patchstack.com/terms-and-conditions/), [privacy policy](https://patchstack.com/privacy-policy/).
 
 You choose at most one vulnerability provider, and lookups run only after you tick the consent box for it.
 
 = Source code =
 
-The uncompiled JavaScript and CSS and the build instructions are at https://github.com/creogen/sitewarden.
+The uncompiled JavaScript and CSS and the build instructions are at https://github.com/creogen/hardenly.
 
 == Installation ==
 
-1. In your dashboard, go to **Plugins → Add New Plugin** and search for "Sitewarden", or upload the plugin zip.
+1. In your dashboard, go to **Plugins → Add New Plugin** and search for "Hardenly", or upload the plugin zip.
 2. Activate the plugin.
-3. Go to **Sitewarden** in the admin menu and click **Run first scan**.
-4. Optional: in **Sitewarden → Settings**, choose what to scan, turn on automatic scans and email reports, and set up online services.
+3. Go to **Hardenly** in the admin menu and click **Run first scan**.
+4. Optional: in **Hardenly → Settings**, choose what to scan, turn on automatic scans and email reports, and set up online services.
 
 == Frequently Asked Questions ==
 
-= Does Sitewarden change or delete anything on my site? =
+= Does Hardenly change or delete anything on my site? =
 
-No. It only reads files and settings and tells you what to fix. Ignoring a finding only hides it in Sitewarden.
+No. It only reads files and settings and tells you what to fix. Ignoring a finding only hides it in Hardenly.
 
 = Can it scan automatically? =
 
-Yes. In Sitewarden > Settings, choose a daily or weekly scan, and optionally an email summary. Scans run through WP-Cron, so they start with the first visit after the scheduled time.
+Yes. In Hardenly > Settings, choose a daily or weekly scan, and optionally an email summary. Scans run through WP-Cron, so they start with the first visit after the scheduled time.
 
 = Does it slow down my site? =
 
-No. Sitewarden does nothing on the front end. Scans run in the background in short steps of a few seconds, through WP-Cron or while the Sitewarden screen is open.
+No. Hardenly does nothing on the front end. Scans run in the background in short steps of a few seconds, through WP-Cron or while the Hardenly screen is open.
 
 = Does it work on multisite? =
 
-Sitewarden scans one site at a time. Activate it on each site you want to scan; activating it for the whole network is not supported.
+Hardenly scans one site at a time. Activate it on each site you want to scan; activating it for the whole network is not supported.
 
 = Do I need an API key? =
 
