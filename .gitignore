@@ -1,0 +1,9 @@
+/node_modules/
+/vendor/
+/vendor-prefixed/
+/build/
+/assets/build/
+/*.zip
+.phpunit.result.cache
+/.claude/settings.local.json
+/.claude/worktrees/

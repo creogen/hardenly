@@ -1,0 +1,12 @@
+# WordPress functions and classes come from szepeviktor/phpstan-wordpress,
+# loaded by phpstan/extension-installer.
+parameters:
+	level: 6
+	phpVersion: 70400
+	paths:
+		- sitewarden.php
+		- uninstall.php
+		- src
+		- tests
+	excludePaths:
+		- tests/fixtures/*/assets/build/*

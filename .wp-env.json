@@ -1,0 +1,8 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
+	"testsEnvironment": false,
+	"plugins": [
+		"./build/sitewarden",
+		"https://downloads.wordpress.org/plugin/plugin-check.latest-stable.zip"
+	]
+}
