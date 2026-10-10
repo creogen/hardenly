@@ -50,18 +50,18 @@ class UploadsPhpCheck extends FileWalkCheck {
 		return empty( $uploads['basedir'] ) ? null : (string) $uploads['basedir'];
 	}
 
-	protected function matches( string $relative, string $absolute, Context $context ): bool {
-		if ( ! in_array( self::extension( $relative ), self::EXTENSIONS, true ) ) {
-			return false;
+	protected function inspect( string $path, string $absolute, Context $context ): ?string {
+		if ( ! in_array( self::extension( $path ), self::EXTENSIONS, true ) ) {
+			return null;
 		}
 		// Small files with nothing but a comment ("Silence is golden") are harmless.
 		if ( $this->filesystem->size( $absolute ) <= 1024 ) {
 			$contents = $this->filesystem->read( $absolute, 1024 );
 			if ( null !== $contents && 1 === preg_match( self::COMMENT_ONLY, $contents ) ) {
-				return false;
+				return null;
 			}
 		}
-		return true;
+		return $path;
 	}
 
 	protected function results( array $matches, int $total ): array {

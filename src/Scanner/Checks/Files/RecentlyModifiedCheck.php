@@ -43,12 +43,12 @@ class RecentlyModifiedCheck extends FileWalkCheck {
 		return $this->abspath;
 	}
 
-	protected function matches( string $relative, string $absolute, Context $context ): bool {
-		if ( 'php' !== self::extension( $relative ) ) {
-			return false;
+	protected function inspect( string $path, string $absolute, Context $context ): ?string {
+		if ( 'php' !== self::extension( $path ) ) {
+			return null;
 		}
 		$days = max( 1, (int) $context->setting( 'modified_days', 7 ) );
-		return $this->filesystem->mtime( $absolute ) >= (int) ( $this->clock )() - $days * DAY_IN_SECONDS;
+		return $this->filesystem->mtime( $absolute ) >= (int) ( $this->clock )() - $days * DAY_IN_SECONDS ? $path : null;
 	}
 
 	protected function results( array $matches, int $total ): array {

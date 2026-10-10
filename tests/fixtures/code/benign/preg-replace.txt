@@ -1,0 +1,5 @@
+<?php
+$s = preg_replace( '/\s+/', ' ', $s );
+$s = preg_replace( '/name/i', 'rename', $s );
+$s = preg_replace( '#/e/#', '/x/', $s );
+$s = preg_replace( array( '/a/', '/b/' ), 'e', $s );

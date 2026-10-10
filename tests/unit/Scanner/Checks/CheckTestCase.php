@@ -59,6 +59,17 @@ abstract class CheckTestCase extends TestCase {
 	}
 
 	/**
+	 * Code of a sample in tests/fixtures/code, without its "expect:" line. Samples live in
+	 * .txt files so the plugin's own suspicious code check does not flag the tests.
+	 *
+	 * @param string $sample Path under tests/fixtures/code, e.g. "suspicious/eval-base64".
+	 */
+	protected static function code_sample( string $sample ): string {
+		$contents = (string) file_get_contents( __DIR__ . '/../../../fixtures/code/' . $sample . '.txt' );
+		return 0 === strpos( $contents, 'expect:' ) ? explode( "\n", $contents, 2 )[1] : $contents;
+	}
+
+	/**
 	 * Constants with the given values; others are undefined.
 	 *
 	 * @param array<string, mixed> $values Values by name.

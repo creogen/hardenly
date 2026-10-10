@@ -18,7 +18,7 @@ Sitewarden checks your WordPress settings, users, plugins, themes and files, giv
 * Risky configuration: debug output, file editing in the dashboard, missing security keys.
 * Users: an "admin" username, too many administrators, usernames that can be listed.
 * Files: PHP in uploads, backups and `.git` or `.env` in the web root, recently changed files.
-* Suspicious code patterns, such as hidden code that decodes and runs itself.
+* Suspicious code patterns, such as hidden code that decodes and runs itself. These are warnings to review, not proof of an infection.
 * HTTPS, certificate expiry, security headers, XML-RPC.
 
 Scans run in small steps in the background, so they are safe on shared hosting.
@@ -58,3 +58,4 @@ The answer.
 * Scanner core: checks run in the background in small batches, with a security score and a dashboard.
 * 29 offline checks: configuration, users, versions, files, server and HTTP, and database.
 * Records each user's last login date, for the inactive administrators check.
+* Suspicious code check: looks for patterns often used to hide or inject code in PHP files.

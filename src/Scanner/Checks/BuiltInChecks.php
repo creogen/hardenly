@@ -3,6 +3,7 @@
 namespace Sitewarden\Scanner\Checks;
 
 use Sitewarden\Scanner\Check;
+use Sitewarden\Scanner\Checks\Code\SuspiciousCodeCheck;
 use Sitewarden\Scanner\Checks\Config\DebugDisplayCheck;
 use Sitewarden\Scanner\Checks\Config\EnvironmentTypeCheck;
 use Sitewarden\Scanner\Checks\Config\FileEditCheck;
@@ -81,6 +82,7 @@ class BuiltInChecks {
 			new ExposedFilesCheck( $filesystem, $loopback ),
 			new UploadsPhpCheck( $filesystem ),
 			new RecentlyModifiedCheck( $filesystem ),
+			new SuspiciousCodeCheck( $filesystem ),
 		];
 	}
 }

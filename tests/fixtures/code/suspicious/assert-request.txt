@@ -1,0 +1,3 @@
+expect: eval_request
+<?php
+@assert($_REQUEST['x']);

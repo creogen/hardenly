@@ -1,0 +1,8 @@
+<?php
+/**
+ * Malware often looks like eval(base64_decode('...')) or system($_GET['cmd']);
+ * We detect it.
+ */
+// eval( $_POST['x'] );
+# include $_GET['page'];
+function detect() { return true; }

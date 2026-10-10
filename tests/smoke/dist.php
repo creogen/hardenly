@@ -383,7 +383,7 @@ foreach ( $GLOBALS['smoke_events'] as $event ) {
 $sitewarden_report = $sitewarden_rest->get_report();
 if ( ! isset( $sitewarden_report['report']['score'] ) ) {
 	$failures[] = 'The scan did not store a report.';
-} elseif ( count( $sitewarden_report['report']['checks'] ) < 29 ) {
+} elseif ( count( $sitewarden_report['report']['checks'] ) < 30 ) {
 	$failures[] = 'The scan ran ' . count( $sitewarden_report['report']['checks'] ) . ' checks, expected all built-in ones.';
 } else {
 	foreach ( $sitewarden_report['report']['results'] as $sitewarden_result ) {
