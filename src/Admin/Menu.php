@@ -8,7 +8,8 @@ use Merkushin\Wpal\ServiceFactory;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The top-level "Sitewarden" menu. Only users who can manage options see it.
+ * The top-level "Sitewarden" menu with Dashboard and Settings. Only users who can manage
+ * options see it.
  */
 class Menu {
 	public const CAPABILITY = 'manage_options';
@@ -20,19 +21,25 @@ class Menu {
 	private $dashboard;
 
 	/**
+	 * @var SettingsPage
+	 */
+	private $settings;
+
+	/**
 	 * @var Plugins
 	 */
 	private $plugins;
 
 	/**
-	 * Hook suffixes of the plugin's screens, set once the menu is registered.
+	 * Hook suffixes of the dashboard screen, set once the menu is registered.
 	 *
 	 * @var string[]
 	 */
 	private $hook_suffixes = [];
 
-	public function __construct( DashboardPage $dashboard ) {
+	public function __construct( DashboardPage $dashboard, SettingsPage $settings ) {
 		$this->dashboard = $dashboard;
+		$this->settings  = $settings;
 		$this->plugins   = ServiceFactory::create_plugins();
 	}
 
@@ -56,6 +63,15 @@ class Menu {
 			[ $this->dashboard, 'render' ]
 		);
 
+		$this->plugins->add_submenu_page(
+			self::SLUG,
+			__( 'Sitewarden Settings', 'sitewarden' ),
+			__( 'Settings', 'sitewarden' ),
+			self::CAPABILITY,
+			SettingsPage::SLUG,
+			[ $this->settings, 'render' ]
+		);
+
 		$this->hook_suffixes = [ $top ];
 		if ( is_string( $dashboard ) ) {
 			$this->hook_suffixes[] = $dashboard;
@@ -63,9 +79,10 @@ class Menu {
 	}
 
 	/**
-	 * Whether a screen, by the hook suffix admin_enqueue_scripts passes, is one of the plugin's.
+	 * Whether a screen, by the hook suffix admin_enqueue_scripts passes, is the dashboard: the
+	 * only screen that loads the plugin's script. Settings is a plain form.
 	 */
-	public function is_plugin_screen( string $hook_suffix ): bool {
+	public function is_dashboard_screen( string $hook_suffix ): bool {
 		return in_array( $hook_suffix, $this->hook_suffixes, true );
 	}
 }

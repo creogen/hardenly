@@ -1,6 +1,6 @@
 import { createElement, Fragment } from '@wordpress/element';
 import { __, _n, sprintf } from '@wordpress/i18n';
-import { groupBySeverity, notes } from '../report';
+import { detailPath, groupBySeverity, ignoredProblems, notes } from '../report';
 import Icon from './Icon';
 
 const SEVERITY_LABELS = {
@@ -14,7 +14,48 @@ const SEVERITY_LABELS = {
 /** Severities whose findings start expanded. */
 const OPEN_SEVERITIES = [ 'critical', 'high' ];
 
-function Finding( { result, groupLabel, open } ) {
+function Detail( { result, detail, skipFiles, actions, busy } ) {
+	const path = actions && detailPath( result.check_id, detail );
+	let action = null;
+	if ( path && skipFiles.includes( path ) ) {
+		action = (
+			<span className="sitewarden-muted">
+				{ __( 'Skipped from the next scan', 'sitewarden' ) }
+			</span>
+		);
+	} else if ( path ) {
+		action = (
+			<button
+				type="button"
+				className="button-link"
+				onClick={ () => actions.skip( path ) }
+				disabled={ busy }
+				aria-label={ sprintf(
+					/* translators: %s: file path. */
+					__( 'Skip %s in future scans', 'sitewarden' ),
+					path
+				) }
+			>
+				{ __( 'Skip this file', 'sitewarden' ) }
+			</button>
+		);
+	}
+
+	return (
+		<li>
+			<code>{ detail }</code> { action }
+		</li>
+	);
+}
+
+function Finding( {
+	result,
+	groupLabel,
+	open,
+	skipFiles = [],
+	actions = null,
+	busy = false,
+} ) {
 	const hidden = result.details_total - result.details.length;
 
 	return (
@@ -37,9 +78,14 @@ function Finding( { result, groupLabel, open } ) {
 				{ result.details.length > 0 && (
 					<ul className="sitewarden-finding__details">
 						{ result.details.map( ( detail, index ) => (
-							<li key={ index }>
-								<code>{ detail }</code>
-							</li>
+							<Detail
+								key={ index }
+								result={ result }
+								detail={ detail }
+								skipFiles={ skipFiles }
+								actions={ result.ignored ? null : actions }
+								busy={ busy }
+							/>
 						) ) }
 						{ hidden > 0 && (
 							<li className="sitewarden-muted">
@@ -63,13 +109,61 @@ function Finding( { result, groupLabel, open } ) {
 						{ result.remediation }
 					</div>
 				) }
+				{ actions && (
+					<div className="sitewarden-finding__actions">
+						{ result.ignored ? (
+							<button
+								type="button"
+								className="button-link"
+								onClick={ () => actions.restore( result.id ) }
+								disabled={ busy }
+							>
+								{ __( 'Show again', 'sitewarden' ) }
+							</button>
+						) : (
+							<button
+								type="button"
+								className="button-link"
+								onClick={ () => actions.ignore( result.id ) }
+								disabled={ busy }
+							>
+								{ __( 'Ignore this finding', 'sitewarden' ) }
+							</button>
+						) }
+					</div>
+				) }
 			</div>
 		</details>
 	);
 }
 
-export default function Findings( { report, groups } ) {
+function Section( { id, title, icon, className = '', children } ) {
+	return (
+		<section
+			className="sitewarden-findings"
+			aria-labelledby={ `sitewarden-findings-${ id }` }
+		>
+			<h2
+				id={ `sitewarden-findings-${ id }` }
+				className={ `sitewarden-findings__title ${ className }` }
+			>
+				<Icon name={ icon } />
+				{ title }
+			</h2>
+			{ children }
+		</section>
+	);
+}
+
+export default function Findings( {
+	report,
+	groups,
+	skipFiles = [],
+	actions = null,
+	busy = false,
+} ) {
 	const bySeverity = groupBySeverity( report.results );
+	const ignored = ignoredProblems( report.results );
 	const notesList = notes( report.results );
 	const groupOf = ( result ) =>
 		groups[ report.checks[ result.check_id ]?.group ] ??
@@ -77,7 +171,7 @@ export default function Findings( { report, groups } ) {
 
 	return (
 		<>
-			{ bySeverity.length === 0 ? (
+			{ bySeverity.length === 0 && (
 				<div className="notice notice-success inline">
 					<p>
 						{ __(
@@ -86,57 +180,74 @@ export default function Findings( { report, groups } ) {
 						) }
 					</p>
 				</div>
-			) : (
-				<Problems bySeverity={ bySeverity } groupOf={ groupOf } />
 			) }
-			{ notesList.length > 0 && (
-				<section
-					className="sitewarden-findings"
-					aria-labelledby="sitewarden-findings-notes"
+			{ bySeverity.map( ( { severity, results } ) => (
+				<Section
+					key={ severity }
+					id={ severity }
+					title={ SEVERITY_LABELS[ severity ] }
+					icon={ severity }
+					className={ `sitewarden-severity--${ severity }` }
 				>
-					<h2
-						id="sitewarden-findings-notes"
-						className="sitewarden-findings__title"
-					>
-						<Icon name="info" />
-						{ __( 'Notes', 'sitewarden' ) }
-					</h2>
-					{ notesList.map( ( result, index ) => (
+					{ results.map( ( result, index ) => (
 						<Finding
-							key={ `${ result.check_id }:${ result.key }:${ index }` }
+							key={ `${ result.id }:${ index }` }
 							result={ result }
 							groupLabel={ groupOf( result ) }
+							skipFiles={ skipFiles }
+							actions={ actions }
+							busy={ busy }
+							open={ OPEN_SEVERITIES.includes( severity ) }
+						/>
+					) ) }
+				</Section>
+			) ) }
+			{ notesList.length > 0 && (
+				<Section
+					id="notes"
+					title={ __( 'Notes', 'sitewarden' ) }
+					icon="info"
+				>
+					{ notesList.map( ( result, index ) => (
+						<Finding
+							key={ `${ result.id }:${ index }` }
+							result={ result }
+							groupLabel={ groupOf( result ) }
+							actions={ null }
 							open={ false }
 						/>
 					) ) }
-				</section>
+				</Section>
+			) }
+			{ ignored.length > 0 && (
+				<Section
+					id="ignored"
+					title={ sprintf(
+						/* translators: %d: number of ignored findings. */
+						__( 'Ignored (%d)', 'sitewarden' ),
+						ignored.length
+					) }
+					icon="pass"
+				>
+					<p className="sitewarden-muted">
+						{ __(
+							'Ignored findings do not count in the score, the problem counts or the email.',
+							'sitewarden'
+						) }
+					</p>
+					{ ignored.map( ( result, index ) => (
+						<Finding
+							key={ `${ result.id }:${ index }` }
+							result={ result }
+							groupLabel={ groupOf( result ) }
+							skipFiles={ skipFiles }
+							actions={ actions }
+							busy={ busy }
+							open={ false }
+						/>
+					) ) }
+				</Section>
 			) }
 		</>
 	);
-}
-
-function Problems( { bySeverity, groupOf } ) {
-	return bySeverity.map( ( { severity, results } ) => (
-		<section
-			key={ severity }
-			className="sitewarden-findings"
-			aria-labelledby={ `sitewarden-findings-${ severity }` }
-		>
-			<h2
-				id={ `sitewarden-findings-${ severity }` }
-				className={ `sitewarden-findings__title sitewarden-severity--${ severity }` }
-			>
-				<Icon name={ severity } />
-				{ SEVERITY_LABELS[ severity ] }
-			</h2>
-			{ results.map( ( result, index ) => (
-				<Finding
-					key={ `${ result.check_id }:${ result.key }:${ index }` }
-					result={ result }
-					groupLabel={ groupOf( result ) }
-					open={ OPEN_SEVERITIES.includes( severity ) }
-				/>
-			) ) }
-		</section>
-	) );
 }

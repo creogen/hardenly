@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-10T11:10:28+00:00\n"
+"POT-Creation-Date: 2026-10-10T11:41:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: sitewarden\n"
@@ -17,10 +17,10 @@ msgstr ""
 #. Plugin Name of the plugin
 #: sitewarden.php
 #: src/Admin/DashboardPage.php:32
-#: src/Admin/Menu.php:41
-#: src/Admin/Menu.php:42
-#: src/Admin/Menu.php:52
-#: assets/src/admin/App.js:124
+#: src/Admin/Menu.php:48
+#: src/Admin/Menu.php:49
+#: src/Admin/Menu.php:59
+#: assets/src/admin/App.js:139
 msgid "Sitewarden"
 msgstr ""
 
@@ -40,7 +40,7 @@ msgid "Dmitry Merkushin"
 msgstr ""
 
 #: src/Admin/DashboardPage.php:33
-#: assets/src/admin/App.js:116
+#: assets/src/admin/App.js:131
 msgid "Loading…"
 msgstr ""
 
@@ -48,11 +48,204 @@ msgstr ""
 msgid "The Sitewarden dashboard needs JavaScript."
 msgstr ""
 
-#: src/Admin/Menu.php:53
+#: src/Admin/Menu.php:60
 msgid "Dashboard"
 msgstr ""
 
-#: src/Rest/ScanController.php:119
+#: src/Admin/Menu.php:68
+#: src/Admin/SettingsPage.php:96
+msgid "Sitewarden Settings"
+msgstr ""
+
+#: src/Admin/Menu.php:69
+msgid "Settings"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:104
+msgid "What to scan"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:107
+#: src/Admin/SettingsPage.php:110
+msgid "Checks"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:125
+#: src/Scanner/Checks/Files/RecentlyModifiedCheck.php:39
+msgid "Recently changed files"
+msgstr ""
+
+#. translators: %s: number input for days.
+#: src/Admin/SettingsPage.php:130
+#, php-format
+msgid "Report PHP files changed in the last %s days"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:137
+msgid "Files to skip"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:140
+msgid "One file or folder per line, relative to the WordPress folder. File checks never report them. \"Ignore this file\" on the dashboard adds lines here."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:145
+msgid "Schedule and email"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:148
+msgid "Automatic scan"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:159
+#: src/Admin/SettingsPage.php:162
+msgid "Email report"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:166
+msgid "Email a summary after automatic scans"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:172
+msgid "Only when the score drops or a new high or critical problem appears"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:179
+msgid "Send to"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:182
+msgid "Leave empty to use the site admin email. The email lists scores and problems, never file paths."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:187
+msgid "Ignored findings"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:189
+msgid "No findings are ignored. Use \"Ignore this finding\" on the dashboard to hide a finding you have reviewed."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:194
+msgid "Finding"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:195
+msgid "Ignored"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:196
+#: assets/src/admin/components/Findings.js:121
+msgid "Show again"
+msgstr ""
+
+#. translators: 1: date, 2: username.
+#: src/Admin/SettingsPage.php:208
+#, php-format
+msgid "%1$s by %2$s"
+msgstr ""
+
+#. translators: %s: finding.
+#: src/Admin/SettingsPage.php:221
+#, php-format
+msgid "Show \"%s\" again"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:233
+msgid "Save Changes"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:248
+msgid "Debug output, file editing, HTTPS for the dashboard, security keys."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:249
+msgid "An \"admin\" username, number of administrators, inactive administrators, username listing."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:250
+msgid "Outdated WordPress, plugins, themes and PHP; unused plugins and themes."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:251
+msgid "HTTPS, certificate expiry, security headers, folder listing, XML-RPC. Requests go only to your own site."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:252
+msgid "Table prefix and size of autoloaded options."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:253
+msgid "PHP in uploads, file permissions, backups, debug log, .git and .env, recent changes."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:254
+msgid "Hidden or injected code in PHP files. The slowest check; findings need review."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:269
+msgid "Off"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:270
+msgid "Weekly"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:271
+msgid "Daily"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:278
+msgid "Scans run only when you start them."
+msgstr ""
+
+#. translators: %s: date and time.
+#: src/Admin/SettingsPage.php:283
+#, php-format
+msgid "Next scan: %s. WP-Cron starts it with the first visit after that time."
+msgstr ""
+
+#. translators: 1: site name, 2: security score, 3: change since the previous scan, e.g. " (-6)".
+#: src/Report/EmailReport.php:127
+#, php-format
+msgid "[%1$s] Sitewarden security score: %2$d%3$s"
+msgstr ""
+
+#. translators: 1: security score, 2: change since the previous scan, e.g. " (-6)".
+#: src/Report/EmailReport.php:142
+#, php-format
+msgid "Security score: %1$d of 100%2$s"
+msgstr ""
+
+#. translators: 1: critical, 2: high, 3: medium, 4: low problem counts.
+#: src/Report/EmailReport.php:146
+#, php-format
+msgid "Problems: %1$d critical, %2$d high, %3$d medium, %4$d low"
+msgstr ""
+
+#: src/Report/EmailReport.php:157
+msgid "Main problems:"
+msgstr ""
+
+#. translators: %s: link to the Sitewarden dashboard.
+#: src/Report/EmailReport.php:165
+#, php-format
+msgid "Details and how to fix them: %s"
+msgstr ""
+
+#: src/Report/EmailReport.php:167
+msgid "The score is an indicator, not a guarantee that the site is secure. You get this email because email reports are on in Sitewarden > Settings."
+msgstr ""
+
+#: src/Rest/FindingsController.php:159
+msgid "This is not a path inside the WordPress folder."
+msgstr ""
+
+#: src/Rest/FindingsController.php:179
+msgid "This finding is not in the latest report."
+msgstr ""
+
+#: src/Rest/ScanController.php:117
 msgid "A scan is already running."
 msgstr ""
 
@@ -347,10 +540,6 @@ msgstr ""
 
 #: src/Scanner/Checks/Files/PermissionsCheck.php:95
 msgid "WordPress folder"
-msgstr ""
-
-#: src/Scanner/Checks/Files/RecentlyModifiedCheck.php:39
-msgid "Recently changed files"
 msgstr ""
 
 #: src/Scanner/Checks/Files/RecentlyModifiedCheck.php:56
@@ -914,12 +1103,12 @@ msgstr ""
 msgid "The last scan was stopped."
 msgstr ""
 
-#: assets/src/admin/App.js:133
+#: assets/src/admin/App.js:148
 msgid "Run scan"
 msgstr ""
 
 #. translators: %s: date and time of the last scan.
-#: assets/src/admin/App.js:140
+#: assets/src/admin/App.js:155
 #, js-format
 msgid "Last scan: %s"
 msgstr ""
@@ -948,28 +1137,56 @@ msgstr ""
 msgid "Info"
 msgstr ""
 
-#: assets/src/admin/components/Findings.js:28
+#: assets/src/admin/components/Findings.js:23
+msgid "Skipped from the next scan"
+msgstr ""
+
+#. translators: %s: file path.
+#: assets/src/admin/components/Findings.js:35
+#, js-format
+msgid "Skip %s in future scans"
+msgstr ""
+
+#: assets/src/admin/components/Findings.js:39
+msgid "Skip this file"
+msgstr ""
+
+#: assets/src/admin/components/Findings.js:69
 msgid "Not checked"
 msgstr ""
 
 #. translators: %d: number of items not shown.
-#: assets/src/admin/components/Findings.js:48
+#: assets/src/admin/components/Findings.js:94
 #, js-format
 msgid "and %d more"
 msgid_plural "and %d more"
 msgstr[0] ""
 msgstr[1] ""
 
-#: assets/src/admin/components/Findings.js:62
+#: assets/src/admin/components/Findings.js:108
 msgid "How to fix:"
 msgstr ""
 
-#: assets/src/admin/components/Findings.js:83
+#: assets/src/admin/components/Findings.js:130
+msgid "Ignore this finding"
+msgstr ""
+
+#: assets/src/admin/components/Findings.js:177
 msgid "No problems found. Keep WordPress, plugins and themes up to date and scan regularly."
 msgstr ""
 
-#: assets/src/admin/components/Findings.js:102
+#: assets/src/admin/components/Findings.js:208
 msgid "Notes"
+msgstr ""
+
+#. translators: %d: number of ignored findings.
+#: assets/src/admin/components/Findings.js:227
+#, js-format
+msgid "Ignored (%d)"
+msgstr ""
+
+#: assets/src/admin/components/Findings.js:233
+msgid "Ignored findings do not count in the score, the problem counts or the email."
 msgstr ""
 
 #: assets/src/admin/components/FirstRun.js:16

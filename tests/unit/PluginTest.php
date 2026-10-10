@@ -9,9 +9,15 @@ use Merkushin\Wpal\ServiceFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Sitewarden\Admin\Menu;
+use Sitewarden\Admin\SettingsPage;
+use Sitewarden\Cron\Schedule;
+use Sitewarden\Report\EmailReport;
+use Sitewarden\Report\ReportRefresher;
+use Sitewarden\Rest\FindingsController;
 use Sitewarden\Plugin;
 use Sitewarden\Rest\ScanController;
 use Sitewarden\Scanner\Scanner;
+use Sitewarden\Users\LastLogin;
 
 /**
  * Each WordPress function the plugin calls goes through a WPAL service; the tests swap the
@@ -42,7 +48,7 @@ class PluginTest extends TestCase {
 	/**
 	 * Callbacks added with add_action(), by hook.
 	 *
-	 * @var array<string, callable>
+	 * @var array<string, callable[]>
 	 */
 	private $actions = [];
 
@@ -56,7 +62,7 @@ class PluginTest extends TestCase {
 
 		$this->hooks->method( 'add_action' )->willReturnCallback(
 			function ( string $hook, callable $callback ): bool {
-				$this->actions[ $hook ] = $callback;
+				$this->actions[ $hook ][] = $callback;
 				return true;
 			}
 		);
@@ -75,7 +81,7 @@ class PluginTest extends TestCase {
 	private function plugin_in_admin( string $file = self::PLUGIN_FILE ): Plugin {
 		$plugin = new Plugin( $file );
 		$plugin->init();
-		( $this->actions['admin_menu'] )();
+		( $this->actions['admin_menu'][0] )();
 		return $plugin;
 	}
 
@@ -84,14 +90,32 @@ class PluginTest extends TestCase {
 
 		$plugin->init();
 
-		self::assertSame( [ 'admin_menu', 'admin_enqueue_scripts', 'rest_api_init', Scanner::TICK_HOOK, 'wp_login' ], array_keys( $this->actions ) );
-		self::assertEquals( [ $plugin, 'enqueue_admin_assets' ], $this->actions['admin_enqueue_scripts'] );
-		self::assertIsArray( $this->actions['admin_menu'] );
-		self::assertInstanceOf( Menu::class, $this->actions['admin_menu'][0] );
-		self::assertIsArray( $this->actions['rest_api_init'] );
-		self::assertInstanceOf( ScanController::class, $this->actions['rest_api_init'][0] );
-		self::assertIsArray( $this->actions[ Scanner::TICK_HOOK ] );
-		self::assertInstanceOf( Scanner::class, $this->actions[ Scanner::TICK_HOOK ][0] );
+		$classes = array_map(
+			static function ( array $callbacks ): array {
+				return array_map(
+					static function ( $callback ): string {
+						return is_array( $callback ) && is_object( $callback[0] ) ? get_class( $callback[0] ) . '::' . $callback[1] : 'other';
+					},
+					$callbacks
+				);
+			},
+			$this->actions
+		);
+		self::assertSame(
+			[
+				'admin_menu'                        => [ Menu::class . '::register' ],
+				'admin_init'                        => [ SettingsPage::class . '::register' ],
+				'admin_enqueue_scripts'             => [ Plugin::class . '::enqueue_admin_assets' ],
+				'rest_api_init'                     => [ ScanController::class . '::register_routes', FindingsController::class . '::register_routes' ],
+				Scanner::TICK_HOOK                  => [ Scanner::class . '::handle_tick_event' ],
+				Schedule::HOOK                      => [ Schedule::class . '::run' ],
+				'add_option_sitewarden_settings'    => [ Schedule::class . '::sync' ],
+				'update_option_sitewarden_settings' => [ Schedule::class . '::sync', ReportRefresher::class . '::refresh' ],
+				'sitewarden_scan_completed'         => [ EmailReport::class . '::maybe_send' ],
+				'wp_login'                          => [ LastLogin::class . '::record' ],
+			],
+			$classes
+		);
 	}
 
 	public function testEnqueueAdminAssets_OtherScreen_EnqueuesNothing(): void {

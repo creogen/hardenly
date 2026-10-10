@@ -8,6 +8,13 @@ use Merkushin\Wpal\Service\Plugins;
 use Merkushin\Wpal\ServiceFactory;
 use Sitewarden\Admin\DashboardPage;
 use Sitewarden\Admin\Menu;
+use Sitewarden\Admin\SettingsPage;
+use Sitewarden\Cron\Schedule;
+use Sitewarden\Report\EmailReport;
+use Sitewarden\Report\ReportRefresher;
+use Sitewarden\Report\Summary;
+use Sitewarden\Rest\FindingsController;
+use Sitewarden\Rest\ReportPayload;
 use Sitewarden\Rest\ScanController;
 use Sitewarden\Scanner\Checks\BuiltInChecks;
 use Sitewarden\Scanner\CheckRegistry;
@@ -78,22 +85,36 @@ class Plugin {
 		$last_login = new LastLogin();
 		$last_login->start();
 
-		$reports    = new ReportStore();
-		$scanner    = new Scanner(
+		$settings      = new Settings();
+		$reports       = new ReportStore();
+		$summary       = new Summary( $this->score() );
+		$scanner       = new Scanner(
 			new CheckRegistry( BuiltInChecks::all( $last_login ) ),
 			new RunStore(),
 			$reports,
-			new Settings(),
+			$settings,
 			new Lock( 'sitewarden_lock' ),
-			$this->score()
+			$summary
 		);
-		$rest       = new ScanController( $scanner, $reports );
-		$this->menu = new Menu( new DashboardPage() );
+		$schedule      = new Schedule( $scanner, $settings );
+		$settings_page = new SettingsPage( $settings, $schedule );
+		$scans         = new ScanController( $scanner, new ReportPayload( $reports, $settings ) );
+		$refresher     = new ReportRefresher( $reports, $settings, $summary );
+		$findings      = new FindingsController( $scans, $reports, $settings, $refresher );
+		$email         = new EmailReport( $settings, $reports );
+		$this->menu    = new Menu( new DashboardPage(), $settings_page );
 
 		$this->hooks->add_action( 'admin_menu', [ $this->menu, 'register' ] );
+		$this->hooks->add_action( 'admin_init', [ $settings_page, 'register' ] );
 		$this->hooks->add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
-		$this->hooks->add_action( 'rest_api_init', [ $rest, 'register_routes' ] );
+		$this->hooks->add_action( 'rest_api_init', [ $scans, 'register_routes' ] );
+		$this->hooks->add_action( 'rest_api_init', [ $findings, 'register_routes' ] );
 		$this->hooks->add_action( Scanner::TICK_HOOK, [ $scanner, 'handle_tick_event' ] );
+		$this->hooks->add_action( Schedule::HOOK, [ $schedule, 'run' ] );
+		$this->hooks->add_action( 'add_option_' . Settings::OPTION, [ $schedule, 'sync' ] );
+		$this->hooks->add_action( 'update_option_' . Settings::OPTION, [ $schedule, 'sync' ] );
+		$this->hooks->add_action( 'update_option_' . Settings::OPTION, [ $refresher, 'refresh' ] );
+		$this->hooks->add_action( 'sitewarden_scan_completed', [ $email, 'maybe_send' ] );
 		$this->hooks->add_action( 'wp_login', [ $last_login, 'record' ], 10, 2 );
 	}
 
@@ -103,7 +124,7 @@ class Plugin {
 	 * @param string $hook_suffix Screen being loaded, passed by admin_enqueue_scripts.
 	 */
 	public function enqueue_admin_assets( $hook_suffix = '' ): void {
-		if ( null === $this->menu || ! $this->menu->is_plugin_screen( (string) $hook_suffix ) ) {
+		if ( null === $this->menu || ! $this->menu->is_dashboard_screen( (string) $hook_suffix ) ) {
 			return;
 		}
 		$this->enqueue_entry( 'admin' );

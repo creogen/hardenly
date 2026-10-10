@@ -5,9 +5,7 @@ namespace Sitewarden\Rest;
 use Merkushin\Wpal\Service\Capabilities;
 use Merkushin\Wpal\Service\RestApi;
 use Merkushin\Wpal\ServiceFactory;
-use Sitewarden\Scanner\Group;
 use Sitewarden\Scanner\Scanner;
-use Sitewarden\Storage\ReportStore;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
@@ -31,9 +29,9 @@ class ScanController {
 	private $scanner;
 
 	/**
-	 * @var ReportStore
+	 * @var ReportPayload
 	 */
-	private $reports;
+	private $payload;
 
 	/**
 	 * @var RestApi
@@ -45,9 +43,9 @@ class ScanController {
 	 */
 	private $capabilities;
 
-	public function __construct( Scanner $scanner, ReportStore $reports ) {
+	public function __construct( Scanner $scanner, ReportPayload $payload ) {
 		$this->scanner      = $scanner;
-		$this->reports      = $reports;
+		$this->payload      = $payload;
 		$this->rest         = ServiceFactory::create_rest_api();
 		$this->capabilities = ServiceFactory::create_capabilities();
 	}
@@ -146,10 +144,6 @@ class ScanController {
 	 * @return array<string, mixed>
 	 */
 	public function get_report(): array {
-		return [
-			'report'  => $this->reports->latest(),
-			'history' => $this->reports->history(),
-			'groups'  => Group::labels(),
-		];
+		return $this->payload->build();
 	}
 }

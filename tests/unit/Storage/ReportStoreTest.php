@@ -37,10 +37,63 @@ class ReportStoreTest extends TestCase {
 					'finished_at' => 100,
 					'score'       => 80,
 					'counts'      => [ 'high' => 1 ],
+					'serious'     => [],
 				],
 			],
 			$store->history()
 		);
+	}
+
+	public function testReplaceLatest_SameReport_UpdatesReportAndItsSummary(): void {
+		$store = new ReportStore();
+		$store->save(
+			[
+				'id'    => 'old',
+				'score' => 50,
+			]
+		);
+		$store->save(
+			[
+				'id'    => 'new',
+				'score' => 60,
+			]
+		);
+
+		$store->replace_latest(
+			[
+				'id'    => 'new',
+				'score' => 75,
+			]
+		);
+
+		self::assertSame( 75, ( $store->latest() ?? [] )['score'] );
+		self::assertSame( [ 75, 50 ], array_column( $store->history(), 'score' ) );
+	}
+
+	public function testSave_SeriousProblems_AreRememberedInTheSummary(): void {
+		$store = new ReportStore();
+
+		$store->save(
+			[
+				'id'      => 'r1',
+				'results' => [
+					[
+						'check_id' => 'a',
+						'key'      => '',
+						'status'   => 'fail',
+						'severity' => 'high',
+					],
+					[
+						'check_id' => 'b',
+						'key'      => '',
+						'status'   => 'fail',
+						'severity' => 'low',
+					],
+				],
+			]
+		);
+
+		self::assertSame( [ 'a' ], $store->history()[0]['serious'] );
 	}
 
 	public function testSave_ManyReports_KeepsNewestSummaries(): void {

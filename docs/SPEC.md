@@ -169,7 +169,13 @@ src/Cron/Schedule.php         scheduled scan
 Action Scheduler is **not** bundled. WP-Cron is enough and keeps the plugin small.
 
 ### 4.2 Storage
-- `sitewarden_settings`: all settings in one option.
+- `sitewarden_settings`: all settings in one option (`Storage\Settings`): `disabled_groups`, `modified_days`,
+  `skip_files`, `ignored` (finding id => message, date, user), `schedule` (off/daily/weekly), `email_enabled`,
+  `email_only_changes`, `email_to`. Every write goes through `Settings::sanitize()`; the Settings screen posts to
+  `options.php` and is mapped by `Settings::sanitize_form()`.
+- Ignored findings: a finding id is the check id, plus `:key` for checks with several results. `Report\Summary`
+  leaves ignored findings out of score and counts; `Report\ReportRefresher` recomputes the latest report and its
+  history entry whenever the settings change (`update_option_sitewarden_settings`).
 - `sitewarden_latest_report`: full latest report (findings capped, e.g. 500 per check).
 - `sitewarden_report_history`: last 10 summaries (date, score, counts).
 - `sitewarden_run_state`: option for the active (or last failed/stopped) run.
@@ -181,10 +187,16 @@ Action Scheduler is **not** bundled. WP-Cron is enough and keeps the plugin smal
 (critical 25, high 15, medium 8, low 3, caps per group so one group cannot zero the score). Weights live in one
 class and are covered by unit tests. Show the score as an indicator, not a guarantee.
 
-### 4.4 Email (optional, off by default)
-Daily/weekly/off. Recipient defaults to the admin email, editable. Plain-text summary: score, change since last
-scan, counts by severity, top findings, link to the dashboard. No full file lists in email. Uses `wp_mail()`.
-Send only when the score drops or new high/critical findings appear (setting: "only on changes").
+### 4.4 Schedule and email (optional, off by default)
+Automatic scans: off/daily/weekly, a WP-Cron event `sitewarden_scheduled_scan` (`Cron\Schedule`) kept in sync with
+the setting on every settings save; first run an hour after turning it on. Both cron hooks are cleared on
+deactivation and uninstall.
+
+Email (`Report\EmailReport`), after **automatic** scans only. Recipient defaults to the admin email, editable.
+Plain-text summary: score, change since last scan, counts by severity, top 10 problems (titles only), link to the
+dashboard. No file paths or other details from disk. Uses `wp_mail()`. With "only on changes" (default on), sends
+only when the score dropped or a high/critical problem appeared that the previous scan did not have (history
+summaries keep their high/critical finding ids for this).
 
 ### 4.5 Security of the plugin itself
 - Every admin page, action and REST route: `manage_options` + nonce / `permission_callback`.

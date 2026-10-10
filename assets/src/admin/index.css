@@ -299,6 +299,15 @@
 	word-break: break-all;
 }
 
+.sitewarden-finding__details .button-link {
+	margin-left: 8px;
+	word-break: normal;
+}
+
+.sitewarden-finding__actions .button-link {
+	min-height: 28px;
+}
+
 .sitewarden-finding__fix {
 	padding: 10px 12px;
 	background: #f6f7f7;

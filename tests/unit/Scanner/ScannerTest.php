@@ -6,6 +6,7 @@ use Merkushin\Wpal\Service\Cron;
 use Merkushin\Wpal\Service\Environment;
 use Merkushin\Wpal\Service\Hooks;
 use Merkushin\Wpal\ServiceFactory;
+use Sitewarden\Report\Summary;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -92,7 +93,7 @@ class ScannerTest extends TestCase {
 			new ReportStore(),
 			new Settings(),
 			$this->lock,
-			new Score(),
+			new Summary( new Score() ),
 			function (): float {
 				return $this->now;
 			}

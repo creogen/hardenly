@@ -42,9 +42,43 @@ export const groupBySeverity = ( results ) =>
 	SEVERITIES.map( ( severity ) => ( {
 		severity,
 		results: results.filter(
-			( result ) => isProblem( result ) && result.severity === severity
+			( result ) =>
+				isProblem( result ) &&
+				! result.ignored &&
+				result.severity === severity
 		),
 	} ) ).filter( ( group ) => group.results.length > 0 );
+
+/**
+ * Problems the user chose to ignore.
+ *
+ * @param {Object[]} results Report results.
+ * @return {Object[]} Ignored problems.
+ */
+export const ignoredProblems = ( results ) =>
+	results.filter( ( result ) => isProblem( result ) && result.ignored );
+
+/** Checks whose details start with a file path that "Skip this file" can add to the settings. */
+export const FILE_CHECKS = [
+	'files.uploads_php',
+	'files.backups',
+	'code.suspicious',
+];
+
+/**
+ * The file path at the start of a detail, such as "wp-content/x.php:12 eval(...)".
+ *
+ * @param {string} checkId Check the detail belongs to.
+ * @param {string} detail  Detail text.
+ * @return {string|null} Path, or null when the detail is not about a file.
+ */
+export const detailPath = ( checkId, detail ) => {
+	if ( ! FILE_CHECKS.includes( checkId ) ) {
+		return null;
+	}
+	const match = /^([^\s:]+)/.exec( detail );
+	return match ? match[ 1 ] : null;
+};
 
 /**
  * Results that are not problems but worth reading: notes, and checks that could not run.

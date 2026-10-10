@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
 	groupBySeverity,
 	isActive,
+	detailPath,
+	ignoredProblems,
 	isProblem,
 	notes,
 	progressPercent,
@@ -59,6 +61,15 @@ describe( 'groupBySeverity', () => {
 		] );
 	} );
 
+	it( 'leaves out ignored problems', () => {
+		const ignored = { ...result( 'fail', 'high', 'a' ), ignored: true };
+
+		expect( groupBySeverity( [ ignored ] ) ).toEqual( [] );
+		expect(
+			ignoredProblems( [ ignored, result( 'fail', 'low' ) ] )
+		).toEqual( [ ignored ] );
+	} );
+
 	it( 'returns nothing without problems', () => {
 		expect( groupBySeverity( [ result( 'pass', 'info' ) ] ) ).toEqual( [] );
 	} );
@@ -77,6 +88,26 @@ describe( 'notes', () => {
 			'note',
 			'skipped',
 		] );
+	} );
+} );
+
+describe( 'detailPath', () => {
+	it( 'reads the path at the start of file details', () => {
+		expect(
+			detailPath(
+				'code.suspicious',
+				'wp-content/a.php:12 eval(x) (rule)'
+			)
+		).toBe( 'wp-content/a.php' );
+		expect(
+			detailPath( 'files.uploads_php', 'wp-content/uploads/b.php' )
+		).toBe( 'wp-content/uploads/b.php' );
+	} );
+
+	it( 'is null for checks whose details are not files', () => {
+		expect(
+			detailPath( 'versions.plugins', 'Akismet 5.0 → 5.4' )
+		).toBeNull();
 	} );
 } );
 

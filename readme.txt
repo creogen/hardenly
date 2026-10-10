@@ -25,7 +25,7 @@ Scans run in small steps in the background, so they are safe on shared hosting.
 
 = Privacy =
 
-By default Sitewarden sends nothing outside your site. It stores its settings, the latest scan results and each user's last login date in your database. Deleting the plugin removes all of it.
+By default Sitewarden sends nothing outside your site. If you turn on email reports, a summary (score and problem titles, no file paths) is sent with your site's own email setup to the address you choose. It stores its settings, the latest scan results and each user's last login date in your database. Deleting the plugin removes all of it.
 
 To see what visitors see, some checks send requests from your site to itself (loopback requests, the same kind Site Health uses): the home page (security headers), `/?author=` and `/wp-json/wp/v2/users` (username listing), `xmlrpc.php`, the uploads folder (folder listing), and `debug.log`, `.git` and `.env` when those files exist. The certificate check opens a connection to your own site's address to read its expiry date. None of these requests go to other sites.
 
@@ -42,9 +42,17 @@ The uncompiled JavaScript and CSS and the build instructions are at https://gith
 
 == Frequently Asked Questions ==
 
-= A question users ask =
+= Does Sitewarden change or delete anything on my site? =
 
-The answer.
+No. It only reads files and settings and tells you what to fix. Ignoring a finding only hides it in Sitewarden.
+
+= Can it scan automatically? =
+
+Yes. In Sitewarden > Settings, choose a daily or weekly scan, and optionally an email summary. Scans run through WP-Cron, so they start with the first visit after the scheduled time.
+
+= Why does a finding say it is suspicious, not infected? =
+
+The code check looks for patterns often used to hide code, but some legitimate plugins use them too. Review the file; if it is expected, add it to "Files to skip".
 
 == Screenshots ==
 
@@ -59,3 +67,6 @@ The answer.
 * 29 offline checks: configuration, users, versions, files, server and HTTP, and database.
 * Records each user's last login date, for the inactive administrators check.
 * Suspicious code check: looks for patterns often used to hide or inject code in PHP files.
+* Settings screen: choose check groups, the recently changed files threshold and files to skip.
+* Ignore findings you have reviewed, and skip files from the dashboard.
+* Daily or weekly automatic scans, with an optional email summary.
