@@ -234,10 +234,10 @@ Design: https://claude.ai/artifact/C6fX7ZS2Vm7emLwMhvdMHa (native WP admin look,
 - Dashboard, results: score gauge with change since last scan and a short label ("Needs attention"), counts by
   severity, last scans, a notice when vulnerability lookup is not configured, filters (severity, passed, ignored),
   findings grouped by severity (or check group), each with group tag, details, "How to fix" and "Ignore this
-  finding" / "Ignore this file". Lower severities start collapsed; passed checks are one collapsed row.
+  finding" / "Skip this file". Lower severities start collapsed; passed checks are one collapsed row.
 - Settings sections: What to scan (check groups, modified-files threshold, files to skip), Schedule and email,
   Online services (off by default, each option says exactly what is sent, masked API key, consent checkbox),
-  Ignored findings (with Restore). "Ignore this file" adds the path to "Files to skip".
+  Ignored findings (with Restore). "Skip this file" adds the path to "Files to skip".
 - Progress via REST polling (`@wordpress/api-fetch`). Assets only on Sitewarden screens. Entries:
   `assets/src/admin/`. i18n via `@wordpress/i18n`.
 - Accessible: no colour-only status (icon + text), real buttons and labels.
