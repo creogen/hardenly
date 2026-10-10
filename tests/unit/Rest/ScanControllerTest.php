@@ -9,7 +9,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Sitewarden\Rest\ScanController;
 use Sitewarden\Scanner\Scanner;
+use Sitewarden\Rest\ReportPayload;
 use Sitewarden\Storage\ReportStore;
+use Sitewarden\Storage\Settings;
 use WP_Error;
 
 class ScanControllerTest extends TestCase {
@@ -43,7 +45,9 @@ class ScanControllerTest extends TestCase {
 	}
 
 	private function controller(): ScanController {
-		return new ScanController( $this->scanner, $this->reports );
+		$settings = $this->createMock( Settings::class );
+		$settings->method( 'get' )->willReturn( [ 'skip_files' => [ 'a.php' ] ] );
+		return new ScanController( $this->scanner, new ReportPayload( $this->reports, $settings ) );
 	}
 
 	public function testRegisterRoutes_Always_ProtectsEveryEndpoint(): void {
@@ -117,5 +121,6 @@ class ScanControllerTest extends TestCase {
 		self::assertSame( [ 'score' => 90 ], $response['report'] );
 		self::assertSame( [ [ 'score' => 90 ] ], $response['history'] );
 		self::assertArrayHasKey( 'files', $response['groups'] );
+		self::assertSame( [ 'a.php' ], $response['skip_files'] );
 	}
 }
