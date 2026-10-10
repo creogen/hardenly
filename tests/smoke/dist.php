@@ -29,6 +29,9 @@ define( 'ABSPATH', __DIR__ . '/' );
 
 $GLOBALS['smoke_actions']  = [];
 $GLOBALS['smoke_enqueued'] = [];
+$GLOBALS['smoke_options']  = [];
+$GLOBALS['smoke_routes']   = [];
+$GLOBALS['smoke_events']   = [];
 
 function add_action( string $hook, callable $callback, int $priority = 10, int $accepted_args = 1 ): bool {
 	$GLOBALS['smoke_actions'][ $hook ][] = $callback;
@@ -47,6 +50,126 @@ function do_action( string $hook, ...$args ): void {
 		$callback( ...$args );
 	}
 }
+
+/**
+ * @param mixed $value Value to filter.
+ * @param mixed ...$args Other arguments.
+ *
+ * @return mixed
+ */
+function apply_filters( string $hook, $value, ...$args ) {
+	return $value;
+}
+
+function __( string $text, string $domain = 'default' ): string {
+	return $text;
+}
+
+function esc_html_e( string $text, string $domain = 'default' ): void {
+	echo htmlspecialchars( $text, ENT_QUOTES );
+}
+
+function esc_attr( string $text ): string {
+	return htmlspecialchars( $text, ENT_QUOTES );
+}
+
+/**
+ * @param mixed $default_value Returned when the option is missing.
+ *
+ * @return mixed
+ */
+function get_option( string $option, $default_value = false ) {
+	return $GLOBALS['smoke_options'][ $option ] ?? $default_value;
+}
+
+/**
+ * @param mixed     $value    Value.
+ * @param bool|null $autoload Autoload.
+ */
+function update_option( string $option, $value, $autoload = null ): bool {
+	$GLOBALS['smoke_options'][ $option ] = $value;
+	return true;
+}
+
+function delete_option( string $option ): bool {
+	unset( $GLOBALS['smoke_options'][ $option ] );
+	return true;
+}
+
+/**
+ * @param mixed[] $args Event arguments.
+ */
+function wp_schedule_single_event( int $timestamp, string $hook, array $args = [], bool $wp_error = false ): bool {
+	$GLOBALS['smoke_events'][] = [ $hook, $args ];
+	return true;
+}
+
+/**
+ * @param mixed[] $args Event arguments.
+ */
+function wp_clear_scheduled_hook( string $hook, array $args = [], bool $wp_error = false ): int {
+	return 0;
+}
+
+function spawn_cron( int $gmt_time = 0 ): bool {
+	return true;
+}
+
+function wp_convert_hr_to_bytes( string $value ): int {
+	return 256 * 1024 * 1024;
+}
+
+/**
+ * @param mixed ...$args Object id and the like.
+ */
+function current_user_can( string $capability, ...$args ): bool {
+	return true;
+}
+
+/**
+ * @param mixed[] $args Route options.
+ */
+function register_rest_route( string $route_namespace, string $route, array $args = [], bool $override = false ): bool {
+	$GLOBALS['smoke_routes'][] = $route_namespace . $route;
+	return true;
+}
+
+function add_menu_page( string $page_title, string $menu_title, string $capability, string $menu_slug, callable $callback, string $icon_url = '', ?int $position = null ): string {
+	return 'toplevel_page_' . $menu_slug;
+}
+
+function add_submenu_page( string $parent_slug, string $page_title, string $menu_title, string $capability, string $menu_slug, callable $callback, ?int $position = null ): string {
+	return 'toplevel_page_' . $menu_slug;
+}
+
+// Stand-in for $wpdb, enough for the scan lock (Storage\Lock): every lock is free.
+// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- WordPress is not loaded here.
+$GLOBALS['wpdb'] = new class() {
+	/**
+	 * @var string
+	 */
+	public $options = 'wp_options';
+
+	/**
+	 * @param mixed ...$args Values.
+	 */
+	public function prepare( string $query, ...$args ): string {
+		return $query;
+	}
+
+	public function query( string $query ): int {
+		return 1;
+	}
+
+	/**
+	 * No stored lock to read: query() always succeeds.
+	 *
+	 * @return null
+	 */
+	public function get_var( string $query ) {
+		return null;
+	}
+};
 
 function plugin_dir_url( string $file ): string {
 	return 'https://example.com/wp-content/plugins/sitewarden/';
@@ -74,9 +197,35 @@ function wp_set_script_translations( string $handle, string $domain = 'default',
 require $main_file;
 
 do_action( 'init' );
+do_action( 'admin_menu' );
+do_action( 'rest_api_init' );
 do_action( 'admin_enqueue_scripts', 'index.php' );
-
 $failures = [];
+if ( [] !== $GLOBALS['smoke_enqueued'] ) {
+	$failures[] = 'Assets were enqueued on a screen that is not the plugin\'s.';
+}
+do_action( 'admin_enqueue_scripts', 'toplevel_page_sitewarden' );
+
+foreach ( $GLOBALS['smoke_routes'] as $route ) {
+	if ( 0 !== strpos( $route, 'sitewarden/v1/' ) ) {
+		$failures[] = "Unexpected REST route $route.";
+	}
+}
+if ( count( $GLOBALS['smoke_routes'] ) < 3 ) {
+	$failures[] = 'REST routes are missing.';
+}
+
+// A whole scan: start it, then run the scheduled batch.
+$sitewarden_rest = $GLOBALS['smoke_actions']['rest_api_init'][0][0];
+$sitewarden_rest->start();
+foreach ( $GLOBALS['smoke_events'] as $event ) {
+	do_action( $event[0], ...$event[1] );
+}
+$sitewarden_report = $sitewarden_rest->get_report();
+if ( ! isset( $sitewarden_report['report']['score'] ) ) {
+	$failures[] = 'The scan did not store a report.';
+}
+
 foreach ( $GLOBALS['smoke_enqueued'] as $url ) {
 	$file = $build_dir . '/' . substr( $url, strlen( plugin_dir_url( $main_file ) ) );
 	if ( ! is_file( $file ) ) {
