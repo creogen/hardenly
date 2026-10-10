@@ -18,8 +18,7 @@ class PluginTest extends TestCase {
 	private const PLUGIN_URL = 'https://example.com/wp-content/plugins/sitewarden/';
 
 	/**
-	 * A plugin directory with a build of assets: admin has a stylesheet and uses wp-i18n,
-	 * frontend has only a script.
+	 * A plugin directory with a build of assets: admin has a stylesheet and uses wp-i18n.
 	 */
 	private const PLUGIN_FILE = __DIR__ . '/../fixtures/plugin/sitewarden.php';
 
@@ -58,7 +57,6 @@ class PluginTest extends TestCase {
 
 		self::assertEquals(
 			[
-				'wp_enqueue_scripts'    => [ $plugin, 'enqueue_frontend_assets' ],
 				'admin_enqueue_scripts' => [ $plugin, 'enqueue_admin_assets' ],
 			],
 			$added
@@ -101,16 +99,6 @@ class PluginTest extends TestCase {
 			->with( 'sitewarden-admin', 'sitewarden' );
 
 		( new Plugin( self::PLUGIN_FILE ) )->enqueue_admin_assets();
-	}
-
-	public function testEnqueueFrontendAssets_NoStylesheetOrI18n_EnqueuesOnlyScript(): void {
-		$this->assets->expects( self::never() )->method( 'wp_enqueue_style' );
-		$this->assets->expects( self::never() )->method( 'wp_set_script_translations' );
-		$this->assets->expects( self::once() )
-			->method( 'wp_enqueue_script' )
-			->with( 'sitewarden-frontend', self::PLUGIN_URL . 'assets/build/frontend.js', [], 'frontend-hash' );
-
-		( new Plugin( self::PLUGIN_FILE ) )->enqueue_frontend_assets();
 	}
 
 	public function testEnqueueAdminAssets_NotBuilt_EnqueuesNothing(): void {
